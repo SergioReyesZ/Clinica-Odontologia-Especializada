@@ -1,0 +1,119 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+    
+.menu-lateral {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-style: double;
+    border-color: #222121;
+    width: 20%;
+    height: 100vh;
+}
+
+.menu-lateral .titulo-menu{
+    width: 80%;
+    color: #333;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.menu{
+    display: flex;
+    flex-direction: column;
+    align-items: center ;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.opcion {
+    align-items: center;
+    margin-bottom: 10px;
+    width: 80%;
+    border-radius: 10px;
+    padding: 10px 5px;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+
+.opcion li {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+}
+.opcion li i {
+    margin-right: 10px;
+}
+.menu .opcion.activo{
+    background-color: rgb(227, 243, 240);
+    color: #127e14;
+}
+
+
+.opcion:hover, .opcion:hover li{
+    background-color: rgb(227, 243, 240);
+    color: #127e14;
+}
+
+.logo {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.icono_diente {
+    width: 15px;
+    height: 15px;
+}
+
+.perfil-menu{
+    border-radius: 10px;
+    display:flex;
+    align-items: center;
+    width: 80%;
+    gap: 1rem;
+    cursor: pointer;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.perfil-menu:hover{
+    background-color: rgb(227, 243, 240);
+    color: #127e14;
+}
+.perfil-menu img{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+.perfil-menu p{
+    font-size: 10px;
+}
+.linea-separadora{
+    width: 80%;
+    height: 1px;
+    background-color: #222121;
+    margin: 10px 0;
+}
+.nombre-rol {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px; 
+}
+
+.nombre-rol p {
+    margin: 0; 
+}
+
+.opciones{
+    display: flex;
+    flex-direction: column;
+    align-items: center ;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
