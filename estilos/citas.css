@@ -1,0 +1,340 @@
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+}
+
+body{
+    margin: 0;
+    font-family: Arial, sans-serif;
+    
+}
+
+.contenedor-principal{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.contenedor{
+    margin-left: 20%;
+    width: 80%;
+    padding: 10px 20px;
+    background-color: rgb(227, 243, 240);
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.header{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.texto-bienvenida{
+    gap: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.texto-bienvenida p{
+    margin: 0;
+}
+
+.texto-bienvenida h1{
+    font-weight: lighter;
+    margin: 5px 0;
+    font-size: 32px;
+    color: black;
+} 
+.texto-bienvenida .fecha{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, sans-serif;
+    font-size: 12px;
+    color: #037767;
+    font-weight: bold;
+}
+
+.descripcion{
+    font-size: 14px;
+    color: #828181;
+}
+
+.busqueda-nueva-cita {
+    height: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+    width: 40%;
+}
+
+.inp.buscar-paciente,
+.btn.nueva-cita {
+    padding: 10px 15px;     
+    font-size: 14px;
+    border-radius: 10px;
+    height: 40px;           
+}
+
+.inp.buscar-paciente {
+    width: 70%;
+    border: 1px solid #ccc;
+}
+
+.btn.nueva-cita {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(18, 126, 115);
+    color: white;
+    border: none;
+    width: 30%;
+    cursor: pointer;
+}
+
+.citas-programadas {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    height: fit-content;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.citas-info{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.citas-info p{
+    color: #868585;
+    font-size: 12px;
+    margin: 0;
+}
+.citas-info .titulo{
+    font-weight: bold;
+}
+.citas-info label{
+    font-size: 2rem;
+}
+
+.citas-programadas .bi.bi-calendar-week{
+    color: rgb(42 117 107);
+    background-color: rgb(222, 241, 238);
+    padding: 20px;
+    border-radius: 20px;
+    font-size: 1.5rem;
+}
+
+.citas-programadas .bi.bi-clock{
+    color: rgb(18, 62, 84);
+    background-color: rgb(225, 239, 246);
+    padding: 20px;
+    border-radius: 20px;
+    font-size: 1.5rem;
+}
+
+.citas-programadas .bi.bi-people{
+    color: rgb(106, 79, 60);
+    background-color: rgb(247, 236, 221);
+    padding: 20px;
+    border-radius: 20px;
+    font-size: 1.5rem;
+}
+
+.informacion-citas{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.agenda{
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 10px;
+    height: 50vh;
+    padding: 20px;
+}
+.btnfecha{
+    font-size: 0.8rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    color: black;
+    margin: 0;
+    padding: 10px;
+    cursor: pointer;
+}
+.btnfecha:hover{
+    background-color: rgb(18, 126, 115);
+    color: white;
+}
+.agenda-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.titulo-fecha{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.titulo-fecha p{
+    margin: 0;
+}
+
+.titulo-fecha .titulo{
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #024b41;
+}
+.div-dias{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.dia{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;  
+    border-radius: 10px;
+    width: 4rem;
+    height: 3rem;
+    margin-top: 20px;
+}
+.dia.actual{
+    background-color: rgb(18, 126, 115);
+    color: white;   
+}
+.dia p{
+    margin: 0;
+}
+
+.dia .titulo{
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.select{
+    width: 20%;
+    border-radius: 20px;
+    border-style: solid;
+    font-size: 15px;
+}
+
+.citas{
+    display: flex;
+    justify-content: space-between;
+}
+
+.citas-pacientes{
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hora .titulo{
+    font-size: 20px;
+}
+.hora p{
+    margin: 0;
+}
+.paciente{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.paciente .titulo{
+    font-size: 20px;
+}
+
+.paciente p{
+    margin: 0;
+}
+
+.btn.estado{
+    background-color: #037767;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+}
+
+.btn.three-dots{
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.btn.three-dots i{
+    font-size: 20px;
+}
+
+.hora-paciente{
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.separador-vertical{
+    width: 3px;
+    height: 3rem;
+    border: none;
+    background-color: #0ea692;
+}
+
+.foto-paciente{
+    display: flex;
+    width: 40px;
+    height: 40px;
+    background-color: #6bd5c7;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+/* Estilos para las animaciones de transición de la agenda */
+@keyframes deslizarDerecha {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes deslizarIzquierda {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animar-derecha {
+    animation: deslizarDerecha 0.3s ease-out forwards;
+}
+
+.animar-izquierda {
+    animation: deslizarIzquierda 0.3s ease-out forwards;
+}
