@@ -142,15 +142,48 @@ p{
     margin: 0;
 }
 
-.eslogan{
+/* =========================
+   ESTILOS DE TEXTO PULIDOS
+========================= */
+.eslogan {
     font-size: 3.5rem;
-    color: rgb(24, 47, 44);
-    line-height: 1;
+    line-height: 1.1;
+    font-weight: 800; /* Tipografía más gruesa y sólida */
+}
+.eslogan .texto-oscuro {
+    color: #1b2a47; /* Azul marino oscuro */
+}
+.eslogan .texto-claro {
+    color: #2570d3; /* Azul brillante que resalta */
 }
 
-.eslogan-2{
-    font-size: 1.5rem;
-    color: rgb(62, 141, 247);
+.eslogan-2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #2570d3;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.linea-adorno {
+    width: 25px;
+    height: 2px;
+    background-color: #2570d3;
+}
+
+/* =========================
+   BOTÓN HAMBURGUESA
+========================= */
+.hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 2.5rem;
+    color: #1b2a47;
+    cursor: pointer;
 }
 
 .descripcion{
@@ -778,46 +811,83 @@ body { min-width: 280px; }
 .mapa { flex: 3 1 0; min-width: 0; width: auto; }
 .informacion { flex: 2 1 0; min-width: 0; width: auto; }
 .footer { padding-inline: clamp(1.25rem, 4vw, 3rem); }
-
-/* El breakpoint solo cambia la DISTRIBUCIÓN, no el tamaño del menú.
-   También se activa cuando el zoom reduce el ancho CSS disponible. */
-@media (max-width: 1250px) {
-    .header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
-    .header img { grid-column: 1; grid-row: 1; }
-    .header .botones { grid-column: 2; grid-row: 1; justify-self: end; }
-    .header .menu {
-        grid-column: 1 / -1;
-        grid-row: 2;
+/* =========================
+   RESPONSIVE: MENÚ HAMBURGUESA
+========================= */
+@media (max-width: 1050px) {
+    .hamburger-btn {
+        display: block;
+        margin-left: auto; /* Empuja el botón al lado derecho */
+    }
+    .header {
+        flex-wrap: wrap; /* Permite que el menú se coloque en la fila inferior */
+    }
+    .menu, .header .botones {
+        display: none; /* Ocultos hasta que se presiona el botón */
         width: 100%;
-        justify-content: center;
-        gap: 1.5rem;
-        margin: 0;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scrollbar-width: thin;
-        -webkit-overflow-scrolling: touch;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+        gap: 1rem;
     }
-    .header .opcion { font-size: 1.3rem; }
-    .footer-contenido { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .menu.activo, .header .botones.activo {
+        display: flex;
+    }
+    .linea-flotante {
+        display: none; /* En vista móvil esta línea no aporta visualmente */
+    }
 }
+
+/* =========================
+   RESPONSIVE: MÓVILES E IMAGEN ARRIBA
+========================= */
 @media (max-width: 850px) {
-    .contenedor { flex-direction: column; }
-    .div-izquierdo { flex: none; padding: clamp(1.5rem, 5vw, 2.5rem); }
-    .div-derecho {
-        position: relative; inset: auto; width: 100%; height: auto;
-        padding: 0 clamp(1rem, 5vw, 2.5rem) clamp(1rem, 4vw, 2rem);
+    .contenedor {
+        flex-direction: column-reverse; /* LA MAGIA: Invierte el orden, poniendo la imagen arriba */
     }
-    .imagen { height: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+    .div-izquierdo {
+        flex: none;
+        padding: 0 clamp(1.5rem, 5vw, 2.5rem) clamp(1.5rem, 5vw, 2.5rem);
+        margin-top: -3rem; /* Acerca el texto hacia la parte transparente de la imagen */
+        position: relative;
+        z-index: 5;
+    }
+    .div-derecho {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: auto;
+        padding: 0;
+    }
+    .imagen {
+        height: auto;
+        display: block;
+        position: relative;
+    }
     .imagen img {
-        width: 100%; height: clamp(240px, 48vw, 420px);
-        border-radius: 20px; object-fit: cover;
-        -webkit-mask-image: none; mask-image: none;
+        width: 100%;
+        height: clamp(350px, 70vw, 550px);
+        border-radius: 0;
+        object-fit: cover;
+        /* Difuminado lineal de negro (sólido) hacia abajo a transparente */
+        -webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
+        mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
     }
     .circulo-edad {
-        position: relative; inset: auto; flex: none;
-        width: 100px; height: 100px; margin: 0 0 1rem .4rem;
-        outline-width: 4px;
+        position: absolute;
+        top: 20px;
+        right: 20px; /* Queda anclado sobre la imagen sin importar el dispositivo */
+        flex: none;
+        width: 90px;
+        height: 90px;
+        margin: 0;
+        z-index: 10;
+        outline-width: 3px;
     }
+    .circulo-edad .años {
+        font-size: 1.5rem;
+    }
+    
     .ubicacion { flex-direction: column; }
     .mapa, .informacion { width: 100%; flex: none; }
     .mapa iframe { height: 360px; min-height: 0; }

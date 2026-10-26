@@ -20,6 +20,17 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.addEventListener("mouseleave", () => {
         linea.style.opacity = "0";
     });
+
+    const btnMenu = document.getElementById("hamburger-btn");
+    const menuNav = document.getElementById("menu");
+    const botonesHeader = document.getElementById("botones");
+
+    if (btnMenu) {
+        btnMenu.addEventListener("click", () => {
+            menuNav.classList.toggle("activo");
+            botonesHeader.classList.toggle("activo");
+        });
+    }
 });
 
 window.addEventListener('DOMContentLoaded', () => {
