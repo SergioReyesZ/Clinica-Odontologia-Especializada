@@ -21,3 +21,18 @@ document.addEventListener("DOMContentLoaded", () => {
         linea.style.opacity = "0";
     });
 });
+
+window.addEventListener('DOMContentLoaded', () => {
+    const header = document.getElementById('header');
+    const content = document.getElementById('contenedor');
+
+    // Función para actualizar el margen dinámicamente
+    const ajustarMargen = () => {
+        const headerHeight = header.offsetHeight;
+        content.style.marginTop = `${headerHeight}px`;
+    };
+
+    ajustarMargen();
+    // Por si cambia de tamaño al redimensionar la ventana
+    window.addEventListener('resize', ajustarMargen);
+});

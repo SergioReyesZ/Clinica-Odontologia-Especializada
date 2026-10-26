@@ -9,14 +9,13 @@
 </head>
 <body>
     <div class="contenedor-principal">
-        <div class="header">
+        <div class="header" id="header">
             <img src="iconos/logo.png" alt="logo">
             <div class="menu">
-                <a href="" class="opcion">Inicio</a>
+                <a href="#contenedor" class="opcion">Inicio</a>
+                <a href="#opiniones" class="opcion">Nosotros</a>
                 <a href="#servicios" class="opcion">Servicios</a>
-                <a href="" class="opcion">Nosotros</a>
                 <a href="#ubicacion" class="opcion">Ubicación</a>
-                <a href="" class="opcion">Agendar cita</a>
                 <div class="linea-flotante"></div>
             </div>
             <div class="botones">
@@ -25,52 +24,56 @@
             </div>
         </div>
 
-        <div class="contenedor">
+        <div class="contenedor" id="contenedor">
             <div class="div-izquierdo">
                 <div class="texto">
                     <p class="eslogan-2">⎯ Odontología especializada ®</p>
                     <p class="eslogan">Tu sonrisa merece <br>cuidado, calma y <br> confianza.</p>
-                    <p class="descripcion">Atención dental integral para ti y tu familia, con especialistas <br> que escuchan y tecnología que hace cada visita más simple.
+                    <p class="descripcion">Odontología especializada de la Doctora Virginia Hernández Sánchez
                     </p>
                 </div>
     
                     <div class="botones">
-                        <button class="btn agendar-cita">Agendar una cita <i class="bi bi-chevron-right"></i></button>
-                        <button class="btn conocer-servicios" onclick="window.location.href='#servicios'">Conocer servicios</button>
+                        <button class="btn agendar-cita"><i class="bi bi-calendar2-check-fill"></i>Agendar una cita</button>
+                        <button class="btn conocer-servicios" onclick="window.location.href='#servicios'">Conocer servicios <i class="bi bi-arrow-right"></i></button>
                     </div> 
-                    
-                    <div class="opiniones">
-
-                        <div class="opinion">
-                            <i class="bi bi-credit-card"></i>
-                            <p class="titulo">Facilidad de pago</p>
-                            <p>Múltiples opciones de pago flexibles</p>
-                        </div>
-
-                        <div class="opinion">
-                            <i class="bi bi-star"></i> 
-                            <p class="titulo">Clientes satisfechos</p>
-                            <p>Más de 500 recomendaciones</p>
-                        </div>
-
-                        <div class="opinion">
-                            <i class="bi bi-clipboard2-pulse"></i>
-                            <p class="titulo">Odontólogos certificados</p>
-                            <p>Especializados en Odontopediatría</p>
-                        </div>
-                    </div>
+                
+                    <hr class="linea">
+                <div class="cumplimientos">
+                    <span><i class="bi bi-check-circle"></i> Especialista en odontopediatría</span>
+                    <span><i class="bi bi-check-circle"></i> Ambiente amigable</span>
+                    <span><i class="bi bi-check-circle"></i> Buenas recomendaciones</span>
+                </div>
             </div>
             <div class="div-derecho">
                 <div class="imagen">
                     <div class="circulo-edad">
-                        <p class="años">15+</p>
+                        <p class="años">28+</p>
                         <p class="desc">años cuidando <br> sonrisas</p>
                     </div>
-                    <img src="iconos/images.jpeg" alt="imagen">
+                    <img src="iconos/images.jpg" alt="imagen">
                 </div>
             </div>
         </div>
-        <hr class="linea">
+        <div class="opiniones" id="opiniones">
+                        <div class="opinion pago">
+                            <i class="bi bi-credit-card"></i>
+                            <p class="titulo">Facilidad de pago</p>
+                            <p>Múltiples opciones de pago flexibles, meses sin intereses con tarjetas participantes y planes adaptados a ti.</p>
+                        </div>
+
+                        <div class="opinion clientes">
+                            <i class="bi bi-emoji-smile"></i>
+                            <p class="titulo">Clientes satisfechos</p>
+                            <p>Más de 500 familias recomiendan nuestra atención paciente, amable y libre de estrés para los más pequeños.</p>
+                        </div>
+
+                        <div class="opinion odontologos">
+                            <i class="bi bi-clipboard2-pulse"></i>
+                            <p class="titulo">Odontólogos certificados</p>
+                            <p>Especialistas titulados en Odontopediatría y Ortodoncia con actualización continua y tecnología de punta.</p>
+                        </div>
+                    </div>
 
         <div class="contenedor-servicios" id="servicios">
             <p>Servicios dentales</p>
@@ -126,7 +129,6 @@
         </div>
         
         <hr class="linea">
-
         <div class="contenedor-ubicacion" id="ubicacion">
             <h1>Nuestra ubicación</h1>
             <div class="ubicacion">
@@ -151,7 +153,7 @@
                         <p>Teléfono: <a class="telefono" href="tel:8336957177">+52 833 695 7177</a>   </p> 
                         
                         <p>Escríbenos por Whatsapp:</p>
-                        <div class="contacto whatsapp" onclick="window.location.href='https://wa.me/528335355515?text=Hola!,%20quisiera%20más%20información'" >
+                        <div class="contacto whatsapp" onclick=window.location.href="https://wa.me/528336957177?text=Hola%2C%20quisiera%20agendar%20una%20cita">
                             <i class="bi bi-whatsapp"></i>
                             <p>Chatear por Whatsapp</p>
                         </div>
@@ -164,7 +166,6 @@
     </div>
 
 
-<!-- FOOTER -->
 <footer class="footer">
 
     <div class="footer-contenido">
@@ -178,7 +179,7 @@
         </div>
 
         <div class="footer-columna">
-            <h3>Tratamientos</h3>
+            <h3>Servicios</h3>
             <a href="#servicios">Brackets</a>
             <a href="#servicios">Limpieza dental</a>
             <a href="#servicios">Blanqueamiento</a>
@@ -203,7 +204,7 @@
         <div class="footer-columna">
             <h3>Contáctanos</h3>
 
-            <a href="https://wa.me/528335355515">
+            <a href="https://wa.me/528336957177">
                 <i class="bi bi-whatsapp"></i> WhatsApp
             </a>
 
@@ -222,22 +223,15 @@
     <div class="footer-inferior">
 
         <div class="footer-marca">
-            <img src="iconos/logo.png" alt="Logo clínica">
+            <img src="iconos/logo_opuesto.png" alt="Logo clínica">
             <p>© 2026 Clínica Dental Odontología especializada. Todos los derechos reservados.</p>
         </div>
-
-        <div class="footer-redes">
-            <a href="https://wa.me/528335355515" aria-label="WhatsApp">
-                <i class="bi bi-whatsapp"></i>
-            </a>
-        </div>
-
     </div>
 
 </footer>
 
 <a
-    href="https://wa.me/528335355515?text=Hola%2C%20quisiera%20agendar%20una%20cita"
+    href="https://wa.me/528336957177?text=Hola%2C%20quisiera%20agendar%20una%20cita"
     class="whatsapp-flotante"
     target="_blank"
     rel="noopener noreferrer"

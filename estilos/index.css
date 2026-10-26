@@ -11,10 +11,6 @@ body{
     font-family: Arial, sans-serif;   
 }
 
-.contenedor-principal {
-    padding: 0 2rem;
-    margin-top: 10%;
-}
 .header {
     position: fixed;
     top: 0;
@@ -86,7 +82,13 @@ body{
 }
 
 .btn.iniciar-sesion{
-    background-color: transparent;
+    background-color: white;
+    color: #333333;
+    font-size: 1rem;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .btn.registrarse{
@@ -104,20 +106,36 @@ body{
     transform: scale(1.1);
 }
 
+/* HERO: fotografía integrada al extremo derecho */
 .contenedor{
+    position: relative;
     display: flex;
-    height: 60vh;
-    margin: 10% 0;
+    align-items: stretch;
+    min-height: 70vh;
+    height: auto;
+    background-color: rgba(237, 246, 252, 0.95);
+    overflow: hidden;
 }
 .div-izquierdo{
+    position: relative;
+    z-index: 2;
+    box-sizing: border-box;
+    flex: 0 0 58%;
+    padding: 5rem 2rem;
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
+.div-derecho{
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 53%;
+    z-index: 1;
+}
 .texto{
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.5rem;
 }
 
 p{
@@ -141,25 +159,44 @@ p{
     font-size: 1.5rem;
 }
 
-.btn.agendar-cita{
-    padding: 1rem;
-    background-color: rgb(44, 72, 148);
+.btn.agendar-cita {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background-color: #0056e0; 
     color: white;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3); 
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.btn.conocer-servicios{
-    padding: 1rem;
-    background-color: transparent;
+.btn.agendar-cita:hover {
+    background-color: #0045b3;
+    transform: translateY(-2px);
 }
 
-.btn.agendar-cita:hover{
-    transform: translateY(-0.2rem);
-    background-color: rgb(32, 52, 105);
+.btn.conocer-servicios {
+    border: 1px solid #d1d5db; 
+    padding: 1rem 2rem;
+    background-color: white;
+    color: #333333;
+    font-size: 1rem;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.btn.conocer-servicios:hover{
-    transform: scale(1.1);
-    text-decoration: underline;
+.btn.conocer-servicios:hover {
+    background-color: #f4f2f2;
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
 }
 
 .linea{
@@ -168,23 +205,21 @@ p{
 }
 .imagen {
     position: relative;
-    margin-left: 30%;
-    width: 65%;        
-    height: 100%;       
+    width: 100%;
+    height: 100%;
 }
-
 .imagen img {
-    border-radius: 40% 20px 40% 20px;
-    width: 100%;        
-    height: 100%;        
-    object-fit: cover;    
     display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    -webkit-mask-image: linear-gradient(to left, #000 0%, #000 58%, rgba(0,0,0,.85) 70%, transparent 100%);
+    mask-image: linear-gradient(to left, #000 0%, #000 58%, rgba(0,0,0,.85) 70%, transparent 100%);
 }
-
 .circulo-edad {
     position: absolute;
-    top: 15%; 
-    left: -10%; 
+    top: 15%;  
     display: flex;
     flex-direction: column;
     background-color: rgb(32, 52, 105);
@@ -235,6 +270,7 @@ p{
 }
 
 .contenedor-ubicacion{
+    padding: 2rem;
     margin: 5% 0
 }
 .div{
@@ -339,7 +375,7 @@ p{
 .contenedor-servicios {
     padding: 1rem;
     margin: 5% 0;
-    background-color: rgb(246, 246, 246);
+    background-color: rgba(237, 246, 252, 0.95);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -422,25 +458,36 @@ p{
 
 .boton-servicios {
     font-size: 1rem;
+    font-weight: 600; /* Le da más presencia al texto */
     width: fit-content;
-    padding: 1rem 2rem;
+    padding: 1rem 2.2rem;
     border-radius: 50px;
     background-color: transparent;
-    border: black solid 2px;
+    color: #1e3a8a; /* Color de texto azul oscuro para que combine desde el estado normal */
+    border: 2px solid #2570d3; /* Cambiamos el negro por un borde azul estilizado */
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 4px 12px rgba(37, 112, 211, 0.1); /* Sombra sutil del mismo tono */
+    transition: all 0.3s ease; /* Transición fluida para todas las propiedades */
 }
 
 .boton-servicios:hover {
     background-color: #2570d3;
     color: white;
+    border-color: #2570d3; /* Asegura que el borde mantenga el color al rellenarse */
+    transform: translateY(-2px); /* Pequeño efecto de elevación muy elegante */
+    box-shadow: 0 6px 16px rgba(37, 112, 211, 0.25); /* Sombra más notable al pasar el mouse */
 }
-
-#servicios {
+#opiniones {
     scroll-margin-top: 120px;
+}
+#contenedor {
+    scroll-margin-top: 50px;
+}
+#servicios {
+    scroll-margin-top: 110px;
 }
 #ubicacion{
-    scroll-margin-top: 120px;
+    scroll-margin-top: 50px;
 }
 
 /* =========================
@@ -575,62 +622,244 @@ p{
     background-color: #1ebe5d;
 }
 
-.opiniones{
-    padding-top: 1rem;
+.opiniones {
     display: flex;
     width: 100%;
-    gap: 1rem;
+    min-height: 60vh;
+    align-items: center;
+    gap: 2rem;
+    justify-content: center;
+    padding: 2rem;
+    box-sizing: border-box;
 }
 
-.opinion{
-    padding: 1rem;
+.opinion {
+    border-radius: 30px;
+    padding: 2.5rem 2rem;
     display: flex;
     flex-direction: column;
-    width: 33%;
+    width: 28%;
+    max-width: 350px;
+    min-height: 380px;
+    gap: 1.2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.opinion:hover{
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+}
+
+.opinion.pago {
+    background-color: rgb(247, 250, 255);
+}
+
+.opinion.clientes {
+    background-color: rgb(255, 253, 244);
+}
+
+.opinion.odontologos {
+    background-color: rgb(247, 254, 249);
+}
+
+.opinion .titulo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.2;
+}
+
+.opinion p {
+    font-size: 1rem;
+    color: #555555;
+    line-height: 1.5;
+}
+
+/* Iconos */
+.opinion i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    color: white;
+    border-radius: 20px;
+    font-size: 1.8rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Sombra propia para los iconos */
+}
+
+.opinion.pago i {
+    background-color: rgb(33, 81, 197);
+}
+
+.opinion.clientes i {
+    background-color: rgb(233, 162, 59);
+}
+
+.opinion.odontologos i {
+    background-color: rgb(76, 161, 84);
+}
+
+.cumplimientos{
+    display: flex;
+    gap: 3%;
+}
+.cumplimientos i{
+    color: green;
+}
+
+/* ==========================================================
+   RESPONSIVE OPTIMIZADO
+   Conserva la tipografía original del menú (1.3rem).
+   El menú nunca hace wrap: cuando falta espacio pasa a
+   una fila independiente, y en móvil admite scroll horizontal.
+   ========================================================== */
+:root { --header-height: 90px; }
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: calc(var(--header-height) + 16px); }
+body { min-width: 280px; }
+#contenedor, #opiniones, #servicios, #ubicacion {
+    scroll-margin-top: calc(var(--header-height) + 16px);
+}
+#contenedor { margin-top: var(--header-height); }
+.header {
     gap: 1rem;
+    padding: .8rem clamp(1rem, 2vw, 2rem);
 }
+.header img {
+    width: clamp(95px, 10vw, 155px);
+    flex: 0 0 auto;
+    object-fit: contain;
+}
+.menu {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    min-width: 0;
+    padding-bottom: 8px;
+}
+.opcion {
+    font-size: 1.3rem;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+.header .botones { flex: 0 0 auto; gap: .65rem; }
+.header .btn { white-space: nowrap; }
+.contenedor { min-height: 0; }
+.div-izquierdo {
+    min-width: 0;
+    padding: clamp(2rem, 5vw, 5rem) clamp(1.25rem, 3vw, 3rem);
+    gap: clamp(1rem, 2vw, 2rem);
+}
+.eslogan { font-size: clamp(2rem, 3.6vw, 3.5rem); line-height: 1.12; }
+.eslogan-2, .descripcion { font-size: clamp(1rem, 1.6vw, 1.5rem); }
+.descripcion { line-height: 1.45; }
+.div-izquierdo .botones { flex-wrap: wrap; }
+.btn.agendar-cita { font-size: clamp(1rem, 1.5vw, 1.5rem); }
+.cumplimientos { flex-wrap: wrap; gap: .7rem 1rem; }
+.div-derecho { width: 48%; }
+.circulo-edad {
+    top: 12%;
+    left: 10%;
+    z-index: 3;
+    width: clamp(88px, 9vw, 120px);
+    height: clamp(88px, 9vw, 120px);
+    text-align: center;
+}
+.opiniones { flex-wrap: wrap; min-height: 0; padding: clamp(1.5rem, 4vw, 3rem); }
+.opinion { flex: 1 1 245px; width: auto; max-width: none; min-width: 0; min-height: 0; }
+.servicio { width: auto; min-width: clamp(180px, 19vw, 250px); padding: 1.25rem; }
+.contenedor-servicios h1 { font-size: clamp(1.8rem, 4vw, 3.5rem); margin: 0; }
+.ubicacion { min-width: 0; }
+.mapa { flex: 3 1 0; min-width: 0; width: auto; }
+.informacion { flex: 2 1 0; min-width: 0; width: auto; }
+.footer { padding-inline: clamp(1.25rem, 4vw, 3rem); }
 
-.opinion .titulo{
-    font-size: 1.5rem;
-}
-.opinion p{
-    font-size: 0.7rem;
-}
-.opinion i{
-    font-size: 2rem;
-}
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 1000px) {
-    .footer-contenido {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+/* El breakpoint solo cambia la DISTRIBUCIÓN, no el tamaño del menú.
+   También se activa cuando el zoom reduce el ancho CSS disponible. */
+@media (max-width: 1250px) {
+    .header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+    .header img { grid-column: 1; grid-row: 1; }
+    .header .botones { grid-column: 2; grid-row: 1; justify-self: end; }
+    .header .menu {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        width: 100%;
+        justify-content: center;
+        gap: 1.5rem;
+        margin: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+        -webkit-overflow-scrolling: touch;
     }
+    .header .opcion { font-size: 1.3rem; }
+    .footer-contenido { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-
+@media (max-width: 850px) {
+    .contenedor { flex-direction: column; }
+    .div-izquierdo { flex: none; padding: clamp(1.5rem, 5vw, 2.5rem); }
+    .div-derecho {
+        position: relative; inset: auto; width: 100%; height: auto;
+        padding: 0 clamp(1rem, 5vw, 2.5rem) clamp(1rem, 4vw, 2rem);
+    }
+    .imagen { height: auto; display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+    .imagen img {
+        width: 100%; height: clamp(240px, 48vw, 420px);
+        border-radius: 20px; object-fit: cover;
+        -webkit-mask-image: none; mask-image: none;
+    }
+    .circulo-edad {
+        position: relative; inset: auto; flex: none;
+        width: 100px; height: 100px; margin: 0 0 1rem .4rem;
+        outline-width: 4px;
+    }
+    .ubicacion { flex-direction: column; }
+    .mapa, .informacion { width: 100%; flex: none; }
+    .mapa iframe { height: 360px; min-height: 0; }
+}
 @media (max-width: 650px) {
-
-    .footer {
-        padding: 3rem 1.5rem 2rem;
-    }
-
-    .footer-contenido {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 2.5rem 1rem;
-    }
-
-    .footer-inferior,
-    .footer-marca {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
+    .header { padding: .65rem .85rem; gap: .65rem; }
+    .header img { width: 100px; }
+    .header .botones { gap: .35rem; }
+    .header .btn { font-size: .75rem; padding: .6rem .55rem; border-radius: 10px; }
+    .header .menu { justify-content: flex-start; gap: 1rem; }
+    .header .opcion { font-size: 1.3rem; }
+    .div-izquierdo { padding: 1.5rem 1rem; }
+    .eslogan { font-size: clamp(1.85rem, 7.8vw, 2.65rem); }
+    .eslogan br, .contenedor-servicios h1 br { display: none; }
+    .div-izquierdo .botones { align-items: stretch; }
+    .div-izquierdo .botones .btn { flex: 1 1 190px; padding: .85rem 1rem; }
+    .cumplimientos { flex-direction: column; gap: .6rem; }
+    .div-derecho { padding: 0 1rem 1.5rem; }
+    .circulo-edad { width: 88px; height: 88px; }
+    .circulo-edad .años { font-size: 1.6rem; }
+    .opiniones { flex-direction: column; padding: 1.25rem 1rem; gap: 1rem; }
+    .opinion { flex: none; width: 100%; padding: 1.5rem; }
+    .contenedor-servicios { padding: 2rem 1rem; gap: 1.25rem; }
+    .contenedor-servicios p { margin-top: 0; }
+    .servicio { min-width: 175px; padding: 1rem; }
+    .contenedor-ubicacion { padding: 1.25rem 1rem; margin: 2rem 0; }
+    .mapa iframe { height: 300px; }
+    .footer { padding: 3rem 1.5rem 2rem; }
+    .footer-contenido { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 1rem; padding-bottom: 2rem; }
+    .footer-inferior, .footer-marca { flex-direction: column; align-items: flex-start; }
     .whatsapp-flotante {
-        width: 55px;
-        height: 55px;
-        font-size: 1.8rem;
-        bottom: 20px;
-        right: 20px;
+        width: 55px; height: 55px; font-size: 1.8rem;
+        bottom: max(16px, env(safe-area-inset-bottom));
+        right: max(16px, env(safe-area-inset-right));
     }
+}
+@media (max-width: 360px) {
+    .header img { width: 82px; }
+    .header .btn { font-size: .68rem; padding: .5rem .4rem; }
+    .footer-contenido { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .servicios { animation: none; }
 }
