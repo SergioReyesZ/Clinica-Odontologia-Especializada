@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
+    <link rel="icon" href="iconos/favicon2.ico" type="image/x-icon">
     <link rel="stylesheet" href="estilos/index.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
@@ -12,13 +13,12 @@
        <div class="header" id="header">
     <img src="iconos/logo.png" alt="logo">
     
-    <!-- Botón Hamburguesa -->
     <button class="hamburger-btn" id="hamburger-btn">
         <i class="bi bi-list"></i>
     </button>
 
     <div class="menu" id="menu">
-        <a href="#contenedor" class="opcion">Inicio</a>
+        <a href="#contenedor" class="opcion activo">Inicio</a>
         <a href="#opiniones" class="opcion">Nosotros</a>
         <a href="#servicios" class="opcion">Servicios</a>
         <a href="#ubicacion" class="opcion">Ubicación</a>
@@ -237,7 +237,6 @@
             <p>© 2026 Clínica Dental Odontología especializada. Todos los derechos reservados.</p>
         </div>
     </div>
-
 </footer>
 
 <a
@@ -249,6 +248,26 @@
 >
     <i class="bi bi-whatsapp"></i>
 </a>
+
+<div class="alerta-overlay" id="alerta-login">
+    <div class="alerta-contenido">
+        <div class="alerta-header">
+            <div class="icon-titulo">
+                <i class="bi bi-people"></i>
+                <h2>Iniciar sesión</h2>
+            </div>
+            <button class="btn-cerrar-alerta" id="btn-cerrar-login">&times;</button>
+        </div>
+        <div class="alerta-body">
+            <p>Correo electrónico</p>
+            <input type="email" placeholder="ejemplo@gmail.com">
+            <p>Contraseña</p>
+            <input type="password" placeholder="********">
+            <button>Iniciar sesión</button>
+            <p class="texto-registro">¿No tienes una cuenta? <a href="">Regístrate</a></p>
+        </div>
+    </div>
+</div>
 
 </body>
 <script src="scripts/index.js"></script>

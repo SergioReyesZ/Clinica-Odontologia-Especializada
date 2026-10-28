@@ -3,22 +3,48 @@ document.addEventListener("DOMContentLoaded", () => {
     const opciones = document.querySelectorAll(".opcion");
     const linea = document.querySelector(".linea-flotante");
 
-    opciones.forEach(opcion => {
-        opcion.addEventListener("mouseenter", (e) => {
-            // Calculamos la posición del enlace relativo al contenedor .menu
-            const anchoOpcion = e.target.offsetWidth;
-            const posicionIzquierda = e.target.offsetLeft;
+    // Función auxiliar para posicionar la línea en un elemento específico
+    const posicionarLinea = (elemento) => {
+        const anchoOpcion = elemento.offsetWidth;
+        const posicionIzquierda = elemento.offsetLeft;
 
-            // Le damos el ancho y la posición exacta a la línea
-            linea.style.width = `${anchoOpcion}px`;
-            linea.style.left = `${posicionIzquierda}px`;
-            linea.style.opacity = "1";
+        linea.style.width = `${anchoOpcion}px`;
+        linea.style.left = `${posicionIzquierda}px`;
+        linea.style.opacity = "1";
+    };
+
+    // 1. Detectar si ya hay una opción con la clase "activo" al cargar la página
+    const opcionActivaInicial = document.querySelector(".opcion.activo");
+    if (opcionActivaInicial) {
+        menu.classList.add("tiene-activo");
+        posicionarLinea(opcionActivaInicial);
+    }
+
+    opciones.forEach(opcion => {
+        // Al pasar el mouse, se mueve temporalmente a esa opción
+        opcion.addEventListener("mouseenter", (e) => {
+            posicionarLinea(e.target);
+        });
+
+        // Al hacer clic, definimos esa opción como la "activa" fija
+        opcion.addEventListener("click", (e) => {
+            opciones.ward?.(); // por si acaso
+            opciones.forEach(opt => opt.classList.remove("activo"));
+            e.target.classList.add("activo");
+            menu.classList.add("tiene-activo");
+            posicionarLinea(e.target);
         });
     });
 
-    // Opcional: Ocultar la línea si el cursor sale por completo del menú
+    // Si el cursor sale del menú, regresa a la opción activa (o se oculta si no hay ninguna activa)
     menu.addEventListener("mouseleave", () => {
-        linea.style.opacity = "0";
+        const opcionActiva = document.querySelector(".opcion.activo");
+        if (opcionActiva) {
+            posicionarLinea(opcionActiva);
+        } else {
+            menu.classList.remove("tiene-activo");
+            linea.style.opacity = "0";
+        }
     });
 
     const btnMenu = document.getElementById("hamburger-btn");

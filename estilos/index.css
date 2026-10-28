@@ -51,6 +51,15 @@ body{
     transform: scale(1.05);
 }
 
+.menu .linea-flotante {
+    opacity: 1;
+}
+
+/* Opcional: si quieres que la opción activa tenga un color de texto distinto o resalte */
+.opcion.activo {
+    color: rgb(44, 72, 148);
+}
+
 .linea-flotante {
     position: absolute;
     bottom: 0;
@@ -710,7 +719,6 @@ p{
     line-height: 1.5;
 }
 
-/* Iconos */
 .opinion i {
     display: flex;
     align-items: center;
@@ -743,9 +751,123 @@ p{
     color: green;
 }
 
+/* ======================== */
+/* Alerta modal */
+/* ======================== */
+
+.alerta-overlay {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); 
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+.alerta-overlay.activo {
+    display: flex;
+}
+
+.alerta-contenido {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 50%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: fadeIn 0.5s ease;
+}
+
+.alerta-body{
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.alerta-body input{
+    background-color: white;
+    border: 1px solid #d1d5db; 
+    padding: 1rem;
+    color: #333333;
+    font-size: 1rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.alerta-body button{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #0056e0; 
+    color: white;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3); 
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.alerta-body button:hover{
+    transform: scale(1.02);
+}
+.icon-titulo{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.texto-registro{
+    margin-top: 1rem;
+    text-align: center;
+}
+.icon-titulo i{
+    background-color: #0056e0;
+    color: white;
+    border-radius: 10px;
+    padding: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.alerta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.alerta-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #1b2a47;
+}
+
+.btn-cerrar-alerta {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* ==========================================================
    RESPONSIVE OPTIMIZADO
-   Conserva la tipografía original del menú (1.3rem).
    El menú nunca hace wrap: cuando falta espacio pasa a
    una fila independiente, y en móvil admite scroll horizontal.
    ========================================================== */
@@ -811,19 +933,17 @@ body { min-width: 280px; }
 .mapa { flex: 3 1 0; min-width: 0; width: auto; }
 .informacion { flex: 2 1 0; min-width: 0; width: auto; }
 .footer { padding-inline: clamp(1.25rem, 4vw, 3rem); }
-/* =========================
-   RESPONSIVE: MENÚ HAMBURGUESA
-========================= */
+
 @media (max-width: 1050px) {
     .hamburger-btn {
         display: block;
-        margin-left: auto; /* Empuja el botón al lado derecho */
+        margin-left: auto;
     }
     .header {
-        flex-wrap: wrap; /* Permite que el menú se coloque en la fila inferior */
+        flex-wrap: wrap; 
     }
     .menu, .header .botones {
-        display: none; /* Ocultos hasta que se presiona el botón */
+        display: none; 
         width: 100%;
         flex-direction: column;
         align-items: center;
@@ -834,21 +954,18 @@ body { min-width: 280px; }
         display: flex;
     }
     .linea-flotante {
-        display: none; /* En vista móvil esta línea no aporta visualmente */
+        display: none; 
     }
 }
 
-/* =========================
-   RESPONSIVE: MÓVILES E IMAGEN ARRIBA
-========================= */
 @media (max-width: 850px) {
     .contenedor {
-        flex-direction: column-reverse; /* LA MAGIA: Invierte el orden, poniendo la imagen arriba */
+        flex-direction: column-reverse; 
     }
     .div-izquierdo {
         flex: none;
         padding: 0 clamp(1.5rem, 5vw, 2.5rem) clamp(1.5rem, 5vw, 2.5rem);
-        margin-top: -3rem; /* Acerca el texto hacia la parte transparente de la imagen */
+        margin-top: -3rem;
         position: relative;
         z-index: 5;
     }
@@ -869,14 +986,13 @@ body { min-width: 280px; }
         height: clamp(350px, 70vw, 550px);
         border-radius: 0;
         object-fit: cover;
-        /* Difuminado lineal de negro (sólido) hacia abajo a transparente */
         -webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
         mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 100%);
     }
     .circulo-edad {
         position: absolute;
         top: 20px;
-        right: 20px; /* Queda anclado sobre la imagen sin importar el dispositivo */
+        right: 20px; 
         flex: none;
         width: 90px;
         height: 90px;
