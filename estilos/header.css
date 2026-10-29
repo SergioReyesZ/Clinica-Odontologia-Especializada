@@ -230,8 +230,13 @@
 }
 
 /* Hover específico para el botón de cerrar sesión */
-.texto-peligro:hover {
+.texto-peligro {
     background-color: #fef2f2;
+    color: #dc2626;
+}
+
+.texto-peligro:hover {
+    background-color: #fbdede;
     color: #dc2626;
 }
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,23 +8,25 @@
     <link rel="icon" href="iconos/favicon2.ico" type="image/x-icon">
     <link rel="stylesheet" href="estilos/global.css">
     <link rel="stylesheet" href="estilos/header.css">
+    <link rel="stylesheet" href="estilos/adminDashboard.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
-<body>
+
+<body id="cuerpo">
     <div class="contenedor-principal">
         <div class="header" id="header">
             <img src="iconos/logo.png" alt="logo">
-            
+
             <div class="menu" id="menu">
-                <a href="#" class="opcion activo">Inicio</a>
-                <a href="#" class="opcion">Citas</a>
-                <a href="#" class="opcion">Pacientes</a>
-                <a href="#" class="opcion">Usuarios</a>
-                <a href="#" class="opcion">Horarios</a>
-                <a href="#" class="opcion">Bitácora</a>
+                <a href="#cuerpo" class="opcion activo">Inicio</a>
+                <a href="recursos/citas.html" class="opcion">Citas</a>
+                <a href="recursos/pacientes.html" class="opcion">Pacientes</a>
+                <a href="recursos/usuarios.html" class="opcion">Usuarios</a>
+                <a href="recursos/horarios.html" class="opcion">Horarios</a>
+                <a href="recursos/bitacora.html" class="opcion">Bitácora</a>
                 <div class="linea-flotante"></div>
             </div>
-            
+
             <div class="perfil-contenedor">
                 <!-- Quitamos el onclick de aquí y le ponemos un ID para controlarlo con JS -->
                 <div class="perfil" id="btnPerfilDropdown">
@@ -33,7 +36,7 @@
                 </div>
                 <!-- El pequeño modal flotante -->
                 <div class="dropdown-perfil" id="dropdownPerfil">
-                    <a href="recursos/cliPerfil.html" class="dropdown-item">
+                    <a href="recursos/perfil.html" class="dropdown-item">
                         <i class="bi bi-gear"></i> Configuración de cuenta
                     </a>
                     <hr class="dropdown-divisor">
@@ -42,13 +45,179 @@
                     </a>
                 </div>
             </div>
-            
+
+        </div>
+        <div class="contenedor" id="contenedor">
+
+            <div class="encabezado-texto">
+                <p class="eslogan-2">
+                    PANEL ADMINISTRATIVO
+                </p>
+                <h1>Bienvenido al centro de gestión</h1>
+                <p class="descripcion-corta">Organiza las citas, los pacientes y el equipo desde un solo lugar.</p>
+            </div>
+
+            <div class="acciones-rapidas">
+                <div class="panel-head">
+                    <h2><i class="bi bi-lightning-charge"></i> Acciones rápidas</h2>
+                </div>
+                <div class="panel-rapido">
+                    <div class="superior">
+                        <!-- Acción Primaria: Máximo peso visual -->
+                        <button class="btn-rapido btn-primario" data-action="newAppointment">
+                            <i class="bi bi-calendar-week"></i> 
+                            <span>Nueva cita</span>
+                        </button>
+                        <!-- Acción Secundaria: Peso medio -->
+                        <button class="btn-rapido btn-secundario" data-action="newPatient">
+                            <i class="bi bi-person-plus"></i>
+                            <span>Agregar paciente</span>
+                        </button>
+                    </div>
+                    <div class="inferior">
+                        <!-- Acciones Administrativas: Menor peso visual -->
+                        <button class="btn-rapido btn-terciario" data-action="newUser">
+                            <i class="bi bi-person-gear"></i>
+                            <span>Crear usuario</span>
+                        </button>
+                        <button class="btn-rapido btn-terciario" data-page="horarios">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Gestionar horarios</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
         
-         
+        <div class="agenda">
+            <div class="agenda-buscador">
+                <div class="buscador-campo">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                    <input type="search" id="buscar-paciente" aria-label="Buscar citas por paciente o servicio" placeholder="Buscar por paciente o servicio..." autocomplete="off">
+                    <button type="button" id="limpiar-busqueda" aria-label="Limpiar búsqueda" hidden><i class="bi bi-x-lg"></i></button>
+                </div>
+                <span id="resultado-busqueda" role="status" aria-live="polite"></span>
+            </div>
+            
+            <div class="agenda-header">
+                <div class="titulo-fecha">
+                    <p class="titulo">Agenda</p>
+                    <p id="mes-anio-actual">Octubre 2026</p>
+                </div>
+
+                <div class="botones-fecha">
+                    <button type="button" id="btn-anterior" class="btnfecha izquierda"><i
+                            class="bi bi-chevron-left"></i></button>
+
+                    <div style="position: relative; display: inline-block;">
+                        <button type="button" id="btn-hoy" class="btnfecha actual">Hoy</button>
+                        <input type="date" id="input-fecha-oculto"
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                    </div>
+
+                    <button type="button" id="btn-siguiente" class="btnfecha derecha"><i
+                            class="bi bi-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <div class="div-dias" id="contenedor-dias">
+                
+            </div>
+            <hr>
+            <div class="citas">
+                <div class="titulo-fecha">
+                    <p class="titulo">Citas de hoy</p>
+                    <p>5 citas programadas</p>
+                </div>
+                <select name="" id="" class="select">
+                    <option value="" selected>Todos los servicios</option>
+                    <option value="">Ortodoncia</option>
+                </select>
+            </div>
+
+            <div class="citas-pacientes">
+
+                <div class="hora-paciente">
+                    <div class="hora">
+                        <p class="titulo">09:00</p>
+                        <p>09:30</p>
+                    </div>
+                    <hr class="separador-vertical">
+                    <div class="paciente">
+                        <div class="foto-paciente">
+                            <p>ML</p>
+                        </div>
+                        <div class="nombre-servicio">
+                            <p class="titulo">Mariana López</p>
+                            <p>Limpieza dental</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="estado-info">
+                    <button class="btn estado cancelada">CANCELADA</button>
+                    <button class="btn three-dots"><i class="bi bi-three-dots"></i> </button>
+                </div>
+            </div>
+            <div class="citas-pacientes">
+
+                <div class="hora-paciente">
+                    <div class="hora">
+                        <p class="titulo">09:00</p>
+                        <p>09:30</p>
+                    </div>
+                    <hr class="separador-vertical">
+                    <div class="paciente">
+                        <div class="foto-paciente">
+                            <p>ML</p>
+                        </div>
+                        <div class="nombre-servicio">
+                            <p class="titulo">Mariana López</p>
+                            <p>Limpieza dental</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="estado-info">
+                    <button class="btn estado confirmada">CONFIRMADA</button>
+                    <button class="btn three-dots"><i class="bi bi-three-dots"></i> </button>
+                </div>
+            </div>
+            <div class="citas-pacientes">
+
+                <div class="hora-paciente">
+                    <div class="hora">
+                        <p class="titulo">09:00</p>
+                        <p>09:30</p>
+                    </div>
+                    <hr class="separador-vertical">
+                    <div class="paciente">
+                        <div class="foto-paciente">
+                            <p>ML</p>
+                        </div>
+                        <div class="nombre-servicio">
+                            <p class="titulo">Mariana López</p>
+                            <p>Limpieza dental</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="estado-info">
+                    <button class="btn estado terminada">TERMINADA</button>
+                    <button class="btn three-dots"><i class="bi bi-three-dots"></i> </button>
+                </div>
+            </div>
+
+
+        </div>
+
     </div>
 
 </body>
 <script src="scripts/adminHeader.js"></script>
 <script src="scripts/dashboard.js"></script>
+<script src="scripts/dashCitas.js"></script>
 </html>

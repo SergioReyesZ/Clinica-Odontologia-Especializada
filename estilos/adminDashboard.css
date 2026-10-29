@@ -1,0 +1,362 @@
+body{
+    background: #fafcff
+}
+.contenedor{
+    display: flex;
+    gap: 25px; /* Crea una separación perfecta y automática entre las dos tarjetas */
+    padding: 25px 25px 0 25px;
+}
+
+button {
+    cursor: pointer
+}
+
+.encabezado-texto {
+    display: flex;
+    box-sizing: border-box; 
+    flex-direction: column;
+    align-items: start;
+    text-align: start;
+    width: 60%;
+    margin: 0; /* Elimina los márgenes manuales anteriores */
+    padding: 3rem 2rem;
+    background: white;
+    border: 1px solid #eaf0f7;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px #1b2a4709;
+}
+.encabezado-texto .eslogan-2{
+    color: #2570d3;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px
+}
+
+.encabezado-texto h1 {
+    font-size: 2rem;
+    color: #1b2a47;
+    margin: 1rem 0;
+    line-height: 1.2;
+}
+
+.descripcion-corta {
+    font-size: 1.2rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* ESTILO DE LA AGENDA COMPLETA */ 
+
+.agenda{
+    margin: 25px; /* Esto arregla el pegado superior y mantiene los lados iguales */
+    border-radius: 10px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #eaf0f7;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px #1b2a4709
+}
+.btnfecha {
+    font-size: 1rem;
+    background-color: transparent; 
+    border: 1px solid #e2e8f0; /* Borde más suave e integrado[cite: 2] */
+    border-radius: 8px;
+    color: #64748b;
+    padding: 8px 12px;
+    transition: all 0.2s ease;
+}
+.btnfecha:hover {
+    background-color: #f8fbff;
+    color: #2570d3;
+    border-color: #2570d3;
+}
+.agenda-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.titulo-fecha{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.titulo-fecha p{
+    margin: 0;
+}
+
+.titulo-fecha .titulo{
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #1b2a47; /* Azul marino oscuro, más sobrio */
+}
+.div-dias{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.dia{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;  
+    border-radius: 10px;
+    width: 4rem;
+    height: 3rem;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.dia.actual {
+    background-color: #2570d3; /* Se alinea con el resto de la interfaz[cite: 2] */
+    color: white;
+    box-shadow: 0 4px 10px rgba(37, 112, 211, 0.3);
+}
+.dia:not(.actual):hover {
+    background-color: #eaf0f7;
+}
+
+.dia p{
+    margin: 0;
+}
+
+.dia .titulo{
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.select{
+    width: 20%;
+    border-radius: 20px;
+    border-style: solid;
+    font-size: 15px;
+}
+
+.citas{
+    display: flex;
+    justify-content: space-between;
+}
+
+.citas-pacientes{
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-radius: 12px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+.citas-pacientes:hover {
+    background-color: #f8fbff; /* Un azul casi imperceptible */
+    transform: translateX(5px); /* Pequeño salto a la derecha indicando que es accionable */
+}
+
+.hora .titulo{
+    font-size: 20px;
+}
+.hora p{
+    margin: 0;
+}
+.paciente{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.paciente .titulo{
+    font-size: 20px;
+}
+
+.paciente p{
+    margin: 0;
+}
+
+.btn.estado{
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+}
+
+.btn.estado.cancelada{
+    background-color: red;
+}
+
+.btn.estado.confirmada{
+    background-color: green;
+}
+
+.btn.estado.pendiente{
+    background-color: orange;
+}
+
+.btn.estado.terminada{
+    background-color: #93c5fd;
+}
+
+.btn.three-dots{
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.btn.three-dots i{
+    font-size: 20px;
+}
+
+.hora-paciente{
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+.separador-vertical {
+    width: 2px; /* Más delgado[cite: 2] */
+    height: 3rem;
+    border: none;
+    background-color: #e2e8f0; /* Gris muy suave, deja de competir visualmente[cite: 2] */
+}
+
+.foto-paciente {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    background-color: #eaf4ff; /* Fondo azul clarito[cite: 2] */
+    color: #2570d3; /* Texto azul haciendo juego */
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+/* Estilos para las animaciones de transición de la agenda */
+@keyframes deslizarDerecha {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes deslizarIzquierda {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animar-derecha {
+    animation: deslizarDerecha 0.3s ease-out forwards;
+}
+
+.animar-izquierda {
+    animation: deslizarIzquierda 0.3s ease-out forwards;
+}
+
+/* PANEL RAPIDO ADMINISTRADOR*/
+
+.acciones-rapidas{
+    width: 40%;
+    margin: 0; /* Elimina los márgenes manuales anteriores */
+    padding: 1rem 2rem;
+    align-items: start;
+    background: white;
+    border: 1px solid #eaf0f7;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px #1b2a4709
+    
+}
+.acciones-rapidas i{
+    color: #2570d3;
+}
+.superior, .inferior{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    gap: 15px;
+}
+/* Esqueleto base: Mantiene el flexbox y espaciado de tu código actual[cite: 2] */
+.btn-rapido {
+    width: 50%;
+    padding: 1rem;
+    font-size: 1rem;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 12px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent; 
+}
+
+.btn-primario {
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #0056e0; 
+    color: white;
+    border: none;
+    box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3); 
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.acciones-rapidas .btn-primario i {
+    color: white; 
+}
+.btn-primario:hover {
+    background-color: #1348b1;
+    transform: translateY(-2px);
+}
+
+/* 🟡 SECUNDARIO: Acción importante pero de soporte continuo */
+.btn-secundario {
+    background-color: #f8fbff;
+    color: #1b2a47;
+    border: 1px solid #e2e8f0;
+}
+.acciones-rapidas .btn-secundario i {
+    color: #2570d3;
+}
+.btn-secundario:hover {
+    background-color: #eaf4ff;
+    border-color: #93c5fd;
+}
+
+/* ⚪ TERCIARIOS (Admin): Acciones de configuración poco frecuentes. */
+.btn-terciario {
+    background-color: transparent;
+    color: #64748b;
+    border: 1px dashed #7c7c7c; /* El borde punteado denota una herramienta de sistema */
+}
+.acciones-rapidas .btn-terciario i {
+    color: #94a3b8;
+}
+.btn-terciario:hover {
+    color: #1b2a47;
+    background-color: #f1f5f9;
+    border-style: solid;
+}
+.panel-rapido{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.agenda-buscador{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.buscador-campo{display:flex;align-items:center;gap:12px;width:min(100%,460px);min-height:46px;padding:0 14px;border:1px solid #dbe4ee;border-radius:10px;background:#fff;transition:border-color .2s,box-shadow .2s}
+.buscador-campo:focus-within{border-color:var(--admin-primary);box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+.buscador-campo>i{color:#94a3b8;font-size:1.1rem}
+.agenda .buscador-campo input{flex:1;min-width:0;width:100%;padding:11px 0;border:0;outline:0;background:transparent;font:inherit;font-size:.92rem;color:var(--admin-ink)}
+.buscador-campo input::-webkit-search-cancel-button{display:none}
+.buscador-campo button{border:0;background:transparent;color:var(--admin-muted);padding:5px}
+.buscador-campo button[hidden],.sin-resultados[hidden]{display:none}
+#resultado-busqueda{font-size:.82rem;color:var(--admin-muted)}

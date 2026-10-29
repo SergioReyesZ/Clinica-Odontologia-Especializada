@@ -1,0 +1,22 @@
+(()=>{'use strict';
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const key='odontologia_admin_demo_v1';
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const seed=()=>({users:[{id:1,name:'Administrador',last:'Clínica',email:'admin@ejemplo.test',role:'Administrador'},{id:2,name:'Sofía',last:'Morales',email:'sofia@ejemplo.test',role:'Cliente'},{id:3,name:'Virginia',last:'Hernández Sánchez',email:'virginia@ejemplo.test',role:'Odontólogo'}],patients:[{id:1,name:'Mateo',last:'Ramírez',birth:'2018-05-12',userId:2,notes:''}],schedules:[{doctorId:3,days:[1,2,3,4,5],start:'16:30',end:'20:00'}],appointments:[],audit:[]});
+let db;try{db=JSON.parse(localStorage.getItem(key))||seed()}catch{db=seed()}
+for(const k of ['users','patients','schedules','appointments','audit'])db[k]??=[];
+const save=()=>localStorage.setItem(key,JSON.stringify(db)),next=a=>Math.max(0,...a.map(x=>x.id))+1;
+const user=id=>db.users.find(x=>x.id===Number(id)),patient=id=>db.patients.find(x=>x.id===Number(id)),fullname=x=>x?`${x.name} ${x.last}`:'No disponible';
+const fmt=d=>d?new Date(d+'T12:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}):'—';
+const notice=t=>{$('#notice').textContent=t;setTimeout(()=>{$('#notice').textContent=''},4500)};
+const log=(action,id,detail)=>db.audit.unshift({date:new Date().toLocaleString('es-MX'),action,id,detail,actor:'Administrador (demo)'});
+const modal=(title,html)=>{$('#modalTitle').textContent=title;$('#modalContent').innerHTML=html;$('#modal').classList.remove('hidden')};
+const close=()=>$('#modal').classList.add('hidden');
+$('#closeModal').onclick=close;$('#modal').onclick=e=>{if(e.target.id==='modal')close()};
+
+function render(){const q=$('#searchPatient').value.toLowerCase();$('#patientsBody').innerHTML=db.patients.filter(p=>[fullname(p),fullname(user(p.userId)),user(p.userId)?.email].join(' ').toLowerCase().includes(q)).map(p=>`<tr><td><b>${esc(fullname(p))}</b></td><td>${fmt(p.birth)}</td><td>${esc(fullname(user(p.userId)))}<small>${esc(user(p.userId)?.email)}</small></td><td>${db.appointments.filter(a=>a.patientId===p.id).length} citas</td><td><div class="actions"><button data-action="edit" data-id="${p.id}">Editar</button><button data-action="history" data-id="${p.id}">Historial</button></div></td></tr>`).join('')||'<tr><td colspan="5" class="emptymsg">Sin resultados.</td></tr>'}
+function form(id){let p=patient(id);modal(p?'Editar paciente':'Agregar paciente',`<form id="patientForm" class="formgrid" data-id="${id||''}"><label>Nombre<input name="name" value="${esc(p?.name||'')}" required></label><label>Apellido<input name="last" value="${esc(p?.last||'')}" required></label><label>Fecha de nacimiento<input type="date" name="birth" max="${iso(new Date())}" value="${p?.birth||''}" required></label><label>Usuario / tutor<select name="userId" required>${db.users.filter(u=>u.role==='Cliente').map(u=>`<option value="${u.id}" ${u.id===p?.userId?'selected':''}>${esc(fullname(u))}</option>`).join('')}</select></label><label class="full">Observaciones<input name="notes" value="${esc(p?.notes||'')}"></label><button class="primary full">Guardar paciente</button></form>`)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const id=Number(b.dataset.id);if(b.dataset.action==='newPatient')form();if(b.dataset.action==='edit')form(id);if(b.dataset.action==='history'){const p=patient(id);modal('Historial de '+fullname(p),`<div class="tablewrap"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Servicio</th><th>Estado</th></tr></thead><tbody>${db.appointments.filter(a=>a.patientId===id).map(a=>`<tr><td>#${a.id}</td><td>${fmt(a.date)} ${esc(a.time)}</td><td>${esc(a.service)}</td><td>${esc(a.status)}</td></tr>`).join('')||'<tr><td colspan="4">Sin historial.</td></tr>'}</tbody></table></div>`) }});
+document.addEventListener('submit',e=>{if(e.target.id!=='patientForm')return;e.preventDefault();const f=e.target,v=Object.fromEntries(new FormData(f)),id=Number(f.dataset.id);if(!v.userId)return notice('Primero registra un usuario cliente.');const data={name:v.name.trim(),last:v.last.trim(),birth:v.birth,userId:Number(v.userId),notes:v.notes||''};if(id)Object.assign(patient(id),data);else db.patients.push({id:next(db.patients),...data});save();close();render();notice('Paciente guardado.')});
+$('#searchPatient').addEventListener('input',render);render();
+})();
