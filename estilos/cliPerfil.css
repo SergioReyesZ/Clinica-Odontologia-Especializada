@@ -1,0 +1,299 @@
+.encabezado-seccion {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    width: auto;
+    background-color: rgba(237, 246, 252, 0.95);
+    overflow: hidden;
+    padding: 2rem;
+    margin: 25px 25px 0 25px; 
+    border-radius: 20px;
+    box-sizing: border-box;
+    background: linear-gradient(to bottom, rgba(237, 246, 252, 0.95) 80%, rgba(237, 246, 252, 0) 100%);
+}
+
+
+.encabezado-seccion h2 { margin: 0; color: #333; font-size: 1.8rem; }
+.encabezado-seccion p { margin: 0.5rem 0 0 0; color: #666; }
+
+/* =========================================
+   CONTENEDOR PRINCIPAL DE PERFIL
+   ========================================= */
+.contenedor-perfil {
+    display: flex;
+    gap: 2rem;
+    padding: 0 2rem 2rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* =========================================
+   TARJETAS DE SECCIÓN
+   ========================================= */
+.tarjeta-perfil {
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.lado-izquierdo {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: fit-content;
+}
+
+.lado-derecho {
+    width: 70%;
+}
+
+/* =========================================
+   AVATAR Y FOTO DE PERFIL
+   ========================================= */
+.avatar-wrapper {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 1.5rem;
+}
+
+.avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #eff6ff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: filter 0.3s ease;
+}
+
+.btn-cambiar-foto {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: #0056e0;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-cambiar-foto:hover {
+    background-color: #0045b3;
+    transform: scale(1.1);
+}
+
+.avatar-wrapper:hover img {
+    filter: brightness(0.9);
+}
+
+.lado-izquierdo h3 { margin: 0 0 0.5rem 0; color: #0f172a; }
+.etiqueta-rol { background: #dbeafe; color: #1e40af; padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.85rem; font-weight: bold; }
+.texto-ayuda { font-size: 0.85rem; color: #64748b; margin-top: 1rem; }
+
+/* =========================================
+   FORMULARIO DE DATOS
+   ========================================= */
+.titulo-form {
+    margin: 0 0 1.5rem 0;
+    color: #334155;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 0.5rem;
+}
+
+.formulario-perfil {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.campo-doble {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.campo label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #475569;
+}
+
+.campo input {
+    padding: 0.8rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: #f8fafc;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.campo input:focus {
+    outline: none;
+    border-color: #0056e0;
+    background-color: #fff;
+}
+
+.linea-divisora {
+    border: none;
+    border-top: 1px dashed #cbd5e1;
+    margin: 1rem 0;
+}
+
+/* =========================================
+   BOTONES DE ACCIÓN
+   ========================================= */
+.acciones-perfil {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.oculto{
+    display: none;
+}
+
+.btn.guardar{
+    background-color: #2ecc71; /* Verde moderno */
+  color: #ffffff; /* Texto blanco */
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 20px; /* Esquinas sutilmente redondeadas */
+  cursor: pointer; /* Cambia el cursor a una mano */
+  
+  /* Efecto de sombra sutil */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  /* Transición suave para los cambios visuales */
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 
+}
+
+.btn.guardar:hover{
+    background-color: #27ae60; /* Verde un poco más oscuro */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn.guardar:active {
+  transform: scale(0.98); /* Se encoge un 2% simulando una pulsación mecánica */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+   RESPONSIVE (MÓVILES)
+   ========================================= */
+@media (max-width: 768px) {
+    .contenedor-perfil {
+        flex-direction: column;
+    }
+    
+    .lado-izquierdo, .lado-derecho {
+        width: 100%;
+    }
+    
+    .campo-doble {
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+}
+
+/* MODAL */
+
+/* =========================================
+   MODALES DE NOTIFICACIÓN
+   ========================================= */
+.modal-overlay {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none; /* Oculto por defecto */
+    justify-content: center; 
+    align-items: center; 
+    z-index: 2000; /* Por encima de todo */
+}
+
+.modal-overlay.activo {
+    display: flex;
+}
+
+.modal-notificacion {
+    background: #fff; 
+    width: 90%; 
+    max-width: 400px;
+    border-radius: 20px; 
+    padding: 3rem 2rem; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: aparecerModal 0.3s ease-out;
+}
+
+@keyframes aparecerModal {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.icono-exito {
+    font-size: 5rem;
+    color: #2ecc71; /* Verde moderno */
+}
+
+.icono-error {
+    font-size: 5rem;
+    color: #e74c3c; /* Rojo de error */
+}
+
+.modal-notificacion h3 {
+    margin: 0;
+    color: #334155;
+    font-size: 1.5rem;
+}
+
+.modal-notificacion p {
+    color: #64748b;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.btn-cerrar-modal {
+    margin-top: 1rem;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 15px;
+    background-color: #f1f5f9;
+    color: #475569;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-cerrar-modal:hover {
+    background-color: #e2e8f0;
+}

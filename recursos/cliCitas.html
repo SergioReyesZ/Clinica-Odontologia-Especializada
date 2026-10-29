@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Citas | Odontología Especializada</title>
+    <link rel="icon" href="iconos/favicon2.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../estilos/header.css">
+    <link rel="stylesheet" href="../estilos/cliCitas.css"> <!-- Nuevo archivo para estilos específicos -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="contenedor-principal">
+
+        <div class="header" id="header">
+            <img src="../iconos/logo.png" alt="logo">
+            <div class="menu" id="menu">
+                <a href="../dashboard.html" class="opcion">Inicio</a>
+                <a href="#" class="opcion activo">Citas</a>
+                <a href="cliPacientes.html" class="opcion">Pacientes</a>
+                <div class="linea-flotante"></div>
+            </div>
+            <div class="perfil-contenedor">
+                <div class="perfil" id="btnPerfilDropdown">
+                    <button class="btn-perfil"><img src="../iconos/perfil.png" alt=""></button>
+                    <p>Sofía Morales</p>
+                    <i class="bi bi-chevron-down flecha-perfil"></i> <!-- Opcional: una flechita para indicar menú -->
+                </div>
+                
+                <div class="dropdown-perfil" id="dropdownPerfil">
+                    <a href="cliPerfil.html" class="dropdown-item">
+                        <i class="bi bi-gear"></i> Configuración de cuenta
+                    </a>
+                    <hr class="dropdown-divisor">
+                    <a href="#" class="dropdown-item texto-peligro">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENCABEZADO DE SECCIÓN -->
+        <div class="encabezado-seccion" id="contenedor">
+            <div>
+                <h2>Gestión de Citas</h2>
+                <p>Administra tus próximas consultas, reprograma o descarga tus comprobantes.</p>
+            </div>
+            <button class="btn agregar-cita" onclick="abrirModal()"><i class="bi bi-calendar-plus"></i> Agendar Nueva Cita</button>
+        </div>
+
+        <!-- FILTROS -->
+        <div class="filtros-citas">
+            <button class="filtro activo" onclick="cambiarVista('proximas', this)">Próximas</button>
+            <button class="filtro" onclick="cambiarVista('historial', this)">Historial</button>
+            <button class="filtro" onclick="cambiarVista('canceladas', this)">Canceladas</button>
+        </div>
+
+        <!-- CONTENEDORES DE CITAS -->
+        <div class="grid-citas" id="vista-proximas">
+            <!-- Aquí van tus tarjetas de citas PRÓXIMAS (con botones de modificar/cancelar) -->
+            <div class="tarjeta-cita-detalle">...</div>
+        </div>
+
+        <div class="grid-citas oculto" id="vista-historial">
+            <!-- Aquí van las tarjetas de citas TERMINADAS (solo botón de comprobante) -->
+            <div class="tarjeta-cita-detalle">
+                <div class="cita-header">
+                    <span class="estado confirmada" style="background: #e0f2fe; color: #0284c7;">Terminada</span>
+                </div>
+                <!-- ... resto de la tarjeta ... -->
+            </div>
+        </div>
+
+        <div class="grid-citas oculto" id="vista-canceladas">
+            <!-- Aquí van las tarjetas de citas CANCELADAS (sin botones de acción) -->
+            <div class="tarjeta-cita-detalle">
+                <div class="cita-header">
+                    <span class="estado pendiente" style="background: #fef2f2; color: #ef4444;">Cancelada</span>
+                </div>
+                <!-- ... resto de la tarjeta ... -->
+            </div>
+        </div>
+
+        <!-- GRID DE CITAS -->
+        <div class="grid-citas">
+            <!-- Tarjeta de Cita Individual -->
+            <div class="tarjeta-cita-detalle">
+                <div class="cita-header">
+                    <span class="estado confirmada">Confirmada</span>
+                    <span class="precio">$800.00 MXN</span>
+                </div>
+                <div class="cita-body">
+                    <div class="fecha-bloque">
+                        <p class="mes">Oct</p>
+                        <p class="dia">29</p>
+                    </div>
+                    <div class="info-bloque">
+                        <h3>Limpieza Dental</h3>
+                        <p><i class="bi bi-person"></i> Paciente: Mateo Ramírez</p>
+                        <p><i class="bi bi-person-badge"></i> Odontólogo: Dra. Virginia Hernández</p>
+                        <p><i class="bi bi-clock"></i> 10:00 AM</p>
+                    </div>
+                </div>
+                <hr class="linea">
+                <div class="cita-footer">
+                    <button class="btn-accion secundario"><i class="bi bi-pencil-square"></i> Modificar</button>
+                    <button class="btn-accion peligro"><i class="bi bi-x-circle"></i> Cancelar</button>
+                    <button class="btn-accion primario"><i class="bi bi-file-earmark-pdf"></i> Comprobante</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: REGISTRO DE NUEVA CITA (Oculto por defecto) -->
+    <div class="modal-overlay" id="modalNuevaCita">
+        <div class="modal-contenido">
+            <div class="modal-header">
+                <h3>Agendar Nueva Cita</h3>
+                <button class="btn-cerrar" onclick="cerrarModal()"><i class="bi bi-x"></i></button>
+            </div>
+            <form class="formulario-cita">
+                <div class="campo">
+                    <label>Paciente</label>
+                    <select required>
+                        <option value="">Selecciona un paciente</option>
+                        <option value="1">Mateo Ramírez</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label>Servicio</label>
+                    <select required id="selectServicio">
+                        <option value="">Selecciona un servicio</option>
+                        <option value="limpieza">Limpieza Dental - $800</option>
+                        <option value="extraccion">Extracción - $1,200</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label>Odontólogo</label>
+                    <select required>
+                        <option value="">Selecciona un especialista</option>
+                        <option value="virginia">Dra. Virginia Hernández</option>
+                    </select>
+                </div>
+                <div class="campo-doble">
+                    <div class="campo">
+                        <label>Fecha</label>
+                        <input type="date" required>
+                    </div>
+                    <div class="campo">
+                        <label>Hora</label>
+                        <select required>
+                            <option value="">Selecciona horario</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="resumen-costo">
+                    <p>Costo Estimado: <strong>$0.00 MXN</strong></p>
+                </div>
+                <button type="submit" class="btn agregar-cita ancho-total">Confirmar Cita</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function abrirModal() { document.getElementById('modalNuevaCita').style.display = 'flex'; }
+        function cerrarModal() { document.getElementById('modalNuevaCita').style.display = 'none'; }
+    </script>
+</body>
+<script src="../scripts/header.js"></script>
+<script src="../scripts/cliCitas.js"></script>
+</html>

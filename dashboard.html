@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cliente</title>
+    <title>Inicio | Odontología Especializada</title>
     <link rel="icon" href="iconos/favicon2.ico" type="image/x-icon">
     <link rel="stylesheet" href="estilos/dashboard.css">
+    <link rel="stylesheet" href="estilos/header.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
@@ -17,23 +18,35 @@
                 <a href="#" class="opcion activo">Inicio</a>
                 <a href="recursos/cliCitas.html" class="opcion">Citas</a>
                 <a href="recursos/cliPacientes.html" class="opcion">Pacientes</a>
-                <a href="recursos/comprobantes.html" class="opcion">Comprobantes</a>
                 <div class="linea-flotante"></div>
             </div>
             
-            <div class="botones" id="botones">
-                <button class="btn agendar-cita"><i class="bi bi-calendar-week"></i> Agendar Cita</button>
-                <div class="perfil">
+            <div class="perfil-contenedor">
+                <!-- Quitamos el onclick de aquí y le ponemos un ID para controlarlo con JS -->
+                <div class="perfil" id="btnPerfilDropdown">
                     <button class="btn-perfil"><img src="iconos/perfil.png" alt=""></button>
                     <p>Sofía Morales</p>
+                    <i class="bi bi-chevron-down flecha-perfil"></i> <!-- Opcional: una flechita para indicar menú -->
+                </div>
+                
+                <!-- El pequeño modal flotante -->
+                <div class="dropdown-perfil" id="dropdownPerfil">
+                    <a href="recursos/cliPerfil.html" class="dropdown-item">
+                        <i class="bi bi-gear"></i> Configuración de cuenta
+                    </a>
+                    <hr class="dropdown-divisor">
+                    <a href="index.html" class="dropdown-item texto-peligro">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                    </a>
                 </div>
             </div>
+            
         </div>
 
         <div class="contenedor" id="contenedor">
             <div class="texto-bienvenida">
                 <h2>¡Hola Sofía!</h2>
-            <h1>Bienvenida a tu portal de pacientes</h1>
+            <h1>Bienvenida a tu portal de gestión</h1>
             <p>Aquí puedes gestionar tus citas, administrar a tus pacientes,
                 descargar tus comprobantes y mantener tu información siempre actualizada.
             </p>
@@ -46,13 +59,15 @@
             <div class="citas">
 
                 <div class="encabezado">
-                    <p class="titulo"><i class="bi bi-calendar-week"></i> Próximas citas</p>
-                    <a class="ver">Ver todas las citas <i class="bi bi-chevron-right"></i></a>
+                    <div class="titulos">
+                        <p class="titulo"><i class="bi bi-calendar-week"></i> Próximas citas</p>
+                        <a id="ver" class="ver"><i class="bi bi-chevron-right"></i></a>
+                    </div>
+                    
+                    <hr class="linea">
                 </div>
 
-                <hr class="linea">
-
-                <div class="tarjetas">
+                <div class="tarjetas" id="tarjetas">
                     <div class="tarjeta">
     
                         <div class="fecha">
@@ -64,8 +79,7 @@
                         <p class="hora">10:00AM</p>
     
                         <div class="nombre-paciente">
-                            <p class="nombre">Mateo Ramírez</p>
-                            <p>Paciente * 8 Años</p>
+                            <a class="nombre">Mateo Ramírez</a>
                         </div>
     
                         <p>Limpieza dental</p>
@@ -74,49 +88,7 @@
     
                         <i class="bi bi-chevron-right" id="ver-mas"></i>
                     </div>
-
-                    <div class="tarjeta">
-    
-                        <div class="fecha">
-                            <p>Mié</p>
-                            <p class="titulo">29</p>
-                            <p>Oct</p>
-                        </div>
-    
-                        <p class="hora">10:00AM</p>
-    
-                        <div class="nombre-paciente">
-                            <p class="nombre">Mateo Ramírez</p>
-                            <p>Paciente * 8 Años</p>
-                        </div>
-    
-                        <p>Limpieza dental</p>
-    
-                        <p class="estado">Confirmada</p>
-    
-                        <i class="bi bi-chevron-right" id="ver-mas"></i>
-                    </div>
-                    <div class="tarjeta">
-    
-                        <div class="fecha">
-                            <p>Mié</p>
-                            <p class="titulo">29</p>
-                            <p>Oct</p>
-                        </div>
-    
-                        <p class="hora">10:00AM</p>
-    
-                        <div class="nombre-paciente">
-                            <p class="nombre">Mateo Ramírez</p>
-                            <p>Paciente * 8 Años</p>
-                        </div>
-    
-                        <p>Limpieza dental</p>
-    
-                        <p class="estado">Confirmada</p>
-    
-                        <i class="bi bi-chevron-right" id="ver-mas"></i>
-                    </div>
+                    
                 </div>
                 
                 <button class="btn agregar-cita"><i class="bi bi-calendar-week"></i> Agendar nueva cita</button>
@@ -124,47 +96,15 @@
 
             <div class="pacientes">
                 <div class="encabezado">
-                    <p class="titulo"><i class="bi bi-people"></i> Mis pacientes</p>
-                    <a class="ver">Ver todos <i class="bi bi-chevron-right"></i></a>
+                    <div class="titulos">
+                        <p class="titulo"><i class="bi bi-people"></i> Mis pacientes</p>
+                        <a id="ver-pacientes" class="ver"><i class="bi bi-chevron-right"></i></a>
+                    </div>
+                    <hr class="linea">
                 </div>
 
-                <hr class="linea">
 
-                <div class="tarjetas">
-                    <div class="tarjeta-paciente">
-                    <img src="" alt="Imagen">
-                    <div class="nombre-paciente">
-                        <p class="nombre">Mateo Ramírez</p>
-                        <p>8 Años</p>
-                    </div>
-                    <i class="bi bi-chevron-right" id="ver-mas"></i>
-                    </div>   
-
-                    <div class="tarjeta-paciente">
-                    <img src="" alt="Imagen">
-                    <div class="nombre-paciente">
-                        <p class="nombre">Mateo Ramírez</p>
-                        <p>8 Años</p>
-                    </div>
-                    <i class="bi bi-chevron-right" id="ver-mas"></i>
-                    </div>  
-                    <div class="tarjeta-paciente">
-                    <img src="" alt="Imagen">
-                    <div class="nombre-paciente">
-                        <p class="nombre">Mateo Ramírez</p>
-                        <p>8 Años</p>
-                    </div>
-                    <i class="bi bi-chevron-right" id="ver-mas"></i>
-                    </div> 
-                    
-                    <div class="tarjeta-paciente">
-                    <img src="" alt="Imagen">
-                    <div class="nombre-paciente">
-                        <p class="nombre">Mateo Ramírez</p>
-                        <p>8 Años</p>
-                    </div>
-                    <i class="bi bi-chevron-right" id="ver-mas"></i>
-                    </div>  
+                <div class="tarjetas" id="tarjetas-pacientes">
                     <div class="tarjeta-paciente">
                     <img src="" alt="Imagen">
                     <div class="nombre-paciente">
@@ -183,5 +123,6 @@
     </div>
 
 </body>
+<script src="scripts/header.js"></script>
 <script src="scripts/dashboard.js"></script>
 </html>

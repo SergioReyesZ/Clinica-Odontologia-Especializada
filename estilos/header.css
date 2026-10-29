@@ -1,0 +1,224 @@
+html, body {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0;
+    scroll-behavior: smooth;
+}
+
+body{
+    font-family: Arial, sans-serif;   
+}
+
+.contenedor-principal{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(251, 253, 252, 0.95);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 2rem;
+    box-sizing: border-box;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.header img {
+    width: 10%;
+    height: auto;
+}
+
+.menu {
+    display: flex;
+    gap: 1.5rem;
+    position: relative; 
+    padding-bottom: 8px;
+}
+
+.opcion {
+    text-decoration: none;
+    color: black;
+    font-size: 1.3rem;
+    transition: transform 0.3s ease;
+}
+
+.opcion:hover {
+    color: rgb(44, 72, 148);
+    transform: scale(1.05);
+}
+
+.menu .linea-flotante {
+    opacity: 1;
+}
+
+.opcion.activo {
+    color: rgb(44, 72, 148);
+}
+
+.linea-flotante {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px; 
+    background-color: rgb(32, 52, 105); 
+    width: 0; 
+    opacity: 0; 
+    pointer-events: none; 
+    
+    transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1), 
+                width 0.35s cubic-bezier(0.25, 1, 0.5, 1), 
+                opacity 0.2s ease;
+}
+
+.botones{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn{
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 1rem;
+    border: none;
+    padding: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.btn.agendar-cita{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #0056e0; 
+    color: white;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3); 
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn.btn.agendar-cita:hover{
+    background-color: #0045b3;
+    transform: translateY(-2px);
+}
+
+
+.perfil{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.perfil:hover{
+    color: #0056e0;
+}
+
+.btn-perfil{
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+    border: none;
+}
+.btn-perfil img{
+    cursor: pointer;
+    width: 40px;
+    height: auto;
+    margin: 0;
+}
+
+/* Contenedor relativo para anclar el menú al perfil */
+.perfil-contenedor {
+    position: relative;
+    display: inline-block;
+}
+
+.perfil {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.flecha-perfil {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-left: 0.2rem;
+}
+
+/* Modal flotante (Dropdown) */
+.dropdown-perfil {
+    position: absolute;
+    top: 110%; /* Se coloca justo debajo del contenedor */
+    right: 0;
+    background-color: white;
+    min-width: 240px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    
+    /* Configuración de la animación de entrada */
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none; /* Evita clics accidentales cuando está invisible */
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Clase que activa el menú desde JS */
+.dropdown-perfil.mostrar {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Elementos dentro del menú */
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1rem;
+    color: #475569;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border-radius: 10px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f5f9;
+    color: #0056e0;
+}
+
+.dropdown-item i {
+    font-size: 1.2rem;
+}
+
+.dropdown-divisor {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 0.3rem 0;
+}
+
+/* Hover específico para el botón de cerrar sesión */
+.texto-peligro:hover {
+    background-color: #fef2f2;
+    color: #dc2626;
+}

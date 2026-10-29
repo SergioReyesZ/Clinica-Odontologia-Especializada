@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil | Odontología Especializada</title>
+    <link rel="icon" href="../iconos/favicon2.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../estilos/header.css">
+    <link rel="stylesheet" href="../estilos/cliPerfil.css"> <!-- Estilos específicos de perfil -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+    
+    <div class="contenedor-principal">
+        
+        <!-- HEADER -->
+        <div class="header" id="header">
+            <img src="../iconos/logo.png" alt="logo">
+            
+            <div class="menu" id="menu">
+                <a href="../dashboard.html" class="opcion">Inicio</a>
+                <a href="cliCitas.html" class="opcion">Citas</a>
+                <a href="cliPacientes.html" class="opcion">Pacientes</a>
+                <div class="linea-flotante"></div>
+            </div>
+            
+            <div class="perfil-contenedor">
+                <div class="perfil" id="btnPerfilDropdown">
+                    <button class="btn-perfil"><img src="../iconos/perfil.png" alt=""></button>
+                    <p>Sofía Morales</p>
+                    <i class="bi bi-chevron-down flecha-perfil"></i> <!-- Opcional: una flechita para indicar menú -->
+                </div>
+                
+                <div class="dropdown-perfil" id="dropdownPerfil">
+                    <a href="#" class="dropdown-item">
+                        <i class="bi bi-gear"></i> Configuración de cuenta
+                    </a>
+                    <hr class="dropdown-divisor">
+                    <a href="#" class="dropdown-item texto-peligro">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="encabezado-seccion" id="contenedor">
+            <div>
+                <h2>Configuración de Cuenta</h2>
+                <p>Actualiza tus datos personales, credenciales de acceso y foto de perfil.</p>
+            </div>
+        </div>
+
+        <!-- CONTENEDOR DE PERFIL -->
+        <div class="contenedor-perfil">
+            
+            <!-- SECCIÓN: AVATAR -->
+            <div class="tarjeta-perfil lado-izquierdo">
+                <div class="avatar-wrapper">
+                    <img src="../iconos/perfil.png" alt="Avatar actual" id="avatarPreview">
+                    <label for="inputAvatar" class="btn-cambiar-foto">
+                        <i class="bi bi-camera-fill"></i>
+                    </label>
+                    <input type="file" id="inputAvatar" accept="image/*" class="oculto">
+                </div>
+                <h3>Sofía Morales</h3>
+                <span class="etiqueta-rol">Cliente</span>
+                <p class="texto-ayuda">Formatos permitidos: JPG, PNG. Tamaño máximo: 2MB.</p>
+            </div>
+
+            <!-- SECCIÓN: FORMULARIO DE DATOS -->
+            <div class="tarjeta-perfil lado-derecho">
+                <form class="formulario-perfil">
+                    
+                    <h3 class="titulo-form">Información Personal</h3>
+                    <div class="campo-doble">
+                        <div class="campo">
+                            <label>Nombre(s)</label>
+                            <input type="text" value="Sofía" required>
+                        </div>
+                        <div class="campo">
+                            <label>Apellidos</label>
+                            <input type="text" value="Morales" required>
+                        </div>
+                    </div>
+
+                    <div class="campo-doble">
+                        <div class="campo">
+                            <label>Teléfono Celular</label>
+                            <input type="tel" value="8331234567" required>
+                        </div>
+                        <div class="campo">
+                            <label>Fecha de Nacimiento</label>
+                            <input type="date" value="1992-05-15" required>
+                        </div>
+                    </div>
+
+                    <hr class="linea-divisora">
+
+                    <h3 class="titulo-form">Credenciales de Acceso</h3>
+                    <div class="campo">
+                        <label>Correo Electrónico</label>
+                        <input type="email" value="sofia.morales@email.com" required>
+                    </div>
+
+                    <div class="campo-doble">
+                        <div class="campo">
+                            <label>Nueva Contraseña (Opcional)</label>
+                            <input type="password" placeholder="••••••••">
+                        </div>
+                        <div class="campo">
+                            <label>Confirmar Contraseña</label>
+                            <input type="password" placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <div class="acciones-perfil">
+                        <button type="submit" class="btn guardar"><i class="bi bi-save"></i> Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div> 
+
+    <!-- MODALES DE NOTIFICACIÓN -->
+    
+    <!-- Modal: Cambios Guardados -->
+    <div class="modal-overlay" id="modalExito">
+        <div class="modal-notificacion">
+            <i class="bi bi-check-circle-fill icono-exito"></i>
+            <h3>Cambios guardados correctamente</h3>
+            <p>Redirigiendo a inicio...</p>
+        </div>
+    </div>
+
+    <!-- Modal: Error al Guardar -->
+    <div class="modal-overlay" id="modalError">
+        <div class="modal-notificacion">
+            <i class="bi bi-x-circle-fill icono-error"></i>
+            <h3>Los cambios no pudieron guardarse</h3>
+            <button class="btn-cerrar-modal" onclick="cerrarModal('modalError')">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal: Foto Cambiada -->
+    <div class="modal-overlay" id="modalFoto">
+        <div class="modal-notificacion">
+            <i class="bi bi-camera-fill icono-exito"></i>
+            <h3>Foto cambiada correctamente</h3>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="../scripts/header.js"></script>
+    <script src="../scripts/cliPerfil.js"></script>
+</body>
+</html>

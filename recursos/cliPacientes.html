@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis pacientes | Odontología Especializada</title>
+    <link rel="icon" href="../iconos/favicon2.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../estilos/header.css">
+    <link rel="stylesheet" href="../estilos/cliPacientes.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+    
+    <!-- CONTENEDOR PRINCIPAL DE LA PÁGINA -->
+    <div class="contenedor-principal">
+        
+        <div class="header" id="header">
+            <img src="../iconos/logo.png" alt="logo">
+            
+            <div class="menu" id="menu">
+                <a href="../dashboard.html" class="opcion">Inicio</a>
+                <a href="cliCitas.html" class="opcion">Citas</a>
+                <a href="#" class="opcion activo">Pacientes</a>
+                <div class="linea-flotante"></div>
+            </div>
+            
+            <div class="perfil-contenedor">
+                <!-- Quitamos el onclick de aquí y le ponemos un ID para controlarlo con JS -->
+                <div class="perfil" id="btnPerfilDropdown">
+                    <button class="btn-perfil"><img src="../iconos/perfil.png" alt=""></button>
+                    <p>Sofía Morales</p>
+                    <i class="bi bi-chevron-down flecha-perfil"></i> <!-- Opcional: una flechita para indicar menú -->
+                </div>
+                
+                <!-- El pequeño modal flotante -->
+                <div class="dropdown-perfil" id="dropdownPerfil">
+                    <a href="cliPerfil.html" class="dropdown-item">
+                        <i class="bi bi-gear"></i> Configuración de cuenta
+                    </a>
+                    <hr class="dropdown-divisor">
+                    <a href="#" class="dropdown-item texto-peligro">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="encabezado-seccion" id="contenedor">
+            <div>
+                <h2>Mis Pacientes</h2>
+                <p>Administra la información personal de los pacientes a tu cargo.</p>
+            </div>
+            <button class="btn agregar-paciente" onclick="abrirModalPaciente('nuevo')">
+                <i class="bi bi-person-plus"></i> Agregar Paciente
+            </button>
+        </div>
+
+        <!-- GRID DE PACIENTES -->
+        <div class="grid-pacientes">
+            <!-- Tarjeta de Paciente -->
+            <div class="tarjeta-paciente-detalle">
+                <div class="paciente-info-principal">
+                    <div class="avatar-grande">
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+                    <div class="datos-personales">
+                        <h3>Mateo Ramírez</h3>
+                        <span class="etiqueta-parentesco">Hijo</span>
+                    </div>
+                </div>
+                
+                <div class="paciente-detalles">
+                    <p><i class="bi bi-calendar3"></i> <strong>Edad:</strong> 8 años</p>
+                    <p><i class="bi bi-gender-ambiguous"></i> <strong>Género:</strong> Masculino</p>
+                    <p><i class="bi bi-clipboard-pulse"></i> <strong>Última cita:</strong> 29 Oct 2026</p>
+                </div>
+
+                <hr class="linea">
+                
+                <div class="cita-footer">
+                    <button class="btn-accion editar" onclick="abrirModalPaciente('editar')"><i class="bi bi-pencil-square"></i> Editar Info</button>
+                    <button class="btn-accion agendar"><i class="bi bi-calendar-check"></i> Agendar Cita</button>
+                </div>
+            </div>
+
+            <!-- Tarjeta del Usuario (Tú mismo como paciente) -->
+            <div class="tarjeta-paciente-detalle">
+                <div class="paciente-info-principal">
+                    <div class="avatar-grande">
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+                    <div class="datos-personales">
+                        <h3>Sofía Morales</h3>
+                        <span class="etiqueta-parentesco titular">Titular</span>
+                    </div>
+                </div>
+                
+                <div class="paciente-detalles">
+                    <p><i class="bi bi-calendar3"></i> <strong>Edad:</strong> 34 años</p>
+                    <p><i class="bi bi-gender-ambiguous"></i> <strong>Género:</strong> Femenino</p>
+                    <p><i class="bi bi-clipboard-pulse"></i> <strong>Última cita:</strong> 15 Sep 2026</p>
+                </div>
+
+                <hr class="linea">
+                
+                <div class="cita-footer">
+                    <button class="btn-accion editar" onclick="abrirModalPaciente('editar')"><i class="bi bi-pencil-square"></i> Editar Info</button>
+                    <button class="btn-accion agendar"><i class="bi bi-calendar-check"></i> Agendar Cita</button>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- FIN DEL CONTENEDOR PRINCIPAL -->
+
+    <!-- MODAL: REGISTRO / EDICIÓN DE PACIENTE (Queda fuera del contenedor principal) -->
+    <div class="modal-overlay" id="modalPaciente">
+        <div class="modal-contenido">
+            
+            <div class="modal-header">
+                <h3 id="tituloModalPaciente">Registrar Nuevo Paciente</h3>
+                <button class="btn-cerrar" onclick="cerrarModalPaciente()"><i class="bi bi-x"></i></button>
+            </div>
+            
+            <form class="formulario-cita">
+                <div class="campo-doble">
+                    <div class="campo">
+                        <label>Nombre(s)</label>
+                        <input type="text" placeholder="Ej. Mateo" required>
+                    </div>
+                    <div class="campo">
+                        <label>Apellidos</label>
+                        <input type="text" placeholder="Ej. Ramírez" required>
+                    </div>
+                </div>
+                
+                <div class="campo-doble">
+                    <div class="campo">
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" required>
+                    </div>
+                    <div class="campo">
+                        <label>Género</label>
+                        <select required>
+                            <option value="">Seleccionar...</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                            <option value="O">Otro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label>Parentesco / Relación</label>
+                    <select required>
+                        <option value="">Seleccionar...</option>
+                        <option value="titular">Yo mismo (Titular)</option>
+                        <option value="hijo">Hijo / Hija</option>
+                        <option value="esposo">Esposo / Esposa</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label>Alergias o Notas Médicas (Opcional)</label>
+                    <input type="text" placeholder="Ej. Alergia a la penicilina">
+                </div>
+
+                <button type="submit" class="btn agregar-cita ancho-total" id="btnGuardarPaciente">Guardar Paciente</button>
+            </form>
+            
+        </div>
+    </div> 
+
+    <!-- SCRIPTS (Siempre van antes de cerrar el body) -->
+    <script src="../scripts/header.js"></script>
+    <script>
+        function abrirModalPaciente(accion) {
+            const titulo = document.getElementById('tituloModalPaciente');
+            const boton = document.getElementById('btnGuardarPaciente');
+            
+            if(accion === 'editar') {
+                titulo.textContent = 'Editar Información del Paciente';
+                boton.textContent = 'Actualizar Datos';
+            } else {
+                titulo.textContent = 'Registrar Nuevo Paciente';
+                boton.textContent = 'Guardar Paciente';
+                document.querySelector('.formulario-cita').reset();
+            }
+            
+            document.getElementById('modalPaciente').style.display = 'flex';
+        }
+
+        function cerrarModalPaciente() {
+            document.getElementById('modalPaciente').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

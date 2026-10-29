@@ -70,6 +70,52 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     ajustarMargen();
-    // Por si cambia de tamaño al redimensionar la ventana
     window.addEventListener('resize', ajustarMargen);
+
+    /* ALERTA MODAL INICIAR SESIÓN*/
+
+    // 1. Seleccionamos la alerta y el botón para cerrarla
+    const alertaLogin = document.getElementById('alerta-login');
+    const btnCerrarLogin = document.getElementById('btn-cerrar-login');
+    
+    // 2. Seleccionamos el botón de iniciar sesión del header
+    // Nota: Como hay dos botones con la clase '.iniciar-sesion' (una en el menú móvil y otra normal), 
+    // seleccionamos todos para que funcione sin importar el tamaño de pantalla.
+    const botonesIniciarSesion = document.querySelectorAll('.btn.iniciar-sesion');
+    
+    // 3. Seleccionamos el botón de registrarse (opcional, por si quieres mostrar la misma alerta)
+    const botonesRegistrarse = document.querySelectorAll('.btn.registrarse');
+
+    // Función para mostrar la alerta
+    const abrirAlerta = (e) => {
+        e.preventDefault(); // Evita que la página salte
+        alertaLogin.classList.add('activo');
+    };
+
+    // Función para cerrar la alerta
+    const cerrarAlerta = () => {
+        alertaLogin.classList.remove('activo');
+    };
+
+    // Asignamos el evento a todos los botones de "Iniciar sesión"
+    botonesIniciarSesion.forEach(boton => {
+        boton.addEventListener('click', abrirAlerta);
+    });
+
+    // (Opcional) Asignamos el evento a los botones de "Registrarme"
+    botonesRegistrarse.forEach(boton => {
+        boton.addEventListener('click', abrirAlerta);
+    });
+
+    // Evento para cerrar con la "X"
+    if (btnCerrarLogin) {
+        btnCerrarLogin.addEventListener('click', cerrarAlerta);
+    }
+
+    // Opcional por Experiencia de Usuario: Cerrar la alerta si hacen clic fuera de la caja blanca
+    alertaLogin.addEventListener('click', (e) => {
+        if (e.target === alertaLogin) {
+            cerrarAlerta();
+        }
+    });
 });
