@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio | Odontología Especializada</title>
+    <link rel="icon" href="iconos/favicon2.ico" type="image/x-icon">
+    <link rel="stylesheet" href="estilos/global.css">
+    <link rel="stylesheet" href="estilos/header.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="contenedor-principal">
+        <div class="header" id="header">
+            <img src="iconos/logo.png" alt="logo">
+            
+            <div class="menu" id="menu">
+                <a href="#" class="opcion activo">Inicio</a>
+                <a href="#" class="opcion">Citas</a>
+                <a href="#" class="opcion">Pacientes</a>
+                <a href="#" class="opcion">Usuarios</a>
+                <a href="#" class="opcion">Horarios</a>
+                <a href="#" class="opcion">Bitácora</a>
+                <div class="linea-flotante"></div>
+            </div>
+            
+            <div class="perfil-contenedor">
+                <!-- Quitamos el onclick de aquí y le ponemos un ID para controlarlo con JS -->
+                <div class="perfil" id="btnPerfilDropdown">
+                    <button class="btn-perfil"><img class="pfp" src="iconos/perfil.png" alt=""></button>
+                    <p>Administrador</p>
+                    <i class="bi bi-chevron-down flecha-perfil"></i> <!-- Opcional: una flechita para indicar menú -->
+                </div>
+                <!-- El pequeño modal flotante -->
+                <div class="dropdown-perfil" id="dropdownPerfil">
+                    <a href="recursos/cliPerfil.html" class="dropdown-item">
+                        <i class="bi bi-gear"></i> Configuración de cuenta
+                    </a>
+                    <hr class="dropdown-divisor">
+                    <a href="index.html" class="dropdown-item texto-peligro">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+        
+         
+    </div>
+
+</body>
+<script src="scripts/adminHeader.js"></script>
+<script src="scripts/dashboard.js"></script>
+</html>

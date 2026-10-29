@@ -1,121 +1,8 @@
-html, body {
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    margin: 0;
-    scroll-behavior: smooth;
-}
-
-body{
-    margin: 0;
-    font-family: Arial, sans-serif;   
-}
-
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(251, 253, 252, 0.95);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem 2rem;
-    box-sizing: border-box;
-    z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.header img {
-    width: 10%;
-    height: auto;
-}
-
-.menu {
-    display: flex;
-    gap: 1.5rem;
-    position: relative; 
-    padding-bottom: 8px;
-}
-
-.opcion {
-    text-decoration: none;
-    color: black;
-    font-size: 1.3rem;
-    transition: transform 0.3s ease;
-}
-
-.opcion:hover {
-    color: rgb(44, 72, 148);
-    transform: scale(1.05);
-}
-
-.menu .linea-flotante {
-    opacity: 1;
-}
-
-/* Opcional: si quieres que la opción activa tenga un color de texto distinto o resalte */
-.opcion.activo {
-    color: rgb(44, 72, 148);
-}
-
-.linea-flotante {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 3px; 
-    background-color: rgb(32, 52, 105); 
-    width: 0; 
-    opacity: 0; 
-    pointer-events: none; 
-    
-    transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1), 
-                width 0.35s cubic-bezier(0.25, 1, 0.5, 1), 
-                opacity 0.2s ease;
-}
-
 .botones{
     display: flex;
     align-items: center;
     gap: 1rem;
 }
-
-.btn{
-    cursor: pointer;
-    border-radius: 10px;
-    font-size: 1rem;
-    border: none;
-    padding: 1rem;
-    transition: transform 0.3s ease;
-}
-
-.btn.iniciar-sesion{
-    background-color: white;
-    color: #333333;
-    font-size: 1rem;
-    border-radius: 15px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.btn.registrarse{
-    color: white;
-    background-color: rgb(44, 72, 148);
-}
-
-.btn.iniciar-sesion:hover{
-    text-decoration: underline;
-    transform: scale(1.1);
-}
-
-.btn.registrarse:hover{
-    background-color: rgb(32, 52, 105);
-    transform: scale(1.1);
-}
-
-/* HERO: fotografía integrada al extremo derecho */
 .contenedor{
     position: relative;
     display: flex;
@@ -145,10 +32,6 @@ body{
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-}
-
-p{
-    margin: 0;
 }
 
 /* =========================
@@ -181,18 +64,6 @@ p{
     width: 25px;
     height: 2px;
     background-color: #2570d3;
-}
-
-/* =========================
-   BOTÓN HAMBURGUESA
-========================= */
-.hamburger-btn {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 2.5rem;
-    color: #1b2a47;
-    cursor: pointer;
 }
 
 .descripcion{
@@ -526,10 +397,10 @@ p{
     scroll-margin-top: 50px;
 }
 #servicios {
-    scroll-margin-top: 110px;
+    scroll-margin-top: 200px;
 }
 #ubicacion{
-    scroll-margin-top: 50px;
+    scroll-margin-top: 40px;
 }
 
 /* =========================
@@ -751,165 +622,39 @@ p{
     color: green;
 }
 
-/* ======================== */
-/* Alerta modal */
-/* ======================== */
-
-.alerta-overlay {
-    display: none; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); 
-    backdrop-filter: blur(4px);
-    z-index: 10000;
-    justify-content: center;
-    align-items: center;
-}
-
-.alerta-overlay.activo {
-    display: flex;
-}
-
-.alerta-contenido {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 20px;
-    width: 50%;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    animation: fadeIn 0.5s ease;
-}
-
-.alerta-body{
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.alerta-body input{
-    background-color: white;
-    border: 1px solid #d1d5db; 
-    padding: 1rem;
-    color: #333333;
-    font-size: 1rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.alerta-body button{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 1rem 2rem;
-    font-size: 1rem;
-    font-weight: bold;
-    background-color: #0056e0; 
-    color: white;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3); 
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.alerta-body button:hover{
-    transform: scale(1.02);
-}
-.icon-titulo{
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-.texto-registro{
-    margin-top: 1rem;
-    text-align: center;
-}
-.icon-titulo i{
-    background-color: #0056e0;
-    color: white;
-    border-radius: 10px;
-    padding: 0.5rem;
-    font-size: 1.5rem;
-}
-
-.alerta-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.alerta-header h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: #1b2a47;
-}
-
-.btn-cerrar-alerta {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #666;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
 /* ==========================================================
    RESPONSIVE OPTIMIZADO
    El menú nunca hace wrap: cuando falta espacio pasa a
    una fila independiente, y en móvil admite scroll horizontal.
    ========================================================== */
-:root { --header-height: 90px; }
-*, *::before, *::after { box-sizing: border-box; }
-html { scroll-padding-top: calc(var(--header-height) + 16px); }
-body { min-width: 280px; }
-#contenedor, #opiniones, #servicios, #ubicacion {
-    scroll-margin-top: calc(var(--header-height) + 16px);
+:root { 
+    --header-height: 90px; 
 }
-#contenedor { margin-top: var(--header-height); }
-.header {
-    gap: 1rem;
-    padding: .8rem clamp(1rem, 2vw, 2rem);
+
+*, *::before, *::after {
+    box-sizing: border-box; 
 }
-.header img {
-    width: clamp(95px, 10vw, 155px);
-    flex: 0 0 auto;
-    object-fit: contain;
+
+body {
+    min-width: 280px; 
 }
-.menu {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    min-width: 0;
-    padding-bottom: 8px;
+
+
+#contenedor {
+    margin-top: var(--header-height); 
 }
-.opcion {
-    font-size: 1.3rem;
-    white-space: nowrap;
-    flex: 0 0 auto;
-}
-.header .botones { flex: 0 0 auto; gap: .65rem; }
-.header .btn { white-space: nowrap; }
-.contenedor { min-height: 0; }
+.contenedor {
+    min-height: 0; 
+    }
+
 .div-izquierdo {
     min-width: 0;
     padding: clamp(2rem, 5vw, 5rem) clamp(1.25rem, 3vw, 3rem);
     gap: clamp(1rem, 2vw, 2rem);
 }
+
+
+
 .eslogan { font-size: clamp(2rem, 3.6vw, 3.5rem); line-height: 1.12; }
 .eslogan-2, .descripcion { font-size: clamp(1rem, 1.6vw, 1.5rem); }
 .descripcion { line-height: 1.45; }
@@ -933,30 +678,6 @@ body { min-width: 280px; }
 .mapa { flex: 3 1 0; min-width: 0; width: auto; }
 .informacion { flex: 2 1 0; min-width: 0; width: auto; }
 .footer { padding-inline: clamp(1.25rem, 4vw, 3rem); }
-
-@media (max-width: 1050px) {
-    .hamburger-btn {
-        display: block;
-        margin-left: auto;
-    }
-    .header {
-        flex-wrap: wrap; 
-    }
-    .menu, .header .botones {
-        display: none; 
-        width: 100%;
-        flex-direction: column;
-        align-items: center;
-        padding: 1rem 0;
-        gap: 1rem;
-    }
-    .menu.activo, .header .botones.activo {
-        display: flex;
-    }
-    .linea-flotante {
-        display: none; 
-    }
-}
 
 @media (max-width: 850px) {
     .contenedor {
@@ -1009,12 +730,6 @@ body { min-width: 280px; }
     .mapa iframe { height: 360px; min-height: 0; }
 }
 @media (max-width: 650px) {
-    .header { padding: .65rem .85rem; gap: .65rem; }
-    .header img { width: 100px; }
-    .header .botones { gap: .35rem; }
-    .header .btn { font-size: .75rem; padding: .6rem .55rem; border-radius: 10px; }
-    .header .menu { justify-content: flex-start; gap: 1rem; }
-    .header .opcion { font-size: 1.3rem; }
     .div-izquierdo { padding: 1.5rem 1rem; }
     .eslogan { font-size: clamp(1.85rem, 7.8vw, 2.65rem); }
     .eslogan br, .contenedor-servicios h1 br { display: none; }
@@ -1041,8 +756,6 @@ body { min-width: 280px; }
     }
 }
 @media (max-width: 360px) {
-    .header img { width: 82px; }
-    .header .btn { font-size: .68rem; padding: .5rem .4rem; }
     .footer-contenido { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {

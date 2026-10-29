@@ -1,3 +1,14 @@
+html, body {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0;
+    scroll-behavior: smooth;
+}
+
+body{
+    font-family: Arial, sans-serif;   
+}
 
 .contenedor-principal{
     overflow: hidden;

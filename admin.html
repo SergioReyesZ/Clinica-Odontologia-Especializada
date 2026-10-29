@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Administración | Odontología Especializada</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="estilos/admin.css">
+</head>
+
+<body>
+    <header class="header" id="header">
+        <div class="brand"><span class="brandmark"><i class="bi bi-heart-pulse"></i></span>
+            <div><strong>Odontología Especializada</strong><small>Portal de administración</small></div>
+        </div><button class="hamb" id="hamb" aria-label="Abrir menú"><i class="bi bi-list"></i></button>
+        <nav id="nav"><button class="nav active" data-page="inicio">Inicio</button><button class="nav"
+                data-page="citas">Citas</button><button class="nav" data-page="pacientes">Pacientes</button><button
+                class="nav" data-page="usuarios">Usuarios</button><button class="nav"
+                data-page="horarios">Horarios</button><button class="nav" data-page="bitacora">Bitácora</button></nav>
+        <div class="profile"><button id="profileBtn"><i class="bi bi-person-circle"></i> Administrador <i
+                    class="bi bi-chevron-down"></i></button>
+            <div id="profileMenu" class="profile-menu hidden"><button data-page="perfil">Mi perfil</button><button
+                    id="logout">Cerrar sesión</button></div>
+        </div>
+    </header>
+    <main>
+        <section class="hero">
+            <div><span class="eyebrow">PANEL ADMINISTRATIVO</span>
+                <h1 id="pageTitle">Bienvenido al centro de gestión</h1>
+                <p id="pageDesc">Organiza las citas, los pacientes y el equipo desde un solo lugar.</p>
+            </div>
+            <div class="hero-art"><i class="bi bi-heart-pulse-fill"></i></div>
+        </section>
+        <div id="notice" role="status" aria-live="polite"></div>
+        <section id="inicio" class="page">
+            <div class="stats" id="stats"></div>
+            <div class="two">
+                <article class="panel">
+                    <div class="panel-head">
+                        <h2><i class="bi bi-calendar2-week"></i> Próximas citas</h2><button class="link"
+                            data-page="citas">Ver todas <i class="bi bi-arrow-right"></i></button>
+                    </div>
+                    <div id="upcoming"></div><button class="primary" data-action="newAppointment"><i
+                            class="bi bi-plus-lg"></i> Agendar cita manual</button>
+                </article>
+                <article class="panel">
+                    <div class="panel-head">
+                        <h2><i class="bi bi-lightning-charge"></i> Acciones rápidas</h2>
+                    </div>
+                    <div class="quick"><button data-action="newAppointment"><i
+                                class="bi bi-calendar-plus"></i><span>Nueva cita</span></button><button
+                            data-action="newPatient"><i class="bi bi-person-plus"></i><span>Agregar
+                                paciente</span></button><button data-action="newUser"><i
+                                class="bi bi-person-gear"></i><span>Crear usuario</span></button><button
+                            data-page="horarios"><i class="bi bi-clock-history"></i><span>Gestionar
+                                horarios</span></button></div>
+                    <h3>Notificaciones internas</h3>
+                    <div id="notifications"></div>
+                </article>
+            </div>
+        </section>
+        <section id="citas" class="page hidden">
+            <div class="panel">
+                <div class="panel-head">
+                    <h2><i class="bi bi-calendar-check"></i> Administración de citas</h2><button class="primary"
+                        data-action="newAppointment">+ Nueva cita</button>
+                </div>
+                <div class="filters"><input id="searchAppointment"
+                        placeholder="Buscar paciente, folio u odontólogo"><select id="filterService">
+                        <option value="">Todos los servicios</option>
+                    </select><select id="filterStatus">
+                        <option value="">Todos los estados</option>
+                        <option>Pendiente</option>
+                        <option>Confirmada</option>
+                        <option>Terminada</option>
+                        <option>Cancelada</option>
+                    </select><input id="filterDate" type="date"><button class="soft" id="clearFilters">Limpiar</button>
+                </div>
+                <div class="calendar-head"><button class="soft" id="prevMonth">‹</button>
+                    <h3 id="calendarLabel"></h3><button class="soft" id="nextMonth">›</button><button class="soft"
+                        id="todayMonth">Hoy</button>
+                </div>
+                <div class="calendar" id="calendar"></div>
+                <h3>Registros de citas</h3>
+                <div class="tablewrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Folio / fecha</th>
+                                <th>Paciente</th>
+                                <th>Servicio</th>
+                                <th>Odontólogo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section id="pacientes" class="page hidden">
+            <div class="panel">
+                <div class="panel-head">
+                    <h2><i class="bi bi-people"></i> Pacientes registrados</h2><button class="primary"
+                        data-action="newPatient">+ Agregar paciente</button>
+                </div>
+                <div class="filters"><input id="searchPatient" placeholder="Buscar por nombre, tutor o correo"></div>
+                <div class="tablewrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Paciente</th>
+                                <th>Fecha de nacimiento</th>
+                                <th>Usuario / tutor</th>
+                                <th>Historial</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section id="usuarios" class="page hidden">
+            <div class="panel">
+                <div class="panel-head">
+                    <h2><i class="bi bi-person-gear"></i> Usuarios del sistema</h2><button class="primary"
+                        data-action="newUser">+ Registrar usuario</button>
+                </div>
+                <div class="filters"><input id="searchUser" placeholder="Buscar nombre o correo"><select
+                        id="filterRole">
+                        <option value="">Todos los roles</option>
+                        <option>Cliente</option>
+                        <option>Odontólogo</option>
+                        <option>Administrador</option>
+                    </select></div>
+                <div class="tablewrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section id="horarios" class="page hidden">
+            <div class="panel">
+                <div class="panel-head">
+                    <h2><i class="bi bi-clock"></i> Jornadas de odontólogos</h2>
+                </div>
+                <p class="muted">Configura días y horas disponibles. Los horarios ocupados se bloquean al registrar una
+                    cita.</p>
+                <div id="schedules"></div>
+            </div>
+        </section>
+        <section id="bitacora" class="page hidden">
+            <div class="panel">
+                <div class="panel-head">
+                    <h2><i class="bi bi-journal-text"></i> Bitácora de cambios de citas</h2>
+                </div>
+                <div class="tablewrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha y hora</th>
+                                <th>Acción</th>
+                                <th>Folio</th>
+                                <th>Detalle</th>
+                                <th>Actor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <section id="perfil" class="page hidden">
+            <div class="panel narrow">
+                <h2>Mi perfil</h2>
+                <form id="profileForm" class="formgrid"><label>Nombre<input name="name"
+                            required></label><label>Apellido<input name="last" required></label><label>Correo<input
+                            name="email" type="email" required></label><button class="primary">Guardar cambios</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    <div class="overlay hidden" id="modal">
+        <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="panel-head">
+                <h2 id="modalTitle"></h2><button class="close" id="closeModal" aria-label="Cerrar">×</button>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    <script src="scripts/admin.js"></script>
+</body>
+
+</html>

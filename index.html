@@ -5,43 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
     <link rel="icon" href="iconos/favicon2.ico" type="image/x-icon">
+    <link rel="stylesheet" href="estilos/global.css">
+    <link rel="stylesheet" href="estilos/header.css">
     <link rel="stylesheet" href="estilos/index.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
     <div class="contenedor-principal">
        <div class="header" id="header">
-    <img src="iconos/logo.png" alt="logo">
-    
-    <button class="hamburger-btn" id="hamburger-btn">
-        <i class="bi bi-list"></i>
-    </button>
+            <img src="iconos/logo.png" alt="logo">
+            
+            <button class="hamburger-btn" id="hamburger-btn">
+                <i class="bi bi-list"></i>
+            </button>
 
-    <div class="menu" id="menu">
-        <a href="#contenedor" class="opcion activo">Inicio</a>
-        <a href="#opiniones" class="opcion">Nosotros</a>
-        <a href="#servicios" class="opcion">Servicios</a>
-        <a href="#ubicacion" class="opcion">Ubicación</a>
-        <div class="linea-flotante"></div>
-    </div>
-    <div class="botones" id="botones">
-        <button class="btn iniciar-sesion">Iniciar sesión</button>
-        <button class="btn registrarse">Registrarme</button>
-    </div>
-</div>
+            <div class="menu" id="menu">
+                <a href="#contenedor" class="opcion activo">Inicio</a>
+                <a href="#opiniones" class="opcion">Nosotros</a>
+                <a href="#servicios" class="opcion">Servicios</a>
+                <a href="#ubicacion" class="opcion">Ubicación</a>
+                <div class="linea-flotante"></div>
+            </div>
+                <div class="botones" id="botones">
+                    <button class="header-btn iniciar-sesion">Iniciar sesión</button>
+                    <button class="header-btn registrarse">Registrarme</button>
+            </div>
+        </div>
 
         <div class="contenedor" id="contenedor">
             <div class="div-izquierdo">
                 <div class="texto">
-    <p class="eslogan-2">
-        <span class="linea-adorno"></span> ODONTOLOGÍA ESPECIALIZADA <span class="linea-adorno"></span>
-    </p>
-    <p class="eslogan">
-        <span class="texto-oscuro">Tu sonrisa merece</span> <br>
-        <span class="texto-claro">cuidado, calma y <br> confianza.</span>
-    </p>
-    <p class="descripcion">Odontología especializada de la Doctora Virginia Hernández Sánchez</p>
-</div>
+                    <p class="eslogan-2">
+                        <span class="linea-adorno"></span>
+                         ODONTOLOGÍA ESPECIALIZADA 
+                        <span class="linea-adorno"></span>
+                    </p>
+
+                    <p class="eslogan">
+                        <span class="texto-oscuro">Tu sonrisa merece</span> <br>
+                        <span class="texto-claro">cuidado, calma y <br> confianza.</span>
+                    </p>
+
+                    <p class="descripcion">Odontología especializada de la Doctora Virginia Hernández Sánchez</p>
+                </div>
     
                     <div class="botones">
                         <button class="btn agendar-cita"><i class="bi bi-calendar2-check-fill"></i>Agendar una cita</button>
@@ -256,14 +262,14 @@
                 <i class="bi bi-people"></i>
                 <h2>Iniciar sesión</h2>
             </div>
-            <button class="btn-cerrar-alerta" id="btn-cerrar-login">&times;</button>
+            <button class="header-btn-cerrar-alerta" id="header-btn-cerrar-login">&times;</button>
         </div>
         <div class="alerta-body">
             <p>Correo electrónico</p>
             <input type="email" placeholder="ejemplo@gmail.com">
             <p>Contraseña</p>
             <input type="password" placeholder="********">
-            <button>Iniciar sesión</button>
+            <button onclick=window.location.href='dashboard.html'>Iniciar sesión</button>
             <p class="texto-registro">¿No tienes una cuenta? <a href="">Regístrate</a></p>
         </div>
     </div>
@@ -271,4 +277,5 @@
 
 </body>
 <script src="scripts/index.js"></script>
+<script src="scripts/header.js"></script>
 </html>

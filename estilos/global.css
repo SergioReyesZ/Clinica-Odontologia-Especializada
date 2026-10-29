@@ -1,0 +1,13 @@
+html, body {
+    overflow-x: hidden;
+    margin: 0;
+    scroll-behavior: smooth;
+}
+
+body{
+    font-family: Arial, sans-serif;   
+}
+
+p{
+    margin: 0;
+}

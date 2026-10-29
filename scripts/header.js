@@ -64,48 +64,63 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// SOLUCIÓN DEL MARGEN: Cambiamos DOMContentLoaded por 'load'
-window.addEventListener('load', () => {
+window.addEventListener('DOMContentLoaded', () => {
     const header = document.getElementById('header');
-    const content = document.getElementById('contenedor'); // Contenedor del index
-    const contentCitas = document.querySelector('.encabezado-seccion'); // Por si estás en la página de Citas
+    const content = document.getElementById('contenedor');
 
     // Función para actualizar el margen dinámicamente
     const ajustarMargen = () => {
-        if (header) {
-            const headerHeight = header.offsetHeight;
-            
-            // Aplica el margen al contenedor que exista en la página actual
-            if (content) {
-                content.style.marginTop = `${headerHeight + 25}px`;
-            } else if (contentCitas) {
-                contentCitas.style.marginTop = `${headerHeight + 25}px`;
-            }
-        }
+        const headerHeight = header.offsetHeight;
+        content.style.marginTop = `${headerHeight}px`;
     };
 
-    // Ejecutamos una vez que todo cargó
     ajustarMargen();
-    
-    // Y cada que cambien el tamaño de la ventana
     window.addEventListener('resize', ajustarMargen);
-});
 
-// Lógica para el dropdown del perfil
-    const btnPerfil = document.getElementById('btnPerfilDropdown');
-    const dropdownPerfil = document.getElementById('dropdownPerfil');
+    /* ALERTA MODAL INICIAR SESIÓN*/
 
-    if (btnPerfil && dropdownPerfil) {
-        // Abrir/cerrar al dar clic en el perfil
-        btnPerfil.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita que el clic se propague al resto de la página
-            dropdownPerfil.classList.toggle('mostrar');
-        });
+    // 1. Seleccionamos la alerta y el botón para cerrarla
+    const alertaLogin = document.getElementById('alerta-login');
+    const btnCerrarLogin = document.getElementById('header-btn-cerrar-login');
+    
+    // 2. Seleccionamos el botón de iniciar sesión del header
+    // Nota: Como hay dos botones con la clase '.iniciar-sesion' (una en el menú móvil y otra normal), 
+    // seleccionamos todos para que funcione sin importar el tamaño de pantalla.
+    const botonesIniciarSesion = document.querySelectorAll('.header-btn.iniciar-sesion');
+    
+    // 3. Seleccionamos el botón de registrarse (opcional, por si quieres mostrar la misma alerta)
+    const botonesRegistrarse = document.querySelectorAll('.header-btn.registrarse');
 
-        // Cerrar el modal al hacer clic en cualquier otro lado
-        document.addEventListener('click', (e) => {
-            if (!dropdownPerfil.contains(e.target) && !btnPerfil.contains(e.target)) {
-                dropdownPerfil.classList.remove('mostrar');
-            }
-        });
+    // Función para mostrar la alerta
+    const abrirAlerta = (e) => {
+        e.preventDefault(); // Evita que la página salte
+        alertaLogin.classList.add('activo');
+    };
+
+    // Función para cerrar la alerta
+    const cerrarAlerta = () => {
+        alertaLogin.classList.remove('activo');
+    };
+
+    // Asignamos el evento a todos los botones de "Iniciar sesión"
+    botonesIniciarSesion.forEach(boton => {
+        boton.addEventListener('click', abrirAlerta);
+    });
+
+    // (Opcional) Asignamos el evento a los botones de "Registrarme"
+    botonesRegistrarse.forEach(boton => {
+        boton.addEventListener('click', abrirAlerta);
+    });
+
+    // Evento para cerrar con la "X"
+    if (btnCerrarLogin) {
+        btnCerrarLogin.addEventListener('click', cerrarAlerta);
     }
+
+    // Opcional por Experiencia de Usuario: Cerrar la alerta si hacen clic fuera de la caja blanca
+    alertaLogin.addEventListener('click', (e) => {
+        if (e.target === alertaLogin) {
+            cerrarAlerta();
+        }
+    });
+});
