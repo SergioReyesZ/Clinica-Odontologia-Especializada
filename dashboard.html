@@ -1,61 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio | Odontología Especializada</title>
+    <title>Panel | Odontología Especializada</title>
     <link rel="icon" href="iconos/favicon2.ico" type="image/x-icon">
     <link rel="stylesheet" href="estilos/global.css">
     <link rel="stylesheet" href="estilos/dashboard.css">
     <link rel="stylesheet" href="estilos/header.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
+
 <body>
-    <div class="contenedor-principal">
+    <div class="contenedor-principal cargando">
         <div class="header" id="header">
             <img src="iconos/logo.png" alt="logo">
-            
+
             <div class="menu" id="menu">
                 <a href="#" class="opcion activo">Inicio</a>
                 <a href="recursos/cliCitas.html" class="opcion">Citas</a>
                 <a href="recursos/cliPacientes.html" class="opcion">Pacientes</a>
                 <div class="linea-flotante"></div>
             </div>
-            
+
             <div class="perfil-contenedor">
-                <!-- Quitamos el onclick de aquí y le ponemos un ID para controlarlo con JS -->
+                <button class="btn-notificaciones" id="btnNotificacionesDropdown"><i class="bi bi-bell"></i></button>
+                <div class="dropdown-notificaciones" id="dropdownNotificaciones">
+                    <a href="recursos/cliCitas.html" class="dropdown-item">
+                        <i class="bi bi-calendar-check"></i> Cita confirmada: Mateo Ramírez
+                    </a>
+
+                    <hr class="dropdown-divisor">
+
+                    <a href="recursos/cliCitas.html" class="dropdown-item">
+                        <i class="bi bi-clock-history"></i> Recordatorio: Tu cita es mañana
+                    </a>
+
+                    <hr class="dropdown-divisor">
+
+                    <a href="recursos/cliCitas.html" class="dropdown-item texto-peligro">
+                        <i class="bi bi-calendar-x"></i> Cita cancelada: Ana López
+                    </a>
+                </div>
+
                 <div class="perfil" id="btnPerfilDropdown">
                     <button class="btn-perfil"><img class="pfp" src="iconos/perfil.png" alt=""></button>
-                    <p>Sofía Morales</p>
-                    <i class="bi bi-chevron-down flecha-perfil"></i> <!-- Opcional: una flechita para indicar menú -->
+                    <p id="header-nombre-usuario"></p>
+                    <i class="bi bi-chevron-down flecha-perfil"></i>
                 </div>
-                
-                <!-- El pequeño modal flotante -->
+
                 <div class="dropdown-perfil" id="dropdownPerfil">
                     <a href="recursos/perfil.html" class="dropdown-item">
                         <i class="bi bi-gear"></i> Configuración de cuenta
                     </a>
                     <hr class="dropdown-divisor">
-                    <a href="index.html" class="dropdown-item texto-peligro">
+                    <a href="#" id="btnCerrarSesion" class="dropdown-item texto-peligro">
                         <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                     </a>
                 </div>
             </div>
-            
+
         </div>
 
         <div class="contenedor" id="contenedor">
             <div class="texto-bienvenida">
-                <h2>¡Hola Sofía!</h2>
-            <h1>Bienvenida a tu portal de gestión</h1>
-            <p>Aquí puedes gestionar tus citas, administrar a tus pacientes,
-                descargar tus comprobantes y mantener tu información siempre actualizada.
-            </p>
+                <h2 id="bienvenida-usuario"></h2>
+                <h1>Bienvenida a tu portal de gestión</h1>
+                <p>Aquí puedes gestionar tus citas, administrar a tus pacientes,
+                    descargar tus comprobantes y mantener tu información siempre actualizada.
+                </p>
             </div>
-            
+
             <img src="iconos/Diente kawaii con corazón azul.png" alt="">
         </div>
-         
+
         <div class="informacion">
             <div class="citas">
 
@@ -64,35 +83,15 @@
                         <p class="titulo"><i class="bi bi-calendar-week"></i> Próximas citas</p>
                         <a id="ver" class="ver"><i class="bi bi-chevron-right"></i></a>
                     </div>
-                    
+
                     <hr class="linea">
                 </div>
 
-                <div class="tarjetas" id="tarjetas">
-                    <div class="tarjeta">
-    
-                        <div class="fecha">
-                            <p>Mié</p>
-                            <p class="titulo">29</p>
-                            <p>Oct</p>
-                        </div>
-    
-                        <p class="hora">10:00AM</p>
-    
-                        <div class="nombre-paciente">
-                            <a class="nombre">Mateo Ramírez</a>
-                        </div>
-    
-                        <p>Limpieza dental</p>
-    
-                        <p class="estado">Confirmada</p>
-    
-                        <i class="bi bi-chevron-right" id="ver-mas"></i>
-                    </div>
-                    
-                </div>
-                
-                <button class="btn agregar-cita"><i class="bi bi-calendar-week"></i> Agendar nueva cita</button>
+                <div class="tarjetas" id="tarjetas"></div>
+
+                <button class="btn agregar-cita" onclick="abrirModalCita()">
+                    <i class="bi bi-calendar-week"></i> Agendar nueva cita
+                </button>
             </div>
 
             <div class="pacientes">
@@ -104,26 +103,168 @@
                     <hr class="linea">
                 </div>
 
+                <div class="tarjetas" id="tarjetas-pacientes"></div>
 
-                <div class="tarjetas" id="tarjetas-pacientes">
-                    <div class="tarjeta-paciente">
-                    <img src="" alt="Imagen">
-                    <div class="nombre-paciente">
-                        <p class="nombre">Mateo Ramírez</p>
-                        <p>8 Años</p>
-                    </div>
-                    <i class="bi bi-chevron-right" id="ver-mas"></i>
-                    </div>  
-                </div>
-                
-                
-                <button class="btn agregar-paciente"><i class="bi bi-plus"></i> Agregar paciente</button>
-
+                <button class="btn agregar-paciente" onclick="abrirModalPaciente()">
+                    <i class="bi bi-plus"></i> Agregar paciente
+                </button>
             </div>
         </div>
     </div>
+    <!-- ========================================== -->
+    <!-- MODAL: NUEVA CITA -->
+    <!-- ========================================== -->
+    <div class="modal-overlay" id="modalNuevaCita" style="display: none;">
+        <div class="modal-contenido">
+            <div class="modal-header">
+                <h3><i class="bi bi-calendar2-week"></i> Agendar cita</h3>
+                <button class="btn-cerrar" onclick="cerrarModalCita()"><i class="bi bi-x"></i></button>
+            </div>
 
+            <form class="formulario-cita" id="formNuevaCita">
+                <div class="campo-doble">
+                    <div class="campo">
+                        <label>Paciente</label>
+                        <select required id="cita-paciente">
+                            <option value="" disabled selected>Selecciona paciente</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>Servicio</label>
+                        <select required id="cita-servicio">
+                            <option value="" disabled selected>Selecciona servicio</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="campo">
+                    <label>Odontólogo</label>
+                    <select required id="cita-odontologo">
+                        <option value="" disabled>Selecciona especialista</option>
+                        <option value="1" selected default>Dra. Virginia Hernández</option>
+                    </select>
+                </div>
+
+                <!-- Calendario Interactivo -->
+                <!-- Campo de Fecha Flotante -->
+                <div class="campo" style="position: relative;">
+                    <label>Fecha</label>
+                    <!-- Este es el "input" que el usuario verá -->
+                    <div id="btn-mostrar-calendario" class="input-falso">
+                        <i class="bi bi-calendar-event"></i>
+                        <span id="texto-fecha-seleccionada">Selecciona una fecha</span>
+                    </div>
+
+                    <!-- Calendario Interactivo Flotante -->
+                    <div class="cal-container" id="calendario-flotante" style="display: none;">
+                        <div class="cal-mes-nav">
+                            <button type="button" id="prev-month"><i class="bi bi-chevron-left"></i></button>
+                            <h4 id="mes-año-display"></h4>
+                            <button type="button" id="next-month"><i class="bi bi-chevron-right"></i></button>
+                        </div>
+                        <div class="cal-grid">
+                            <div class="cal-dow">Lu</div>
+                            <div class="cal-dow">Ma</div>
+                            <div class="cal-dow">Mi</div>
+                            <div class="cal-dow">Ju</div>
+                            <div class="cal-dow">Vi</div>
+                            <div class="cal-dow">Sá</div>
+                            <div class="cal-dow">Do</div>
+                            <div id="dias-calendario" class="dias-grid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selector de Hora -->
+                <div class="campo" style="margin-top: 1rem;">
+                    <label>Horario disponible (4:30 PM - 8:00 PM)</label>
+                    <div class="horarios-grid" id="horarios-contenedor"></div>
+                </div>
+
+                <!-- Resumen Costo e Inputs Ocultos -->
+                <div class="resumen-costo">
+                    <p>Costo Estimado: <strong id="costo-cita-clicitas">$0.00 MXN</strong></p>
+                </div>
+
+                <input type="hidden" id="cita-fecha" required>
+                <input type="hidden" id="cita-hora" required>
+
+                <p id="feedback-cita" style="text-align: center; margin-top: 10px;"></p>
+                <button type="submit" class="btn agregar-cita ancho-total" id="btnConfirmarCita">Confirmar Cita</button>
+            </form>
+        </div>
+    </div>
+    <!-- ========================================== -->
+    <!-- MODAL: NUEVO PACIENTE -->
+    <!-- ========================================== -->
+    <div class="modal-overlay" id="modalPaciente" style="display: none;">
+        <div class="modal-contenido">
+            <div class="modal-header">
+                <h3 id="tituloModalPaciente">Registrar Nuevo Paciente</h3>
+                <button class="btn-cerrar" onclick="cerrarModalPaciente()"><i class="bi bi-x"></i></button>
+            </div>
+            <form class="formulario-cita" id="formNuevoPaciente">
+                <div class="campo-doble">
+                    <div class="campo">
+                        <label>Nombre(s)</label>
+                        <input type="text" id="pac-nombre" placeholder="Ej. Mateo" required>
+                    </div>
+                    <div class="campo">
+                        <label>Apellidos</label>
+                        <input type="text" id="pac-apellido" placeholder="Ej. Ramírez" required>
+                    </div>
+                </div>
+
+                <div class="campo-doble">
+                    <div class="campo" style="flex: 1.5;">
+                        <label>Fecha de Nacimiento</label>
+                        <div style="display: flex; gap: 8px;">
+                            <select id="pac-fecha-dia" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                                <option value="" disabled selected>Día</option>
+                                <!-- Generado por JS -->
+                            </select>
+                            <select id="pac-fecha-mes" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                                <option value="" disabled selected>Mes</option>
+                                <option value="01">Enero</option>
+                                <option value="02">Febrero</option>
+                                <option value="03">Marzo</option>
+                                <option value="04">Abril</option>
+                                <option value="05">Mayo</option>
+                                <option value="06">Junio</option>
+                                <option value="07">Julio</option>
+                                <option value="08">Agosto</option>
+                                <option value="09">Septiembre</option>
+                                <option value="10">Octubre</option>
+                                <option value="11">Noviembre</option>
+                                <option value="12">Diciembre</option>
+                            </select>
+                            <select id="pac-fecha-anio" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                                <option value="" disabled selected>Año</option>
+                                <!-- Generado por JS -->
+                            </select>
+                        </div>
+                        <!-- Input oculto para recolectar el valor y mandarlo a Supabase -->
+                        <input type="hidden" id="pac-fecha" required>
+                    </div>
+
+                    <div class="campo">
+                        <label>Género</label>
+                        <select id="pac-sexo" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                        </select>
+                    </div>
+                </div>
+                <p id="feedback-paciente" style="text-align: center; margin-top: 10px;"></p>
+                <button type="submit" class="btn agregar-cita ancho-total" id="btnGuardarPaciente">Guardar
+                    Paciente</button>
+            </form>
+        </div>
+    </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="scripts/app.js"></script>
 <script src="scripts/cliHeader.js"></script>
 <script src="scripts/dashboard.js"></script>
+
 </html>

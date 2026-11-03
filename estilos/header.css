@@ -4,6 +4,17 @@
     height: 100%;
 }
 
+.contenedor-principal{
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.01s ease-in-out;
+}
+
+.contenedor-principal.cargando {
+    opacity: 0;
+    pointer-events: none;
+}
+
 .header {
     position: fixed;
     top: 0;
@@ -149,12 +160,27 @@
     width: 40px;
     height: auto;
     margin: 0;
+    border-radius: 50%;
 }
-
 /* Contenedor relativo para anclar el menú al perfil */
 .perfil-contenedor {
+    display: flex;  
+    align-items: center;
     position: relative;
-    display: inline-block;
+}
+
+.btn-notificaciones {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #1b2a47;
+    cursor: pointer;
+}
+
+.btn-notificaciones:hover {
+    color: #0056e0;
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
 }
 
 .perfil {
@@ -171,7 +197,7 @@
 }
 
 /* Modal flotante (Dropdown) */
-.dropdown-perfil {
+.dropdown-perfil, .dropdown-notificaciones {
     position: absolute;
     top: 110%; /* Se coloca justo debajo del contenedor */
     right: 0;
@@ -194,7 +220,7 @@
 }
 
 /* Clase que activa el menú desde JS */
-.dropdown-perfil.mostrar {
+.dropdown-perfil.mostrar, .dropdown-notificaciones.mostrar {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,7 @@
 <body>
     
     <!-- CONTENEDOR PRINCIPAL DE LA PÁGINA -->
-    <div class="contenedor-principal">
+    <div class="contenedor-principal cargando">
         
         <div class="header" id="header">
             <img src="../iconos/logo.png" alt="logo">
@@ -26,20 +26,29 @@
             </div>
             
             <div class="perfil-contenedor">
-                <!-- Quitamos el onclick de aquí y le ponemos un ID para controlarlo con JS -->
+                <button class="btn-notificaciones" id="btnNotificacionesDropdown"><i class="bi bi-bell"></i></button>
+                <div class="dropdown-notificaciones" id="dropdownNotificaciones">
+                    <a href="cliCitas.html" class="dropdown-item">
+                        <i class="bi bi-calendar-check"></i> Cita confirmada: Mateo Ramírez
+                    </a>
+                    <hr class="dropdown-divisor">
+                    <a href="cliCitas.html" class="dropdown-item">
+                        <i class="bi bi-clock-history"></i> Recordatorio: Tu cita es mañana
+                    </a>
+                </div>
+
                 <div class="perfil" id="btnPerfilDropdown">
-                    <button class="btn-perfil"><img src="../iconos/perfil.png" alt=""></button>
-                    <p>Sofía Morales</p>
-                    <i class="bi bi-chevron-down flecha-perfil"></i> <!-- Opcional: una flechita para indicar menú -->
+                    <button class="btn-perfil"><img class="pfp" src="../iconos/perfil.png" alt=""></button>
+                    <p id="header-nombre-usuario"></p>
+                    <i class="bi bi-chevron-down flecha-perfil"></i>
                 </div>
                 
-                <!-- El pequeño modal flotante -->
                 <div class="dropdown-perfil" id="dropdownPerfil">
-                    <a href="cliPerfil.html" class="dropdown-item">
+                    <a href="perfil.html" class="dropdown-item">
                         <i class="bi bi-gear"></i> Configuración de cuenta
                     </a>
                     <hr class="dropdown-divisor">
-                    <a href="#" class="dropdown-item texto-peligro">
+                    <a href="#" id="btnCerrarSesion" class="dropdown-item texto-peligro">
                         <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                     </a>
                 </div>
@@ -51,149 +60,136 @@
                 <h2>Mis Pacientes</h2>
                 <p>Administra la información personal de los pacientes a tu cargo.</p>
             </div>
-            <button class="btn agregar-paciente" onclick="abrirModalPaciente('nuevo')">
+            <button class="btn agregar-paciente" onclick="abrirModalPaciente()">
                 <i class="bi bi-person-plus"></i> Agregar Paciente
             </button>
         </div>
 
-        <!-- GRID DE PACIENTES -->
-        <div class="grid-pacientes">
-            <!-- Tarjeta de Paciente -->
-            <div class="tarjeta-paciente-detalle">
-                <div class="paciente-info-principal">
-                    <div class="avatar-grande">
-                        <i class="bi bi-person-circle"></i>
-                    </div>
-                    <div class="datos-personales">
-                        <h3>Mateo Ramírez</h3>
-                        <span class="etiqueta-parentesco">Hijo</span>
-                    </div>
-                </div>
-                
-                <div class="paciente-detalles">
-                    <p><i class="bi bi-calendar3"></i> <strong>Edad:</strong> 8 años</p>
-                    <p><i class="bi bi-gender-ambiguous"></i> <strong>Género:</strong> Masculino</p>
-                    <p><i class="bi bi-clipboard-pulse"></i> <strong>Última cita:</strong> 29 Oct 2026</p>
-                </div>
-
-                <hr class="linea">
-                
-                <div class="cita-footer">
-                    <button class="btn-accion editar" onclick="abrirModalPaciente('editar')"><i class="bi bi-pencil-square"></i> Editar Info</button>
-                    <button class="btn-accion agendar"><i class="bi bi-calendar-check"></i> Agendar Cita</button>
-                </div>
-            </div>
-
-            <!-- Tarjeta del Usuario (Tú mismo como paciente) -->
-            <div class="tarjeta-paciente-detalle">
-                <div class="paciente-info-principal">
-                    <div class="avatar-grande">
-                        <i class="bi bi-person-circle"></i>
-                    </div>
-                    <div class="datos-personales">
-                        <h3>Sofía Morales</h3>
-                        <span class="etiqueta-parentesco titular">Titular</span>
-                    </div>
-                </div>
-                
-                <div class="paciente-detalles">
-                    <p><i class="bi bi-calendar3"></i> <strong>Edad:</strong> 34 años</p>
-                    <p><i class="bi bi-gender-ambiguous"></i> <strong>Género:</strong> Femenino</p>
-                    <p><i class="bi bi-clipboard-pulse"></i> <strong>Última cita:</strong> 15 Sep 2026</p>
-                </div>
-
-                <hr class="linea">
-                
-                <div class="cita-footer">
-                    <button class="btn-accion editar" onclick="abrirModalPaciente('editar')"><i class="bi bi-pencil-square"></i> Editar Info</button>
-                    <button class="btn-accion agendar"><i class="bi bi-calendar-check"></i> Agendar Cita</button>
-                </div>
-            </div>
+        <!-- GRID DE PACIENTES DINÁMICO -->
+        <div class="grid-pacientes" id="grid-pacientes-contenedor">
+            <!-- Cargado por JavaScript -->
         </div>
 
-    </div> <!-- FIN DEL CONTENEDOR PRINCIPAL -->
-
-    <!-- MODAL: REGISTRO / EDICIÓN DE PACIENTE (Queda fuera del contenedor principal) -->
-    <div class="modal-overlay" id="modalPaciente">
+    </div>
+    <!-- MODAL: REGISTRO DE PACIENTE -->
+    <div class="modal-overlay" id="modalPaciente" style="display: none;">
         <div class="modal-contenido">
-            
             <div class="modal-header">
                 <h3 id="tituloModalPaciente">Registrar Nuevo Paciente</h3>
                 <button class="btn-cerrar" onclick="cerrarModalPaciente()"><i class="bi bi-x"></i></button>
             </div>
-            
-            <form class="formulario-cita">
+            <form class="formulario-cita" id="formNuevoPaciente">
                 <div class="campo-doble">
                     <div class="campo">
                         <label>Nombre(s)</label>
-                        <input type="text" placeholder="Ej. Mateo" required>
+                        <input type="text" id="pac-nombre" placeholder="Ej. Mateo" required>
                     </div>
                     <div class="campo">
                         <label>Apellidos</label>
-                        <input type="text" placeholder="Ej. Ramírez" required>
+                        <input type="text" id="pac-apellido" placeholder="Ej. Ramírez" required>
                     </div>
                 </div>
-                
+
                 <div class="campo-doble">
-                    <div class="campo">
+                    <div class="campo" style="flex: 1.5;">
                         <label>Fecha de Nacimiento</label>
-                        <input type="date" required>
+                        <div style="display: flex; gap: 8px;">
+                            <select id="pac-fecha-dia" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                                <option value="" disabled selected>Día</option>
+                            </select>
+                            <select id="pac-fecha-mes" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                                <option value="" disabled selected>Mes</option>
+                                <option value="01">Enero</option>
+                                <option value="02">Febrero</option>
+                                <option value="03">Marzo</option>
+                                <option value="04">Abril</option>
+                                <option value="05">Mayo</option>
+                                <option value="06">Junio</option>
+                                <option value="07">Julio</option>
+                                <option value="08">Agosto</option>
+                                <option value="09">Septiembre</option>
+                                <option value="10">Octubre</option>
+                                <option value="11">Noviembre</option>
+                                <option value="12">Diciembre</option>
+                            </select>
+                            <select id="pac-fecha-anio" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                                <option value="" disabled selected>Año</option>
+                            </select>
+                        </div>
+                        <input type="hidden" id="pac-fecha" required>
                     </div>
+
                     <div class="campo">
                         <label>Género</label>
-                        <select required>
+                        <select id="pac-sexo" required>
                             <option value="">Seleccionar...</option>
                             <option value="M">Masculino</option>
                             <option value="F">Femenino</option>
-                            <option value="O">Otro</option>
+                        </select>
+                    </div>
+                </div>
+                <p id="feedback-paciente" style="text-align: center; margin-top: 10px;"></p>
+                <button type="submit" class="btn agregar-cita ancho-total" id="btnGuardarPaciente" style="background-color: #0056e0; box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3);">Guardar Paciente</button>
+            </form>
+        </div>
+    </div>
+    <!-- MODAL: EDITAR PACIENTE (Pégalo aquí, justo abajo del modal de registro) -->
+    <div class="modal-overlay" id="modalEditarPaciente" style="display: none;">
+        <div class="modal-contenido">
+            <div class="modal-header">
+                <h3>Editar Paciente</h3>
+                <button class="btn-cerrar" onclick="cerrarModalEditar()"><i class="bi bi-x"></i></button>
+            </div>
+            
+            <form class="formulario-cita" id="formEditarPaciente">
+                <input type="hidden" id="edit-pac-id">
+
+                <div class="campo" style="align-items: center; text-align: center; margin-bottom: 1.5rem;">
+                    <label style="margin-bottom: 0.5rem;">Foto del Paciente</label>
+                    <div style="position: relative; display: inline-block; cursor: pointer;" onclick="document.getElementById('inputAvatarPaciente').click()">
+                        <img id="edit-avatarPreview" src="../iconos/perfil.png" alt="Avatar" class="pfp" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #cbd5e1;">
+                        <div style="position: absolute; bottom: 0; right: 0; background: #0056e0; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
+                            <i class="bi bi-camera"></i>
+                        </div>
+                    </div>
+                    <input type="file" id="inputAvatarPaciente" accept="image/*" style="display: none;">
+                </div>
+
+                <div class="campo-doble">
+                    <div class="campo">
+                        <label>Nombre(s)</label>
+                        <input type="text" id="edit-pac-nombre" required>
+                    </div>
+                    <div class="campo">
+                        <label>Apellidos</label>
+                        <input type="text" id="edit-pac-apellido" required>
+                    </div>
+                </div>
+
+                <div class="campo-doble">
+                    <div class="campo">
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" id="edit-pac-fecha" disabled style="background-color: #f1f5f9; cursor: not-allowed;">
+                    </div>
+
+                    <div class="campo">
+                        <label>Género</label>
+                        <select id="edit-pac-sexo" required>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="campo">
-                    <label>Parentesco / Relación</label>
-                    <select required>
-                        <option value="">Seleccionar...</option>
-                        <option value="titular">Yo mismo (Titular)</option>
-                        <option value="hijo">Hijo / Hija</option>
-                        <option value="esposo">Esposo / Esposa</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                </div>
-
-                <div class="campo">
-                    <label>Alergias o Notas Médicas (Opcional)</label>
-                    <input type="text" placeholder="Ej. Alergia a la penicilina">
-                </div>
-
-                <button type="submit" class="btn agregar-cita ancho-total" id="btnGuardarPaciente">Guardar Paciente</button>
+                <p id="feedback-editar-paciente" style="text-align: center; margin-top: 10px;"></p>
+                <button type="submit" class="btn agregar-cita ancho-total" id="btnActualizarPaciente" style="background-color: #0056e0; box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3);">Actualizar Datos</button>
             </form>
-            
         </div>
-    </div> 
+    </div>
 
-    <!-- SCRIPTS (Siempre van antes de cerrar el body) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../scripts/app.js"></script>
     <script src="../scripts/cliHeader.js"></script>
-    <script>
-        function abrirModalPaciente(accion) {
-            const titulo = document.getElementById('tituloModalPaciente');
-            const boton = document.getElementById('btnGuardarPaciente');
-            
-            if(accion === 'editar') {
-                titulo.textContent = 'Editar Información del Paciente';
-                boton.textContent = 'Actualizar Datos';
-            } else {
-                titulo.textContent = 'Registrar Nuevo Paciente';
-                boton.textContent = 'Guardar Paciente';
-                document.querySelector('.formulario-cita').reset();
-            }
-            
-            document.getElementById('modalPaciente').style.display = 'flex';
-        }
-
-        function cerrarModalPaciente() {
-            document.getElementById('modalPaciente').style.display = 'none';
-        }
-    </script>
+    <script src="../scripts/cliPacientes.js"></script>
 </body>
 </html>

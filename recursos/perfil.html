@@ -23,7 +23,6 @@
                 <p>Actualiza tus datos personales, credenciales de acceso y foto de perfil.</p>
             </div>
         </div>
-
         <!-- CONTENEDOR DE PERFIL -->
         <div class="contenedor-perfil">
             
@@ -36,35 +35,36 @@
                     </label>
                     <input type="file" id="inputAvatar" accept="image/*" class="oculto">
                 </div>
-                <h3>Sofía Morales</h3>
-                <span class="etiqueta-rol">Cliente</span>
+                <h3 id="perfil-nombre-display"></h3>
+                <span class="etiqueta-rol" id="perfil-rol-display"></span>
                 <p class="texto-ayuda">Formatos permitidos: JPG, PNG. Tamaño máximo: 2MB.</p>
             </div>
 
             <!-- SECCIÓN: FORMULARIO DE DATOS -->
             <div class="tarjeta-perfil lado-derecho">
-                <form class="formulario-perfil">
+                <form class="formulario-perfil" id="formPerfil">
                     
                     <h3 class="titulo-form">Información Personal</h3>
                     <div class="campo-doble">
                         <div class="campo">
                             <label>Nombre(s)</label>
-                            <input type="text" value="Sofía" required>
+                            <input type="text" id="perfil-nombre" required>
                         </div>
                         <div class="campo">
                             <label>Apellidos</label>
-                            <input type="text" value="Morales" required>
+                            <input type="text" id="perfil-apellido" required>
                         </div>
                     </div>
 
                     <div class="campo-doble">
                         <div class="campo">
                             <label>Teléfono Celular</label>
-                            <input type="tel" value="8331234567" required>
+                            <input type="tel" id="perfil-telefono">
                         </div>
                         <div class="campo">
                             <label>Fecha de Nacimiento</label>
-                            <input type="date" value="1992-05-15" required>
+                            <!-- disabled para que no lo puedan cambiar -->
+                            <input type="date" id="perfil-fecha-nac" disabled>
                         </div>
                     </div>
 
@@ -73,22 +73,23 @@
                     <h3 class="titulo-form">Credenciales de Acceso</h3>
                     <div class="campo">
                         <label>Correo Electrónico</label>
-                        <input type="email" value="sofia.morales@email.com" required>
+                        <!-- disabled porque el correo de login no se cambia aquí -->
+                        <input type="email" id="perfil-correo" disabled>
                     </div>
 
                     <div class="campo-doble">
                         <div class="campo">
                             <label>Nueva Contraseña (Opcional)</label>
-                            <input type="password" placeholder="••••••••">
+                            <input type="password" id="perfil-password" placeholder="••••••••">
                         </div>
                         <div class="campo">
                             <label>Confirmar Contraseña</label>
-                            <input type="password" placeholder="••••••••">
+                            <input type="password" id="perfil-password-confirm" placeholder="••••••••">
                         </div>
                     </div>
 
                     <div class="acciones-perfil">
-                        <button type="submit" class="btn guardar"><i class="bi bi-save"></i> Guardar Cambios</button>
+                        <button type="submit" class="btn guardar" id="btnGuardarPerfil"><i class="bi bi-save"></i> Guardar Cambios</button>
                     </div>
                 </form>
             </div>
@@ -103,7 +104,6 @@
         <div class="modal-notificacion">
             <i class="bi bi-check-circle-fill icono-exito"></i>
             <h3>Cambios guardados correctamente</h3>
-            <p>Redirigiendo a inicio...</p>
         </div>
     </div>
 
@@ -124,8 +124,8 @@
         </div>
     </div>
 
-    <!-- SCRIPTS -->
-    <script src="../scripts/cliHeader.js"></script>
-    <script src="../scripts/cliPerfil.js"></script>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../scripts/app.js"></script>
+<script src="../scripts/perfil.js"></script>
 </html>

@@ -79,38 +79,43 @@ window.addEventListener('DOMContentLoaded', () => {
 
     /* ALERTA MODAL INICIAR SESIÓN*/
 
-    // 1. Seleccionamos la alerta y el botón para cerrarla
     const alertaLogin = document.getElementById('alerta-login');
     const btnCerrarLogin = document.getElementById('header-btn-cerrar-login');
-    
-    // 2. Seleccionamos el botón de iniciar sesión del header
-    // Nota: Como hay dos botones con la clase '.iniciar-sesion' (una en el menú móvil y otra normal), 
-    // seleccionamos todos para que funcione sin importar el tamaño de pantalla.
     const botonesIniciarSesion = document.querySelectorAll('.header-btn.iniciar-sesion');
     
-    // 3. Seleccionamos el botón de registrarse (opcional, por si quieres mostrar la misma alerta)
     const botonesRegistrarse = document.querySelectorAll('.header-btn.registrarse');
+    const alertaRegistrarse = document.getElementById('alerta-registrarse');
+    const btnCerrarRegistrarse = document.getElementById('header-btn-cerrar-registrarse');
 
-    // Función para mostrar la alerta
     const abrirAlerta = (e) => {
-        e.preventDefault(); // Evita que la página salte
+        e.preventDefault(); 
         alertaLogin.classList.add('activo');
     };
 
-    // Función para cerrar la alerta
     const cerrarAlerta = () => {
         alertaLogin.classList.remove('activo');
     };
 
-    // Asignamos el evento a todos los botones de "Iniciar sesión"
+    const abrirAlertaRegistrarse = (e) => {
+        e.preventDefault(); 
+        alertaRegistrarse.classList.add('activo');
+    }
+
+    const cerrarAlertaRegistrarse = () => {
+        alertaRegistrarse.classList.remove('activo');
+    }
+
     botonesIniciarSesion.forEach(boton => {
         boton.addEventListener('click', abrirAlerta);
     });
 
-    // (Opcional) Asignamos el evento a los botones de "Registrarme"
     botonesRegistrarse.forEach(boton => {
-        boton.addEventListener('click', abrirAlerta);
+        boton.addEventListener('click', abrirAlertaRegistrarse);
     });
+
+    if (btnCerrarRegistrarse) {
+        btnCerrarRegistrarse.addEventListener('click', cerrarAlertaRegistrarse);
+    }
 
     // Evento para cerrar con la "X"
     if (btnCerrarLogin) {
@@ -123,4 +128,30 @@ window.addEventListener('DOMContentLoaded', () => {
             cerrarAlerta();
         }
     });
+
+    alertaRegistrarse.addEventListener('click', (e) => {
+        if (e.target === alertaRegistrarse) {
+            cerrarAlertaRegistrarse();
+        }
+    });
+
+    // 1. Selecciona SOLO el enlace que está dentro del modal de REGISTRO (para abrir el Login)
+const enlacesIniciarSesion = document.querySelectorAll('#alerta-registrarse .texto-registro a');
+enlacesIniciarSesion.forEach(enlace => {
+    enlace.addEventListener('click', (e) => {
+        e.preventDefault();
+        cerrarAlertaRegistrarse();
+        abrirAlerta(e); // Abre Login
+    });
+});
+
+// 2. Selecciona SOLO el enlace que está dentro del modal de LOGIN (para abrir el Registro)
+const enlacesRegistrarse = document.querySelectorAll('#alerta-login .texto-registro a');
+enlacesRegistrarse.forEach(enlace => {
+    enlace.addEventListener('click', (e) => {
+        e.preventDefault();
+        cerrarAlerta();
+        abrirAlertaRegistrarse(e); // Abre Registro
+    });
+});
 });
