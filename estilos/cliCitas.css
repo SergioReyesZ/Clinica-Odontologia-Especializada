@@ -350,3 +350,53 @@ body{
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     margin-top: 0.5rem;
 }
+
+.conservar-paciente {
+    background: #f0f7ff;
+    border: 1px solid #d5e8fa;
+    border-radius: 10px;
+    padding: 14px;
+    margin: 12px 0 18px;
+}
+
+.conservar-paciente label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.conservar-paciente input {
+    width: 18px;
+    height: 18px;
+    margin-top: 3px;
+    accent-color: #0a84ff;
+    flex-shrink: 0;
+}
+
+.conservar-paciente span {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.conservar-paciente strong {
+    color: #174477;
+    font-size: 14px;
+}
+
+.conservar-paciente small {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.btn-hora:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    text-decoration: line-through;
+    background: #e5e7eb;
+    color: #94a3b8;
+    border-color: #d1d5db;
+}
+

@@ -111,57 +111,185 @@
             </div>
         </div>
     </div>
+
     <!-- ========================================== -->
     <!-- MODAL: NUEVA CITA -->
     <!-- ========================================== -->
     <div class="modal-overlay" id="modalNuevaCita" style="display: none;">
         <div class="modal-contenido">
+
             <div class="modal-header">
                 <h3><i class="bi bi-calendar2-week"></i> Agendar cita</h3>
-                <button class="btn-cerrar" onclick="cerrarModalCita()"><i class="bi bi-x"></i></button>
+                <button class="btn-cerrar" onclick="cerrarModalCita()">
+                    <i class="bi bi-x"></i>
+                </button>
             </div>
 
             <form class="formulario-cita" id="formNuevaCita">
+
+                <!-- PACIENTE Y SERVICIO -->
                 <div class="campo-doble">
+
                     <div class="campo">
-                        <label>Paciente</label>
+                        <label for="cita-paciente">Paciente</label>
+
                         <select required id="cita-paciente">
-                            <option value="" disabled selected>Selecciona paciente</option>
+                            <option value="" disabled selected>
+                                Selecciona paciente
+                            </option>
+                            <option value="nuevo">
+                                + Agregar nuevo paciente...
+                            </option>
                         </select>
                     </div>
+
                     <div class="campo">
-                        <label>Servicio</label>
+                        <label for="cita-servicio">Servicio</label>
+
                         <select required id="cita-servicio">
-                            <option value="" disabled selected>Selecciona servicio</option>
+                            <option value="" disabled selected>
+                                Selecciona servicio
+                            </option>
                         </select>
                     </div>
+
                 </div>
+
+                <!-- REGISTRO DE PACIENTE NUEVO -->
+                <div id="nuevo-paciente-contenedor" style="display: none;">
+
+                    <div class="campo-doble">
+
+                        <div class="campo">
+                            <label for="nuevo-paciente-nombre">
+                                Nombre(s)
+                            </label>
+
+                            <input type="text" id="nuevo-paciente-nombre" placeholder="Nombre del paciente">
+                        </div>
+
+                        <div class="campo">
+                            <label for="nuevo-paciente-apellido">
+                                Apellidos
+                            </label>
+
+                            <input type="text" id="nuevo-paciente-apellido" placeholder="Apellidos del paciente">
+                        </div>
+
+                    </div>
+
+                    <!-- FECHA DE NACIMIENTO Y SEXO DEL NUEVO PACIENTE -->
+                    <div class="campo-doble">
+
+                        <div class="campo" style="flex: 1.5;">
+                            <label>Fecha de nacimiento</label>
+
+                            <div class="fecha-nacimiento-nuevo">
+                                <select id="nuevo-paciente-fecha-dia">
+                                    <option value="">Día</option>
+                                </select>
+
+                                <select id="nuevo-paciente-fecha-mes">
+                                    <option value="">Mes</option>
+                                    <option value="01">Enero</option>
+                                    <option value="02">Febrero</option>
+                                    <option value="03">Marzo</option>
+                                    <option value="04">Abril</option>
+                                    <option value="05">Mayo</option>
+                                    <option value="06">Junio</option>
+                                    <option value="07">Julio</option>
+                                    <option value="08">Agosto</option>
+                                    <option value="09">Septiembre</option>
+                                    <option value="10">Octubre</option>
+                                    <option value="11">Noviembre</option>
+                                    <option value="12">Diciembre</option>
+                                </select>
+
+                                <select id="nuevo-paciente-fecha-anio">
+                                    <option value="">Año</option>
+                                </select>
+                            </div>
+
+                            <input type="hidden" id="nuevo-paciente-fecha">
+                        </div>
+
+                        <div class="campo">
+                            <label for="nuevo-paciente-sexo">Sexo</label>
+
+                            <select id="nuevo-paciente-sexo">
+                                <option value="">Seleccionar...</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <!-- CONSERVAR PACIENTE -->
+                    <div class="conservar-paciente">
+
+                        <label for="conservar-paciente">
+
+                            <input type="checkbox" id="conservar-paciente" checked>
+
+                            <span>
+                                <strong>
+                                    Conservar paciente en mi cuenta
+                                </strong>
+
+                                <small>
+                                    Si desmarcas esta opción, el paciente
+                                    solamente quedará registrado para esta cita
+                                    y no aparecerá en tu lista de pacientes.
+                                </small>
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <!-- ODONTÓLOGO -->
                 <div class="campo">
-                    <label>Odontólogo</label>
+                    <label for="cita-odontologo">Odontólogo</label>
+
                     <select required id="cita-odontologo">
-                        <option value="" disabled>Selecciona especialista</option>
-                        <option value="1" selected default>Dra. Virginia Hernández</option>
+                        <option value="1" selected>
+                            Dra. Virginia Hernández
+                        </option>
                     </select>
                 </div>
 
-                <!-- Calendario Interactivo -->
-                <!-- Campo de Fecha Flotante -->
+                <!-- CALENDARIO -->
                 <div class="campo" style="position: relative;">
+
                     <label>Fecha</label>
-                    <!-- Este es el "input" que el usuario verá -->
+
                     <div id="btn-mostrar-calendario" class="input-falso">
                         <i class="bi bi-calendar-event"></i>
-                        <span id="texto-fecha-seleccionada">Selecciona una fecha</span>
+                        <span id="texto-fecha-seleccionada">
+                            Selecciona una fecha
+                        </span>
                     </div>
 
-                    <!-- Calendario Interactivo Flotante -->
                     <div class="cal-container" id="calendario-flotante" style="display: none;">
+
                         <div class="cal-mes-nav">
-                            <button type="button" id="prev-month"><i class="bi bi-chevron-left"></i></button>
+
+                            <button type="button" id="prev-month">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+
                             <h4 id="mes-año-display"></h4>
-                            <button type="button" id="next-month"><i class="bi bi-chevron-right"></i></button>
+
+                            <button type="button" id="next-month">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+
                         </div>
+
                         <div class="cal-grid">
+
                             <div class="cal-dow">Lu</div>
                             <div class="cal-dow">Ma</div>
                             <div class="cal-dow">Mi</div>
@@ -169,30 +297,53 @@
                             <div class="cal-dow">Vi</div>
                             <div class="cal-dow">Sá</div>
                             <div class="cal-dow">Do</div>
+
                             <div id="dias-calendario" class="dias-grid"></div>
+
                         </div>
+
                     </div>
+
                 </div>
 
-                <!-- Selector de Hora -->
+                <!-- HORARIOS -->
                 <div class="campo" style="margin-top: 1rem;">
+
                     <label>Horario disponible (4:30 PM - 8:00 PM)</label>
+
                     <div class="horarios-grid" id="horarios-contenedor"></div>
+
                 </div>
 
-                <!-- Resumen Costo e Inputs Ocultos -->
+                <!-- COSTO -->
                 <div class="resumen-costo">
-                    <p>Costo Estimado: <strong id="costo-cita-clicitas">$0.00 MXN</strong></p>
+
+                    <p>
+                        Costo Estimado:
+                        <strong id="costo-cita-clicitas">
+                            $0.00 MXN
+                        </strong>
+                    </p>
+
                 </div>
 
+                <!-- INPUTS OCULTOS -->
                 <input type="hidden" id="cita-fecha" required>
                 <input type="hidden" id="cita-hora" required>
 
+                <!-- MENSAJES -->
                 <p id="feedback-cita" style="text-align: center; margin-top: 10px;"></p>
-                <button type="submit" class="btn agregar-cita ancho-total" id="btnConfirmarCita">Confirmar Cita</button>
+
+                <!-- BOTÓN -->
+                <button type="submit" class="btn agregar-cita ancho-total" id="btnConfirmarCita">
+                    Confirmar Cita
+                </button>
+
             </form>
+
         </div>
     </div>
+
     <!-- ========================================== -->
     <!-- MODAL: NUEVO PACIENTE -->
     <!-- ========================================== -->

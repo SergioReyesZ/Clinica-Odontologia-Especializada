@@ -568,3 +568,165 @@ p{
     color: #0a84ff; 
     font-size: 1.1rem;
 }
+
+.img-paciente{
+    width: 60px;
+    height: auto; 
+    border-radius: 50%; 
+    object-fit: cover; 
+}
+
+.conservar-paciente {
+    background: #f0f7ff;
+    border: 1px solid #d5e8fa;
+    border-radius: 10px;
+    padding: 14px;
+    margin: 12px 0 18px;
+}
+
+.conservar-paciente label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.conservar-paciente input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 3px;
+    accent-color: #0a84ff;
+    flex-shrink: 0;
+}
+
+.conservar-paciente span {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.conservar-paciente strong {
+    color: #174477;
+    font-size: 14px;
+}
+
+.conservar-paciente small {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.btn-hora:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+    background: #e5e7eb;
+    color: #94a3b8;
+    border-color: #d1d5db;
+}
+
+/* Fecha de nacimiento del nuevo paciente */
+.fecha-nacimiento-nuevo {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.fecha-nacimiento-nuevo select {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Calendario flotante: el JS calcula su posición */
+#calendario-flotante {
+    position: fixed !important;
+    z-index: 10050 !important;
+    margin: 0 !important;
+    max-width: calc(100vw - 20px);
+    max-height: calc(100vh - 20px);
+    overflow-y: auto;
+}
+
+/* Evitar que los campos se desborden en móvil */
+@media (max-width: 480px) {
+    .fecha-nacimiento-nuevo {
+        gap: 5px;
+    }
+
+    .fecha-nacimiento-nuevo select {
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: 13px;
+    }
+}
+
+/* =========================================
+   CALENDARIO FLOTANTE - ANCHO CORREGIDO
+========================================= */
+
+#calendario-flotante {
+    position: fixed !important;
+
+    width: 320px !important;
+    min-width: 0 !important;
+    max-width: calc(100vw - 24px) !important;
+
+    box-sizing: border-box !important;
+    padding: 16px !important;
+
+    left: auto;
+    right: auto;
+
+    overflow-x: hidden !important;
+    overflow-y: auto;
+
+    z-index: 10050 !important;
+}
+
+/* Navegación del mes */
+#calendario-flotante .cal-mes-nav {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+#calendario-flotante .cal-mes-nav h4 {
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Distribución de los días */
+#calendario-flotante .cal-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+    box-sizing: border-box;
+}
+
+#calendario-flotante .dias-grid {
+    grid-column: 1 / -1;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+}
+
+#calendario-flotante .cal-dow,
+#calendario-flotante .dias-grid button {
+    min-width: 0;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* Adaptación móvil */
+@media (max-width: 480px) {
+    #calendario-flotante {
+        width: 300px !important;
+        max-width: calc(100vw - 20px) !important;
+        padding: 12px !important;
+    }
+}
+
