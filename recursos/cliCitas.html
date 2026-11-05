@@ -97,55 +97,22 @@
             <form class="formulario-cita" id="formNuevaCita">
                 <div class="campo-doble">
                     <div class="campo">
-                        <label for="cita-paciente">Paciente</label>
+                        <label>Paciente</label>
                         <select required id="cita-paciente">
                             <option value="" disabled selected>Selecciona paciente</option>
-                            <option value="nuevo">+ Agregar nuevo paciente...</option>
                         </select>
                     </div>
-
                     <div class="campo">
-                        <label for="cita-servicio">Servicio</label>
+                        <label>Servicio</label>
                         <select required id="cita-servicio">
                             <option value="" disabled selected>Selecciona servicio</option>
                         </select>
                     </div>
                 </div>
-                
-                <!-- REGISTRO DE NUEVO PACIENTE -->
-                <div id="nuevo-paciente-contenedor" style="display: none;">
-
-                    <div class="campo-doble">
-                        <div class="campo">
-                            <label for="nuevo-paciente-nombre">Nombre(s)</label>
-                            <input type="text" id="nuevo-paciente-nombre" placeholder="Nombre del paciente">
-                        </div>
-
-                        <div class="campo">
-                            <label for="nuevo-paciente-apellido">Apellidos</label>
-                            <input type="text" id="nuevo-paciente-apellido" placeholder="Apellidos del paciente">
-                        </div>
-                    </div>
-
-                    <div class="conservar-paciente">
-                        <label for="conservar-paciente">
-                            <input type="checkbox" id="conservar-paciente" checked>
-                            <span>
-                                <strong>Conservar paciente en mi cuenta</strong>
-                                <small>
-                                    Si desmarcas esta opción, el paciente no aparecerá
-                                    en tu lista personal de pacientes.
-                                </small>
-                            </span>
-                        </label>
-                    </div>
-
-                </div>
-
                 <div class="campo">
                     <label>Odontólogo</label>
                     <select required id="cita-odontologo">
-                        <option value="" disabled>Selecciona odontólogo</option>
+                        <option value="" disabled>Selecciona especialista</option>
                         <option value="1" selected default>Dra. Virginia Hernández</option>
                     </select>
                 </div>
