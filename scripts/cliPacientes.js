@@ -36,7 +36,6 @@ async function iniciarPacientes() {
 
         usuarioActual = data.user;
 
-        configurarFechas();
         configurarEventos();
 
         await cargarPacientes();
@@ -51,69 +50,79 @@ async function iniciarPacientes() {
 }
 
 
-// =====================================================
-// CONFIGURAR FECHAS DEL FORMULARIO
-// =====================================================
+/* ==========================================
+   LÓGICA SELECTORES DE FECHA DE NACIMIENTO
+========================================== */
+document.addEventListener('DOMContentLoaded', () => {
+    const selectAnio = document.getElementById('pac-fecha-anio');
+    const selectMes = document.getElementById('pac-fecha-mes');
+    const selectDia = document.getElementById('pac-fecha-dia');
+    const inputFechaOculta = document.getElementById('pac-fecha');
 
-function configurarFechas() {
+    if (!selectAnio || !selectMes || !selectDia) return;
 
-    const dia = document.getElementById("pac-fecha-dia");
-    const anio = document.getElementById("pac-fecha-anio");
-    const mes = document.getElementById("pac-fecha-mes");
-
-    if (!dia || !anio || !mes) return;
-
-    dia.innerHTML = '<option value="">Día</option>';
-
-    for (let i = 1; i <= 31; i++) {
-        dia.innerHTML += `<option value="${String(i).padStart(2, "0")}">${i}</option>`;
+    // 1. Poblar select de años (Desde el año actual hasta 100 años atrás)
+    const anioActual = new Date().getFullYear();
+    for (let i = anioActual; i >= anioActual - 100; i--) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        selectAnio.appendChild(option);
     }
 
-    anio.innerHTML = '<option value="">Año</option>';
+    // 2. Función para actualizar los días disponibles según el mes y año
+    function actualizarDias() {
+        const anio = parseInt(selectAnio.value);
+        const mes = parseInt(selectMes.value);
 
-    const actual = new Date().getFullYear();
+        // Guardar el día actualmente seleccionado para no perderlo si sigue siendo válido
+        const diaSeleccionado = selectDia.value;
 
-    for (let i = actual; i >= actual - 100; i--) {
-        anio.innerHTML += `<option value="${i}">${i}</option>`;
+        // Limpiar días actuales (excepto la opción por defecto)
+        selectDia.innerHTML = '<option value="" disabled selected>Día</option>';
+
+        if (!anio || !mes) return;
+
+        // Calcular cantidad de días del mes seleccionado
+        const diasEnElMes = new Date(anio, mes, 0).getDate();
+
+        // Poblar select de días
+        for (let i = 1; i <= diasEnElMes; i++) {
+            const option = document.createElement('option');
+            const valorDia = i.toString().padStart(2, '0');
+            option.value = valorDia;
+            option.textContent = i;
+            selectDia.appendChild(option);
+        }
+
+        // Restaurar el día seleccionado si todavía es válido en el nuevo mes
+        if (diaSeleccionado && parseInt(diaSeleccionado) <= diasEnElMes) {
+            selectDia.value = diaSeleccionado;
+        }
     }
 
-    [dia, mes, anio].forEach(elemento => {
-        elemento.addEventListener("change", construirFecha);
+    // 3. Función para consolidar la fecha en el input oculto
+    function consolidarFecha() {
+        if (selectAnio.value && selectMes.value && selectDia.value) {
+            inputFechaOculta.value = `${selectAnio.value}-${selectMes.value}-${selectDia.value}`;
+        } else {
+            inputFechaOculta.value = "";
+        }
+    }
+
+    // 4. Escuchar cambios en los selects
+    selectAnio.addEventListener('change', () => {
+        actualizarDias();
+        consolidarFecha();
     });
-}
 
+    selectMes.addEventListener('change', () => {
+        actualizarDias();
+        consolidarFecha();
+    });
 
-function construirFecha() {
-
-    const dia = document.getElementById("pac-fecha-dia").value;
-    const mes = document.getElementById("pac-fecha-mes").value;
-    const anio = document.getElementById("pac-fecha-anio").value;
-
-    const campoFecha = document.getElementById("pac-fecha");
-
-    campoFecha.value = "";
-
-    if (!dia || !mes || !anio) return;
-
-    const fecha = new Date(
-        Number(anio),
-        Number(mes) - 1,
-        Number(dia)
-    );
-
-    // Evitar fechas inexistentes como 31 de febrero.
-    if (
-        fecha.getFullYear() !== Number(anio) ||
-        fecha.getMonth() !== Number(mes) - 1 ||
-        fecha.getDate() !== Number(dia)
-    ) {
-        return;
-    }
-
-    campoFecha.value =
-        `${anio}-${mes}-${dia}`;
-}
-
+    selectDia.addEventListener('change', consolidarFecha);
+});
 
 // =====================================================
 // CONFIGURAR EVENTOS

@@ -94,10 +94,7 @@
                     <div class="campo" style="flex: 1.5;">
                         <label>Fecha de Nacimiento</label>
                         <div style="display: flex; gap: 8px;">
-                            <select id="pac-fecha-dia" required style="flex: 1; padding: 0.8rem 0.5rem;">
-                                <option value="" disabled selected>Día</option>
-                            </select>
-                            <select id="pac-fecha-mes" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                            <select id="pac-fecha-mes" required class="select-mes">
                                 <option value="" disabled selected>Mes</option>
                                 <option value="01">Enero</option>
                                 <option value="02">Febrero</option>
@@ -112,7 +109,10 @@
                                 <option value="11">Noviembre</option>
                                 <option value="12">Diciembre</option>
                             </select>
-                            <select id="pac-fecha-anio" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                            <select id="pac-fecha-dia" required class="select-dia">
+                                <option value="" disabled selected>Día</option>
+                            </select>
+                            <select id="pac-fecha-anio" required class="select-anio">
                                 <option value="" disabled selected>Año</option>
                             </select>
                         </div>

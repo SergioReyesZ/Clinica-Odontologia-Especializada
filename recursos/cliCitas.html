@@ -135,12 +135,12 @@
                             <button type="button" id="next-month"><i class="bi bi-chevron-right"></i></button>
                         </div>
                         <div class="cal-grid">
+                            <div class="cal-dow">Sá</div>
                             <div class="cal-dow">Lu</div>
                             <div class="cal-dow">Ma</div>
                             <div class="cal-dow">Mi</div>
                             <div class="cal-dow">Ju</div>
                             <div class="cal-dow">Vi</div>
-                            <div class="cal-dow">Sá</div>
                             <div class="cal-dow">Do</div>
                             <div id="dias-calendario" class="dias-grid"></div>
                         </div>
@@ -167,7 +167,107 @@
             </form>
         </div>
     </div>
+    <!-- ========================================== -->
+    <!-- MODAL: CANCELAR CITA -->
+    <!-- ========================================== -->
+    <div class="modal-overlay" id="modalCancelarCita" style="display: none;">
+        <div class="modal-contenido" style="text-align: center; max-width: 400px;">
+            <i class="bi bi-exclamation-circle" style="font-size: 4rem; color: #ef4444;"></i>
+            <h3 style="margin: 1rem 0; color: #333;">¿Deseas cancelar la cita?</h3>
+            <p style="color: #64748b; margin-bottom: 2rem;">Esta acción no se puede deshacer.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button class="btn-accion secundario" onclick="cerrarModalCancelar()"
+                    style="padding: 0.8rem 2rem; border-radius: 10px; font-weight: bold;">No</button>
+                <button class="btn-accion peligro" id="btnConfirmarCancelacion"
+                    style="padding: 0.8rem 2rem; background: #ef4444; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">Cancelar
+                    cita</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- ========================================== -->
+    <!-- MODAL: MODIFICAR CITA -->
+    <!-- ========================================== -->
+    <div class="modal-overlay" id="modalModificarCita" style="display: none;">
+        <div class="modal-contenido">
+            <div class="modal-header">
+                <h3><i class="bi bi-pencil-square"></i> Modificar cita</h3>
+                <button class="btn-cerrar" onclick="cerrarModalModificar()"><i class="bi bi-x"></i></button>
+            </div>
+
+            <form class="formulario-cita" id="formModificarCita">
+                <input type="hidden" id="mod-cita-id">
+
+                <div class="campo-doble">
+                    <div class="campo">
+                        <label>Paciente</label>
+                        <!-- Este campo se mantiene de solo lectura por requisito -->
+                        <input type="text" id="mod-cita-paciente" readonly
+                            style="background-color: #f1f5f9; color: #64748b; cursor: not-allowed; border: 1px solid #cbd5e1; padding: 0.8rem; border-radius: 10px; font-family: inherit; font-size: 1rem;">
+                    </div>
+                    <div class="campo">
+                        <label>Servicio</label>
+                        <select required id="mod-cita-servicio">
+                            <option value="" disabled selected>Selecciona servicio</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label>Odontólogo</label>
+                    <select required id="mod-cita-odontologo">
+                        <option value="1" selected default>Dra. Virginia Hernández</option>
+                    </select>
+                </div>
+
+                <!-- Calendario Interactivo Modificar (Idéntico al de agendar) -->
+                <div class="campo" style="position: relative;">
+                    <label>Fecha</label>
+                    <div id="btn-mostrar-calendario-mod" class="input-falso">
+                        <i class="bi bi-calendar-event"></i>
+                        <span id="texto-fecha-seleccionada-mod">Selecciona una fecha</span>
+                    </div>
+
+                    <div class="cal-container" id="calendario-flotante-mod" style="display: none;">
+                        <div class="cal-mes-nav">
+                            <button type="button" id="prev-month-mod"><i class="bi bi-chevron-left"></i></button>
+                            <h4 id="mes-año-display-mod"></h4>
+                            <button type="button" id="next-month-mod"><i class="bi bi-chevron-right"></i></button>
+                        </div>
+                        <div class="cal-grid">
+                            <div class="cal-dow">Lu</div>
+                            <div class="cal-dow">Ma</div>
+                            <div class="cal-dow">Mi</div>
+                            <div class="cal-dow">Ju</div>
+                            <div class="cal-dow">Vi</div>
+                            <div class="cal-dow">Sá</div>
+                            <div class="cal-dow">Do</div>
+                            <div id="dias-calendario-mod" class="dias-grid"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selector de Hora Modificar -->
+                <div class="campo" style="margin-top: 1rem;">
+                    <label>Horario disponible (4:30 PM - 8:00 PM)</label>
+                    <div class="horarios-grid" id="horarios-contenedor-mod"></div>
+                </div>
+
+                <!-- Resumen Costo e Inputs Ocultos -->
+                <div class="resumen-costo" style="margin-top: 1rem;">
+                    <p>Costo Estimado: <strong id="costo-mod-cita" style="color: #0a84ff; font-size: 1.1rem;">$0.00
+                            MXN</strong></p>
+                </div>
+
+                <input type="hidden" id="mod-cita-fecha" required>
+                <input type="hidden" id="mod-cita-hora" required>
+
+                <p id="feedback-modificar" style="text-align: center; margin-top: 10px;"></p>
+                <button type="submit" class="btn agregar-cita ancho-total" id="btnGuardarModificacion">Guardar
+                    Cambios</button>
+            </form>
+        </div>
+    </div>
     <script>
         function abrirModal() { document.getElementById('modalNuevaCita').style.display = 'flex'; }
         function cerrarModal() { document.getElementById('modalNuevaCita').style.display = 'none'; }

@@ -77,7 +77,6 @@
 
         <div class="informacion">
             <div class="citas">
-
                 <div class="encabezado">
                     <div class="titulos">
                         <p class="titulo"><i class="bi bi-calendar-week"></i> Próximas citas</p>
@@ -162,12 +161,12 @@
                             <button type="button" id="next-month"><i class="bi bi-chevron-right"></i></button>
                         </div>
                         <div class="cal-grid">
+                            <div class="cal-dow">Sá</div>
                             <div class="cal-dow">Lu</div>
                             <div class="cal-dow">Ma</div>
                             <div class="cal-dow">Mi</div>
                             <div class="cal-dow">Ju</div>
                             <div class="cal-dow">Vi</div>
-                            <div class="cal-dow">Sá</div>
                             <div class="cal-dow">Do</div>
                             <div id="dias-calendario" class="dias-grid"></div>
                         </div>
@@ -218,10 +217,6 @@
                     <div class="campo" style="flex: 1.5;">
                         <label>Fecha de Nacimiento</label>
                         <div style="display: flex; gap: 8px;">
-                            <select id="pac-fecha-dia" required style="flex: 1; padding: 0.8rem 0.5rem;">
-                                <option value="" disabled selected>Día</option>
-                                <!-- Generado por JS -->
-                            </select>
                             <select id="pac-fecha-mes" required style="flex: 1; padding: 0.8rem 0.5rem;">
                                 <option value="" disabled selected>Mes</option>
                                 <option value="01">Enero</option>
@@ -236,6 +231,10 @@
                                 <option value="10">Octubre</option>
                                 <option value="11">Noviembre</option>
                                 <option value="12">Diciembre</option>
+                            </select>
+                            <select id="pac-fecha-dia" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                                <option value="" disabled selected>Día</option>
+                                <!-- Generado por JS -->
                             </select>
                             <select id="pac-fecha-anio" required style="flex: 1; padding: 0.8rem 0.5rem;">
                                 <option value="" disabled selected>Año</option>

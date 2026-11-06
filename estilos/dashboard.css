@@ -84,6 +84,7 @@ p{
 }
 
 .ver{
+    width: 30px;
     cursor: pointer;
     color: #0056e0;
     transform: rotate(-90deg);
@@ -104,13 +105,14 @@ p{
     font-weight: bold;
 }
 
-.tarjeta{
+.tarjeta {
     border: 1px solid #d1d5db;
-    padding: 0.5rem;
+    padding: 0.8rem 1rem;
     border-radius: 10px;
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto; /* Fecha, Hora, Bloque de Texto (crece), Estado, Flecha */
     align-items: center;
+    gap: 1rem;
 }
 
 .linea{
@@ -142,13 +144,26 @@ p{
 }
 
 .nombre-paciente .nombre{
-    font-size: 1.1rem;
+    text-decoration: none;
+    font-size: 1rem;
     font-weight: bold;
+    color: black;
     cursor: pointer;
+    text-wrap: wrap; 
 }
 
 .nombre-paciente .nombre:hover{
     text-decoration: underline;
+}
+
+.nombre-paciente .nombre, .info-cita .nombre {
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    word-break: break-word; /* Permite que nombres muy largos bajen de línea */
+    overflow-wrap: break-word;
 }
 
 .estado{
@@ -197,13 +212,27 @@ p{
     
 }
 
-.tarjeta-paciente{  
+.tarjeta-paciente {  
     padding: 1rem;
     border-bottom: 1px solid #d1d5db;
     border-radius: 10px;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto; /* Imagen, Textos (crece), Flecha */
     align-items: center;
-    justify-content: space-around;
+    gap: 1rem;
+}
+
+.tarjeta-paciente .nombre-paciente {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Vital para que el texto largo respete el ancho y baje */
+}
+
+.tarjeta-paciente .nombre-paciente .nombre {
+    font-weight: bold;
+    color: black;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .btn.agregar-cita{
@@ -434,27 +463,53 @@ p{
     color: #94a3b8;
 }
 
+/* ==========================================
+   CALENDARIO: ALINEACIÓN DE DÍAS Y NÚMEROS
+========================================== */
+
 .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    column-gap: 4px;
+    row-gap: 0;
     width: 100%;
+    box-sizing: border-box;
 }
 
+/* Encabezados: Lu, Ma, Mi, Ju, Vi, Sá, Do */
 .cal-dow {
-    display: inline-block;
-    width: calc(100% / 7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 0;
     text-align: center;
     font-size: 0.8rem;
     font-weight: bold;
     color: #475569;
     margin-bottom: 0.5rem;
+    box-sizing: border-box;
 }
 
+/* Cuadrícula de números */
 .dias-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    column-gap: 4px;
+    row-gap: 4px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
+/* Cada día */
 .cal-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    box-sizing: border-box;
+
     background-color: white;
     border: 1px solid transparent;
     border-radius: 8px;
@@ -471,6 +526,7 @@ p{
     color: #0056e0;
 }
 
+/* Días desactivados: se conservan */
 .cal-day.disabled {
     color: #cbd5e1;
     background-color: transparent;
@@ -483,6 +539,7 @@ p{
     font-weight: bold;
     box-shadow: 0 4px 10px rgba(0, 86, 224, 0.3);
 }
+
 
 /* Selector de Horarios */
 .horarios-grid {
