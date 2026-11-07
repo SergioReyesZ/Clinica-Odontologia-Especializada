@@ -109,3 +109,64 @@ window.addEventListener('load', () => {
             }
         });
     }
+
+/* ==========================================
+   CARGAR FOTO Y NOMBRE DEL ADMINISTRADOR
+========================================== */
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    const fotoPerfil = document.querySelector(".perfil .pfp");
+    const nombreDropdown = document.getElementById("admin-nombre-dropdown");
+
+    if (!fotoPerfil) return;
+
+    try {
+
+        // Obtener usuario autenticado
+        const { data: { user }, error: authError } =
+            await client.auth.getUser();
+
+        if (authError || !user) {
+            console.error("No se pudo obtener el administrador:", authError);
+            return;
+        }
+
+        // Consultar información del administrador
+        const { data: usuario, error } = await client
+            .from("Usuarios")
+            .select("nombre, apellido, avatar")
+            .eq("id", user.id)
+            .single();
+
+        if (error || !usuario) {
+            console.error("Error al cargar datos del administrador:", error);
+            return;
+        }
+
+        // Mostrar foto guardada
+        if (usuario.avatar) {
+            fotoPerfil.src = usuario.avatar;
+        } else {
+            fotoPerfil.src = "iconos/perfil.png";
+        }
+
+        fotoPerfil.onerror = () => {
+            fotoPerfil.src = "iconos/perfil.png";
+        };
+
+        // Mostrar nombre completo dentro del desplegable
+        if (nombreDropdown) {
+            const nombreCompleto =
+                `${usuario.nombre || ""} ${usuario.apellido || ""}`.trim();
+
+            nombreDropdown.textContent = nombreCompleto || "Administrador";
+        }
+
+    } catch (error) {
+
+        console.error("Error cargando perfil del administrador:", error);
+
+    }
+
+});

@@ -10,10 +10,112 @@
     <link rel="stylesheet" href="estilos/dashboard.css">
     <link rel="stylesheet" href="estilos/header.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 </head>
 
-<body>
+<body class="dashboard-cargando">
+    <!-- ==========================================
+ SKELETON PAGE - CARGA DEL DASHBOARD
+========================================== -->
+    <div class="skeleton-page" aria-label="Cargando dashboard">
+
+        <!-- HEADER -->
+        <div class="skeleton-header">
+            <div class="skeleton-logo skeleton"></div>
+
+            <div class="skeleton-menu">
+                <div class="skeleton skeleton-menu-item"></div>
+                <div class="skeleton skeleton-menu-item"></div>
+                <div class="skeleton skeleton-menu-item"></div>
+            </div>
+
+            <div class="skeleton-perfil">
+                <div class="skeleton skeleton-circulo"></div>
+                <div class="skeleton skeleton-nombre"></div>
+                <div class="skeleton skeleton-flecha"></div>
+            </div>
+        </div>
+
+        <!-- BIENVENIDA -->
+        <div class="skeleton-banner">
+            <div class="skeleton-banner-texto">
+                <div class="skeleton skeleton-titulo-corto"></div>
+                <div class="skeleton skeleton-titulo-largo"></div>
+                <div class="skeleton skeleton-parrafo"></div>
+                <div class="skeleton skeleton-parrafo skeleton-parrafo-corto"></div>
+            </div>
+
+            <div class="skeleton skeleton-diente"></div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="skeleton-informacion">
+
+            <!-- CITAS -->
+            <div class="skeleton-seccion skeleton-citas">
+
+                <div class="skeleton-encabezado">
+                    <div class="skeleton skeleton-subtitulo"></div>
+                    <div class="skeleton skeleton-icono"></div>
+                </div>
+
+                <div class="skeleton-linea"></div>
+
+                <div class="skeleton-tarjetas">
+                    <div class="skeleton skeleton-tarjeta-cita"></div>
+                    <div class="skeleton skeleton-tarjeta-cita"></div>
+                    <div class="skeleton skeleton-tarjeta-cita"></div>
+                </div>
+
+                <div class="skeleton skeleton-boton"></div>
+            </div>
+
+            <!-- PACIENTES -->
+            <div class="skeleton-seccion skeleton-pacientes">
+
+                <div class="skeleton-encabezado">
+                    <div class="skeleton skeleton-subtitulo"></div>
+                    <div class="skeleton skeleton-icono"></div>
+                </div>
+
+                <div class="skeleton-linea"></div>
+
+                <div class="skeleton-lista-pacientes">
+                    <div class="skeleton-paciente">
+                        <div class="skeleton skeleton-avatar"></div>
+                        <div class="skeleton-datos">
+                            <div class="skeleton skeleton-nombre-paciente"></div>
+                            <div class="skeleton skeleton-edad"></div>
+                        </div>
+                    </div>
+
+                    <div class="skeleton-paciente">
+                        <div class="skeleton skeleton-avatar"></div>
+                        <div class="skeleton-datos">
+                            <div class="skeleton skeleton-nombre-paciente"></div>
+                            <div class="skeleton skeleton-edad"></div>
+                        </div>
+                    </div>
+
+                    <div class="skeleton-paciente">
+                        <div class="skeleton skeleton-avatar"></div>
+                        <div class="skeleton-datos">
+                            <div class="skeleton skeleton-nombre-paciente"></div>
+                            <div class="skeleton skeleton-edad"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skeleton skeleton-boton skeleton-boton-secundario"></div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- FIN SKELETON PAGE -->
     <div class="contenedor-principal cargando">
+
+
         <div class="header" id="header">
             <img src="iconos/logo.png" alt="logo">
 
@@ -25,23 +127,20 @@
             </div>
 
             <div class="perfil-contenedor">
-                <button class="btn-notificaciones" id="btnNotificacionesDropdown"><i class="bi bi-bell"></i></button>
+
+                <button class="btn-notificaciones" id="btnNotificacionesDropdown" type="button">
+                    <i class="bi bi-bell"></i>
+                    <span id="contadorNotificaciones" class="contador-notificaciones" style="display: none;">0</span>
+                </button>
+
                 <div class="dropdown-notificaciones" id="dropdownNotificaciones">
-                    <a href="recursos/cliCitas.html" class="dropdown-item">
-                        <i class="bi bi-calendar-check"></i> Cita confirmada: Mateo Ramírez
-                    </a>
+                    <div class="notificaciones-encabezado">
+                        <strong>Notificaciones</strong>
+                    </div>
 
-                    <hr class="dropdown-divisor">
-
-                    <a href="recursos/cliCitas.html" class="dropdown-item">
-                        <i class="bi bi-clock-history"></i> Recordatorio: Tu cita es mañana
-                    </a>
-
-                    <hr class="dropdown-divisor">
-
-                    <a href="recursos/cliCitas.html" class="dropdown-item texto-peligro">
-                        <i class="bi bi-calendar-x"></i> Cita cancelada: Ana López
-                    </a>
+                    <div id="listaNotificaciones">
+                        <p class="sin-notificaciones">Cargando notificaciones...</p>
+                    </div>
                 </div>
 
                 <div class="perfil" id="btnPerfilDropdown">
@@ -72,7 +171,7 @@
                 </p>
             </div>
 
-            <img src="iconos/Diente kawaii con corazón azul.png" alt="">
+            <img src="iconos/diente_kawaii.png" alt="">
         </div>
 
         <div class="informacion">
@@ -161,13 +260,13 @@
                             <button type="button" id="next-month"><i class="bi bi-chevron-right"></i></button>
                         </div>
                         <div class="cal-grid">
-                            <div class="cal-dow">Sá</div>
+                            <div class="cal-dow">Do</div>
                             <div class="cal-dow">Lu</div>
                             <div class="cal-dow">Ma</div>
                             <div class="cal-dow">Mi</div>
                             <div class="cal-dow">Ju</div>
                             <div class="cal-dow">Vi</div>
-                            <div class="cal-dow">Do</div>
+                            <div class="cal-dow">Sá</div>
                             <div id="dias-calendario" class="dias-grid"></div>
                         </div>
                     </div>
@@ -175,7 +274,7 @@
 
                 <!-- Selector de Hora -->
                 <div class="campo" style="margin-top: 1rem;">
-                    <label>Horario disponible (4:30 PM - 8:00 PM)</label>
+                    <label>Horario disponible (16:30 - 20:00)</label>
                     <div class="horarios-grid" id="horarios-contenedor"></div>
                 </div>
 
@@ -263,7 +362,9 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="scripts/app.js"></script>
+<script src="scripts/seguridadCliente.js"></script>
 <script src="scripts/cliHeader.js"></script>
 <script src="scripts/dashboard.js"></script>
+<script src="scripts/notificaciones.js"></script>
 
 </html>

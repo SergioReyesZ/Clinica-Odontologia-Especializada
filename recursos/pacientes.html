@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../estilos/header.css">
     <link rel="stylesheet" href="../estilos/pacientes.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
 </head>
 
 <body>
@@ -24,6 +25,8 @@
                 <a href="../recursos/usuarios.html" class="opcion">Usuarios</a>
                 <a href="../recursos/horarios.html" class="opcion">Horarios</a>
                 <a href="../recursos/bitacora.html" class="opcion">Bitácora</a>
+                <a href="../recursos/admServicios.html" class="opcion">Servicios</a>
+
                 <div class="linea-flotante"></div>
             </div>
 
@@ -36,11 +39,18 @@
                 </div>
                 <!-- El pequeño modal flotante -->
                 <div class="dropdown-perfil" id="dropdownPerfil">
-                    <a href="../recursos/cliPerfil.html" class="dropdown-item">
+
+                    <!-- Identidad del administrador -->
+                    <div class="dropdown-identidad">
+                        <strong id="admin-nombre-dropdown">Cargando...</strong>
+                        <span>Administrador</span>
+                    </div>
+
+                    <a href="perfil.html" class="dropdown-item">
                         <i class="bi bi-gear"></i> Configuración de cuenta
                     </a>
                     <hr class="dropdown-divisor">
-                    <a href="../index.html" class="dropdown-item texto-peligro">
+                    <a href="#" id="btnCerrarSesion" class="dropdown-item texto-peligro">
                         <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                     </a>
                 </div>
@@ -48,7 +58,9 @@
 
         </div>
     </div>
-<main class="contenedor" id="contenedor"><div id="notice" role="status" aria-live="polite"></div><section class="admin-module">
+    <main class="contenedor" id="contenedor">
+        <div id="notice" role="status" aria-live="polite"></div>
+        <section class="admin-module">
             <div class="panel">
                 <div class="panel-head">
                     <h2><i class="bi bi-people"></i> Pacientes registrados</h2><button class="primary"
@@ -70,8 +82,209 @@
                     </table>
                 </div>
             </div>
-        </section></main><div class="overlay hidden" id="modal"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="panel-head"><h2 id="modalTitle"></h2><button class="close" id="closeModal" aria-label="Cerrar">×</button></div><div id="modalContent"></div></div></div>
+        </section>
+    </main>
+    <div class="modal-overlay" id="modalPaciente" style="display: none;">
+        <div class="modal-contenido">
+            <div class="modal-header">
+                <h3 id="tituloModalPaciente">Registrar Nuevo Paciente</h3>
+                <button class="btn-cerrar" onclick="cerrarModalPaciente()"><i class="bi bi-x"></i></button>
+            </div>
+            <form class="formulario-cita" id="formNuevoPaciente">
+                <div class="campo-doble">
+                    <div class="campo">
+                        <label>Nombre(s)</label>
+                        <input type="text" id="pac-nombre" placeholder="Ej. Mateo" required>
+                    </div>
+                    <div class="campo">
+                        <label>Apellidos</label>
+                        <input type="text" id="pac-apellido" placeholder="Ej. Ramírez" required>
+                    </div>
+                </div>
+
+                <div class="campo-doble">
+                    <div class="campo" style="flex: 1.5;">
+                        <label>Fecha de Nacimiento</label>
+                        <div style="display: flex; gap: 8px;">
+                            <select id="pac-fecha-mes" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                                <option value="" disabled selected>Mes</option>
+                                <option value="01">Enero</option>
+                                <option value="02">Febrero</option>
+                                <option value="03">Marzo</option>
+                                <option value="04">Abril</option>
+                                <option value="05">Mayo</option>
+                                <option value="06">Junio</option>
+                                <option value="07">Julio</option>
+                                <option value="08">Agosto</option>
+                                <option value="09">Septiembre</option>
+                                <option value="10">Octubre</option>
+                                <option value="11">Noviembre</option>
+                                <option value="12">Diciembre</option>
+                            </select>
+                            <select id="pac-fecha-dia" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                                <option value="" disabled selected>Día</option>
+                                <!-- Generado por JS -->
+                            </select>
+                            <select id="pac-fecha-anio" required style="flex: 1; padding: 0.8rem 0.5rem;">
+                                <option value="" disabled selected>Año</option>
+                                <!-- Generado por JS -->
+                            </select>
+                        </div>
+                        <!-- Input oculto para recolectar el valor y mandarlo a Supabase -->
+                        <input type="hidden" id="pac-fecha" required>
+                    </div>
+
+                    <div class="campo">
+                        <label>Género</label>
+                        <select id="pac-sexo" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                        </select>
+                    </div>
+                </div>
+                <p id="feedback-paciente" style="text-align: center; margin-top: 10px;"></p>
+                <button type="submit" class="btn agregar-cita ancho-total" id="btnGuardarPaciente">Guardar
+                    Paciente</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL: EDITAR PACIENTE (Pégalo aquí, justo abajo del modal de registro) -->
+    <div class="modal-overlay" id="modalEditarPaciente" style="display: none;">
+        <div class="modal-contenido" style="max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3>Editar Paciente</h3>
+                <button class="btn-cerrar" onclick="cerrarModalEditar()"><i class="bi bi-x"></i></button>
+            </div>
+
+            <form class="formulario-cita" id="formEditarPaciente">
+                <input type="hidden" id="edit-pac-id">
+
+                <div class="campo">
+                    <label>Asignar padre o tutor</label>
+                    <input type="search" id="edit-tutor-busqueda" placeholder="Buscar por correo electrónico..."
+                        autocomplete="off">
+                    <input type="hidden" id="edit-tutor-id">
+                    <div id="resultados-tutores" class="resultados-tutores">
+                        <small>Escribe un correo para buscar un tutor.</small>
+                    </div>
+                    <small id="tutor-seleccionado" class="tutor-seleccionado"></small>
+                </div>
+
+                <div class="campo" style="align-items: center; text-align: center; margin-bottom: 1.5rem;">
+                    <label style="margin-bottom: 0.5rem;">Foto del Paciente</label>
+                    <div style="position: relative; display: inline-block; cursor: pointer;"
+                        onclick="document.getElementById('inputAvatarPaciente').click()">
+                        <img id="edit-avatarPreview" src="../iconos/perfil.png" alt="Avatar" class="pfp"
+                            style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #cbd5e1;">
+                        <div
+                            style="position: absolute; bottom: 0; right: 0; background: #0056e0; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
+                            <i class="bi bi-camera"></i>
+                        </div>
+                    </div>
+                    <input type="file" id="inputAvatarPaciente" accept="image/*" style="display: none;">
+                </div>
+
+                <div class="campo-doble">
+                    <div class="campo">
+                        <label>Nombre(s)</label>
+                        <input type="text" id="edit-pac-nombre" required>
+                    </div>
+                    <div class="campo">
+                        <label>Apellidos</label>
+                        <input type="text" id="edit-pac-apellido" required>
+                    </div>
+                </div>
+
+                <div class="campo-doble">
+                    <div class="campo">
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" id="edit-pac-fecha" disabled
+                            style="background-color: #f1f5f9; cursor: not-allowed;">
+                    </div>
+
+                    <div class="campo">
+                        <label>Género</label>
+                        <select id="edit-pac-sexo" required>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                        </select>
+                    </div>
+                </div>
+
+                <p id="feedback-editar-paciente" style="text-align: center; margin-top: 10px;"></p>
+                <button type="submit" class="btn agregar-cita ancho-total" id="btnActualizarPaciente"
+                    style="background-color: #0056e0; box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3);">Actualizar
+                    Datos</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL PARA RECORTAR LA FOTO DEL PACIENTE -->
+    <div class="modal-cropper" id="modalCropperPaciente">
+        <div class="contenido-cropper">
+            <div class="encabezado-cropper">
+                <div>
+                    <h3>Recortar fotografía</h3>
+                    <p>Ajusta la imagen para que se vea correctamente en el perfil del paciente.</p>
+                </div>
+                <button type="button" id="cerrarCropperPaciente" class="cerrar-cropper" aria-label="Cerrar recortador">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="area-cropper">
+                <img id="imagenCropperPaciente" src="" alt="Imagen del paciente para recortar">
+            </div>
+
+            <div class="controles-cropper">
+                <i class="bi bi-zoom-out"></i>
+                <input type="range" id="zoomCropperPaciente" min="0" max="100" value="50">
+                <i class="bi bi-zoom-in"></i>
+            </div>
+
+            <p class="ayuda-cropper">
+                Arrastra la fotografía para acomodarla y utiliza la barra para acercar o alejar.
+            </p>
+
+            <div class="botones-cropper">
+                <button type="button" id="cancelarCropperPaciente" class="btn-cancelar-cropper">
+                    Cancelar
+                </button>
+                <button type="button" id="aceptarCropperPaciente" class="btn-aceptar-cropper">
+                    <i class="bi bi-check-lg"></i> Aceptar cambios
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- MODAL: ELIMINAR PACIENTE -->
+    <div class="modal-overlay" id="modalEliminarPacienteAdmin" style="display: none;">
+        <div class="modal-contenido" style="text-align: center; max-width: 400px;">
+            <i class="bi bi-exclamation-circle" style="font-size: 4rem; color: #ef4444;"></i>
+            <h3 style="margin: 1rem 0; color: #333;">¿Deseas eliminar este paciente?</h3>
+            <p style="color: #64748b; margin-bottom: 2rem;">Esta acción no se puede deshacer.</p>
+
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button type="button" class="btn-accion secundario" onclick="cerrarModalEliminarPaciente()"
+                    style="padding: 0.8rem 2rem; border-radius: 10px; font-weight: bold;">
+                    No
+                </button>
+
+                <button type="button" class="btn-accion peligro" id="btnConfirmarEliminarPaciente"
+                    style="padding: 0.8rem 2rem; background: #ef4444; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../scripts/app.js"></script>
+<script src="../scripts/seguridadAdmin.js"></script>
 <script src="../scripts/adminHeader.js"></script>
 <script src="../scripts/pacientes.js"></script>
+
 </html>

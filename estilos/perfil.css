@@ -314,3 +314,178 @@
 .btn.volver:hover{
     color: #0056e0;
 }
+
+/* =========================================
+   MODAL PARA RECORTAR FOTOGRAFÍA
+========================================= */
+
+.modal-cropper {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.70);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.modal-cropper.activo {
+    display: flex;
+}
+
+.contenido-cropper {
+    background: white;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+    animation: aparecerModal 0.25s ease;
+    box-sizing: border-box;
+}
+
+.encabezado-cropper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.encabezado-cropper h3 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.25rem;
+}
+
+.encabezado-cropper p {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: 0.88rem;
+}
+
+.cerrar-cropper {
+    border: none;
+    background: #f1f5f9;
+    color: #64748b;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.cerrar-cropper:hover {
+    background: #e2e8f0;
+}
+
+.area-cropper {
+    width: 100%;
+    height: 320px;
+    background: #111827;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.area-cropper img {
+    display: block;
+    max-width: 100%;
+}
+
+.area-cropper .cropper-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.area-cropper .cropper-view-box {
+    outline: 2px solid #ffffff;
+    outline-color: rgba(255,255,255,0.9);
+}
+
+.area-cropper .cropper-line,
+.area-cropper .cropper-point {
+    display: none;
+}
+
+.controles-cropper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+.controles-cropper input {
+    flex: 1;
+    accent-color: #0056e0;
+    cursor: pointer;
+}
+
+.ayuda-cropper {
+    color: #64748b;
+    font-size: 0.82rem;
+    text-align: center;
+    margin: 12px 0 20px;
+}
+
+.botones-cropper {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cancelar-cropper,
+.btn-aceptar-cropper {
+    border: none;
+    border-radius: 10px;
+    padding: 11px 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancelar-cropper {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.btn-cancelar-cropper:hover {
+    background: #e2e8f0;
+}
+
+.btn-aceptar-cropper {
+    background: #0056e0;
+    color: white;
+}
+
+.btn-aceptar-cropper:hover {
+    background: #0045b3;
+}
+
+.btn-aceptar-cropper:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+
+    .contenido-cropper {
+        padding: 18px;
+    }
+
+    .area-cropper {
+        height: 280px;
+    }
+
+    .botones-cropper {
+        flex-direction: column-reverse;
+    }
+
+    .botones-cropper button {
+        width: 100%;
+    }
+}

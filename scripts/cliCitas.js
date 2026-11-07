@@ -12,10 +12,10 @@ let calActual = {
 };
 const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 const franjasHorarias = [
-    { texto: "4:30 PM", valor: "16:30:00" }, { texto: "5:00 PM", valor: "17:00:00" },
-    { texto: "5:30 PM", valor: "17:30:00" }, { texto: "6:00 PM", valor: "18:00:00" },
-    { texto: "6:30 PM", valor: "18:30:00" }, { texto: "7:00 PM", valor: "19:00:00" },
-    { texto: "7:30 PM", valor: "19:30:00" }, { texto: "8:00 PM", valor: "20:00:00" }
+    { texto: "16:30", valor: "16:30:00" }, { texto: "17:00", valor: "17:00:00" },
+    { texto: "17:30", valor: "17:30:00" }, { texto: "18:00", valor: "18:00:00" },
+    { texto: "18:30", valor: "18:30:00" }, { texto: "19:00", valor: "19:00:00" },
+    { texto: "19:30", valor: "19:30:00" }
 ];
 
 // ==========================================
@@ -31,52 +31,149 @@ function cambiarVista(idVistaDestino, botonClickeado) {
 // ==========================================
 // LECTURA DE CITAS DESDE SUPABASE
 // ==========================================
+
+// ==========================================
+// INICIALIZACIÓN DE LA PÁGINA Y SKELETON
+// ==========================================
+
 document.addEventListener('DOMContentLoaded', async () => {
-    const { data: { user } } = await client.auth.getUser();
-    if (!user) return window.location.href = '../index.html';
 
     const contenedores = {
-        'proximas': document.getElementById('vista-proximas'),
-        'historial': document.getElementById('vista-historial'),
-        'canceladas': document.getElementById('vista-canceladas')
+        proximas: document.getElementById('vista-proximas'),
+        historial: document.getElementById('vista-historial'),
+        canceladas: document.getElementById('vista-canceladas')
     };
 
     try {
-        const { data: pacientesUsuario } = await client.from('Pacientes').select('id').eq('cliente', user.id);
-        const pacienteIds = (pacientesUsuario || []).map(p => p.id);
 
-        if (pacienteIds.length === 0) {
-            renderizarMensajeVacio(contenedores.proximas, "No tienes pacientes registrados.");
-            renderizarMensajeVacio(contenedores.historial, "No hay historial disponible.");
-            renderizarMensajeVacio(contenedores.canceladas, "No hay citas canceladas.");
+        // 1. Verificar sesión del usuario
+        const { data: { user }, error: errorUsuario } =
+            await client.auth.getUser();
+
+        if (errorUsuario) throw errorUsuario;
+
+        if (!user) {
+            window.location.href = '../index.html';
             return;
         }
 
+        // 2. Consultar pacientes del usuario
+        const { data: pacientesUsuario, error: errorPacientes } =
+            await client
+                .from('Pacientes')
+                .select('id')
+                .eq('cliente', user.id);
+
+        if (errorPacientes) throw errorPacientes;
+
+        const pacienteIds = (pacientesUsuario || []).map(p => p.id);
+
+        // 3. Si no tiene pacientes, mostrar mensajes vacíos
+        if (pacienteIds.length === 0) {
+
+            renderizarMensajeVacio(
+                contenedores.proximas,
+                "No tienes pacientes registrados."
+            );
+
+            renderizarMensajeVacio(
+                contenedores.historial,
+                "No hay historial disponible."
+            );
+
+            renderizarMensajeVacio(
+                contenedores.canceladas,
+                "No hay citas canceladas."
+            );
+
+            return;
+        }
+
+        // 4. Consultar citas del usuario
         const { data: citasData, error } = await client
             .from('Citas')
-            .select('id, fecha_hora, estado, paciente (nombre, apellido), servicio (id, nombre, costo)')
+            .select(`
+                id,
+                fecha_hora,
+                estado,
+                paciente (nombre, apellido),
+                servicio (id, nombre, costo)
+            `)
             .in('paciente', pacienteIds)
             .order('fecha_hora', { ascending: true });
 
         if (error) throw error;
 
-        const citasProximas = citasData.filter(c => ['PENDIENTE', 'CONFIRMADA'].includes(c.estado));
-        const citasHistorial = citasData.filter(c => c.estado === 'TERMINADA');
-        const citasCanceladas = citasData.filter(c => c.estado === 'CANCELADA');
+        // 5. Separar citas por estado
+        const citasProximas = citasData.filter(c =>
+            ['PENDIENTE', 'CONFIRMADA'].includes(c.estado)
+        );
 
-        Object.values(contenedores).forEach(c => c.innerHTML = '');
+        const citasHistorial = citasData.filter(c =>
+            c.estado === 'TERMINADA'
+        );
 
-        renderizarTarjetas(citasProximas, contenedores.proximas, 'proximas');
-        renderizarTarjetas(citasHistorial, contenedores.historial, 'historial');
-        renderizarTarjetas(citasCanceladas, contenedores.canceladas, 'canceladas');
+        const citasCanceladas = citasData.filter(c =>
+            c.estado === 'CANCELADA'
+        );
 
-        // Precargar catálogo de servicios al iniciar
+        // 6. Limpiar contenedores
+        Object.values(contenedores).forEach(c => {
+            c.innerHTML = '';
+        });
+
+        // 7. Renderizar tarjetas
+        renderizarTarjetas(
+            citasProximas,
+            contenedores.proximas,
+            'proximas'
+        );
+
+        renderizarTarjetas(
+            citasHistorial,
+            contenedores.historial,
+            'historial'
+        );
+
+        renderizarTarjetas(
+            citasCanceladas,
+            contenedores.canceladas,
+            'canceladas'
+        );
+
+        // 8. Precargar servicios
         await cargarCatalogoServicios();
+
+        // 9. Inicializar calendarios
         inicializarEventosCalendarios();
 
     } catch (error) {
+
         console.error("Error al cargar citas:", error);
+
+        // Mostrar un mensaje si ocurre un error
+        Object.values(contenedores).forEach(contenedor => {
+            if (contenedor) {
+                renderizarMensajeVacio(
+                    contenedor,
+                    "No fue posible cargar tus citas. Intenta nuevamente."
+                );
+            }
+        });
+
+    } finally {
+
+        // 10. Retirar el estado de carga
+        const contenedorPrincipal =
+            document.querySelector('.contenedor-principal');
+
+        if (contenedorPrincipal) {
+            contenedorPrincipal.classList.remove('cargando');
+        }
+
+        document.body.classList.remove('dashboard-cargando');
     }
+
 });
 
 async function cargarCatalogoServicios() {
@@ -116,10 +213,10 @@ function renderizarTarjetas(citas, contenedor, tipo) {
         const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
         const mesIndex = parseInt(mesStr) - 1;
 
-        let horas = parseInt(hStr);
-        const ampm = horas >= 12 ? 'PM' : 'AM';
-        horas = horas % 12 || 12;
-        const horaStr = `${horas}:${mStr} ${ampm}`;
+        const horas = String(parseInt(hStr)).padStart(2, '0');
+        const minutos = String(parseInt(mStr)).padStart(2, '0');
+
+        const horaStr = `${horas}:${minutos}`;
 
         const nombrePaciente = cita.paciente ? `${cita.paciente.nombre} ${cita.paciente.apellido}` : 'Desconocido';
         const nombreServicio = cita.servicio ? cita.servicio.nombre : 'Servicio';
@@ -224,6 +321,49 @@ document.getElementById('mod-cita-servicio')?.addEventListener('change', functio
 // ==========================================
 // CALENDARIO REUTILIZABLE
 // ==========================================
+
+// ==========================================
+// CONTROL DE FECHA Y HORA ACTUAL
+// ==========================================
+
+function obtenerFechaLocal() {
+    const ahora = new Date();
+
+    const año = ahora.getFullYear();
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    const dia = String(ahora.getDate()).padStart(2, '0');
+
+    return `${año}-${mes}-${dia}`;
+}
+
+function horaYaPaso(fecha, hora) {
+    if (fecha !== obtenerFechaLocal()) return false;
+
+    const ahora = new Date();
+    const [horas, minutos] = hora.split(':').map(Number);
+
+    const minutosActuales =
+        ahora.getHours() * 60 + ahora.getMinutes();
+
+    const minutosHorario = horas * 60 + minutos;
+
+    return minutosActuales >= minutosHorario;
+}
+
+function diaSinHorarios(fecha, ultimaHora = "19:30:00") {
+    if (fecha !== obtenerFechaLocal()) return false;
+
+    const ahora = new Date();
+    const [horas, minutos] = ultimaHora.split(':').map(Number);
+
+    const minutosActuales =
+        ahora.getHours() * 60 + ahora.getMinutes();
+
+    const minutosFinales = horas * 60 + minutos;
+
+    return minutosActuales >= minutosFinales;
+}
+
 function inicializarEventosCalendarios() {
     document.getElementById('btn-mostrar-calendario').addEventListener('click', () => {
         const cal = document.getElementById('calendario-flotante');
@@ -308,7 +448,17 @@ function renderizarCalendario(modo) {
 
         const columna = columnaPorDia[diaSemana];
 
+        const fechaLocal = [
+            fechaIteracion.getFullYear(),
+            String(fechaIteracion.getMonth() + 1).padStart(2, '0'),
+            String(fechaIteracion.getDate()).padStart(2, '0')
+        ].join('-');
+
+        // Comprobar si el día ya pasó
         const esPasado = fechaIteracion < hoy;
+
+        // Comprobar si ya no quedan horarios disponibles
+        const sinHorarios = diaSinHorarios(fechaLocal, "19:30:00");
 
         // Solamente sábado y domingo son fines de semana.
         const esFinDeSemana =
@@ -330,7 +480,7 @@ function renderizarCalendario(modo) {
             div.classList.add('seleccionado');
         }
 
-        if (esPasado || esFinDeSemana) {
+        if (esPasado || esFinDeSemana || sinHorarios) {
             div.classList.add('disabled');
         } else {
             div.addEventListener('click', () => {
@@ -385,14 +535,27 @@ async function verificarHorariosOcupados(fechaStr, modo, horaOriginalParaIgnorar
 
         document.querySelectorAll(`#horarios-contenedor${prefijoUi} .btn-hora`).forEach(btn => {
             const valorHora = btn.dataset.valor;
-            if (horasOcupadas.includes(valorHora) && valorHora !== horaOriginalParaIgnorar) {
+
+            const estaOcupada =
+                horasOcupadas.includes(valorHora) &&
+                valorHora !== horaOriginalParaIgnorar;
+
+            const yaPaso = horaYaPaso(fechaStr, valorHora);
+
+            if (estaOcupada || yaPaso) {
                 btn.disabled = true;
                 btn.classList.add('ocupada');
-                btn.style.backgroundColor = "#e2e8f0"; btn.style.color = "#94a3b8"; btn.style.cursor = "not-allowed";
+
+                btn.style.backgroundColor = "#e2e8f0";
+                btn.style.color = "#94a3b8";
+                btn.style.cursor = "not-allowed";
             } else {
                 btn.disabled = false;
                 btn.classList.remove('ocupada');
-                btn.style.backgroundColor = ""; btn.style.color = ""; btn.style.cursor = "pointer";
+
+                btn.style.backgroundColor = "";
+                btn.style.color = "";
+                btn.style.cursor = "pointer";
             }
         });
     } catch (err) { console.error("Error al verificar horarios ocupados:", err.message); }
@@ -458,6 +621,11 @@ if (formNuevaCita) {
 
         if (!pacienteId || !servicioId || !odontologoId || !fecha || !hora) return;
 
+        if (horaYaPaso(fecha, hora)) {
+            fb.style.color = "#e74c3c";
+            fb.textContent = "Ese horario ya pasó. Selecciona otro horario.";
+            return;
+        }
         try {
             btnConfirmar.disabled = true; fb.style.color = "#3498db"; fb.textContent = "Agendando...";
             const { error } = await client.from('Citas').insert([{
@@ -530,10 +698,17 @@ document.getElementById('formModificarCita').addEventListener('submit', async (e
     const fecha = document.getElementById('mod-cita-fecha').value;
     const hora = document.getElementById('mod-cita-hora').value;
 
-    if (!hora) {
-        fb.style.color = "#e74c3c"; fb.textContent = "Por favor selecciona un horario."; return;
+    if (!fecha || !hora) {
+        fb.style.color = "#e74c3c";
+        fb.textContent = "Selecciona una fecha y un horario.";
+        return;
     }
 
+    if (horaYaPaso(fecha, hora)) {
+        fb.style.color = "#e74c3c";
+        fb.textContent = "Ese horario ya pasó. Selecciona otro horario.";
+        return;
+    }
     try {
         btn.disabled = true; fb.style.color = "#3498db"; fb.textContent = "Guardando cambios...";
         const { error } = await client.from('Citas').update({

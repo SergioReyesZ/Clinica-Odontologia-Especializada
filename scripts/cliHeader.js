@@ -130,14 +130,13 @@ window.addEventListener('load', () => {
     }
 
     /* OBTENER DATOS DE USUARIO DESDE SUPABASE */
-    /* OBTENER DATOS DE USUARIO DESDE SUPABASE */
 document.addEventListener('DOMContentLoaded', async () => {
     const contenedorPrincipal = document.querySelector('.contenedor-principal');
     const imgPerfil = document.querySelector('.btn-perfil .pfp');
     const txtNombreHeader = document.getElementById('header-nombre-usuario');
     const txtBienvenida = document.getElementById('bienvenida-usuario');
     const btnCerrarSesion = document.getElementById('btnCerrarSesion');
-    const AVATAR_DEFAULT = 'iconos/perfil.png';
+    const AVATAR_DEFAULT = '../iconos/perfil.png';
 
     // Funcionalidad de cerrar sesión
     if (btnCerrarSesion) {
@@ -146,7 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const { error } = await client.auth.signOut();
                 if (error) throw error;
-                window.location.href = 'index.html';
+                window.location.href = '../index.html';
             } catch (err) {
                 console.error("Error al cerrar sesión:", err.message);
                 alert("Ocurrió un error al intentar cerrar sesión.");
@@ -158,7 +157,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { data: { user }, error: authError } = await client.auth.getUser();
 
         if (authError || !user) {
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
             return;
         }
 

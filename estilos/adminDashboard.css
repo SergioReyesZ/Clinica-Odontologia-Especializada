@@ -360,3 +360,936 @@ button {
 .buscador-campo button{border:0;background:transparent;color:var(--admin-muted);padding:5px}
 .buscador-campo button[hidden],.sin-resultados[hidden]{display:none}
 #resultado-busqueda{font-size:.82rem;color:var(--admin-muted)}
+
+
+/* ==========================================
+   ESTILOS DE LOS MODALES
+========================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    z-index: 9999; /* Asegura que esté por encima de todo */
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-contenido {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #182f2c;
+}
+
+.btn-cerrar {
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+}
+
+.btn-cerrar:hover {
+    color: #e74c3c;
+}
+
+.formulario-cita .campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.2rem;
+}
+
+.formulario-cita .campo-doble {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.formulario-cita .campo-doble .campo {
+    flex: 1;
+}
+
+.formulario-cita label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #525151;
+    font-size: 0.9rem;
+}
+
+.formulario-cita input,
+.formulario-cita select {
+    padding: 0.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+}
+
+.formulario-cita input:focus,
+.formulario-cita select:focus {
+    border-color: #0056e0;
+}
+
+.ancho-total {
+    width: 100%;
+    margin-top: 1rem;
+    justify-content: center;
+}
+
+/* ==========================================
+   CALENDARIO INTERACTIVO (TEMA CLARO) Y RESUMEN
+========================================== */
+.cal-container {
+    background-color: #f1f5f9;
+    border-radius: 15px;
+    padding: 1rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 100;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    margin-top: 0.5rem;
+}
+
+.cal-mes-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.cal-mes-nav h4 {
+    margin: 0;
+    color: #182f2c;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.cal-mes-nav button {
+    background: white;
+    border: 1px solid #d1d5db;
+    color: #0056e0;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.cal-mes-nav button:hover:not(:disabled) {
+    background-color: #0056e0;
+    color: white;
+}
+
+.cal-mes-nav button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #e2e8f0;
+    color: #94a3b8;
+}
+
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    column-gap: 4px;
+    row-gap: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.cal-dow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 0;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #475569;
+    margin-bottom: 0.5rem;
+    box-sizing: border-box;
+}
+
+.dias-grid {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    column-gap: 4px;
+    row-gap: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.cal-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    box-sizing: border-box;
+    background-color: white;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 8px 0;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #333333;
+    transition: all 0.2s ease;
+}
+
+.cal-day:hover:not(.disabled) {
+    border-color: #0056e0;
+    color: #0056e0;
+}
+
+.cal-day.disabled {
+    color: #cbd5e1;
+    background-color: transparent;
+    cursor: not-allowed;
+}
+
+.cal-day.seleccionado {
+    background-color: #0056e0;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 86, 224, 0.3);
+}
+
+.horarios-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 0.5rem;
+}
+
+.btn-hora {
+    background-color: white;
+    border: 1px solid #d1d5db;
+    color: #525151;
+    padding: 0.6rem 0.2rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-hora:hover {
+    border-color: #0056e0;
+    color: #0056e0;
+}
+
+.btn-hora.seleccionada {
+    background-color: #0056e0;
+    color: white;
+    border-color: #0056e0;
+    font-weight: bold;
+}
+
+.input-falso {
+    padding: 0.8rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #475569;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: border-color 0.2s;
+}
+
+.input-falso:hover {
+    border-color: #0056e0;
+}
+
+.resumen-costo {
+    background: #f8fafc; 
+    padding: 1rem; 
+    border-radius: 10px; 
+    text-align: right; 
+    border: 1px dashed #cbd5e1;
+    margin-top: 1rem;
+}
+
+.resumen-costo p {
+    margin: 0; 
+    color: #475569;
+}
+
+.resumen-costo strong {
+    color: #0a84ff; 
+    font-size: 1.1rem;
+}
+
+
+/* ==========================================
+   CALENDARIO FLOTANTE CON POSICIÓN ADAPTATIVA
+========================================== */
+
+.agenda-calendario-anchor {
+    position: relative;
+    display: inline-block;
+}
+
+
+.agenda-calendario-popover {
+    position: fixed !important;
+
+    top: 0;
+    left: 0;
+    right: auto !important;
+    bottom: auto !important;
+
+    transform: none !important;
+
+    width: 310px !important;
+    min-width: 0 !important;
+    max-width: calc(100vw - 24px) !important;
+
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: calc(100vh - 24px);
+
+    box-sizing: border-box !important;
+    padding: 16px !important;
+    margin: 0 !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    z-index: 10000;
+
+    background: #f1f5f9;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+}
+
+
+/* Navegación del mes */
+.agenda-calendario-popover .cal-mes-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 42px;
+    margin-bottom: 12px;
+}
+
+.agenda-calendario-popover .cal-mes-nav h4 {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+/* Cuadrícula */
+.agenda-calendario-popover .cal-grid {
+    display: grid !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    gap: 3px;
+    width: 100%;
+}
+
+/* Encabezados */
+.agenda-calendario-popover .cal-dow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Días: siempre seis filas */
+.agenda-calendario-popover .dias-grid {
+    grid-column: 1 / -1;
+    display: grid !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    grid-template-rows: repeat(6, 32px);
+    gap: 3px;
+    width: 100%;
+    align-content: start;
+}
+
+.agenda-calendario-popover .cal-day {
+    width: 100%;
+    height: 32px;
+    min-width: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border-radius: 9px;
+    box-sizing: border-box;
+}
+
+.agenda-calendario-popover .cal-day.seleccionado {
+    background: #1769d2;
+    border-color: #1769d2;
+    color: white;
+    font-weight: 700;
+}
+
+.agenda-calendario-popover .cal-day.hoy {
+    border: 1px solid #93bdf3;
+    color: #1769d2;
+    background: #eaf4ff;
+    font-weight: 700;
+}
+
+/* Botón Ir a hoy */
+.agenda-calendario-popover #agenda-btn-hoy {
+    width: 100%;
+    height: 38px;
+    margin-top: 12px;
+    padding: 0 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #1769d2;
+    color: white;
+    border: none;
+    border-radius: 9px;
+
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 8px rgba(23, 105, 210, 0.18);
+}
+
+.agenda-calendario-popover #agenda-btn-hoy:hover {
+    background: #1055b0;
+    box-shadow: 0 5px 12px rgba(23, 105, 210, 0.25);
+}
+
+.agenda-calendario-popover #agenda-btn-hoy:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+    .agenda-calendario-popover {
+        width: 290px !important;
+        max-width: calc(100vw - 24px) !important;
+    }
+}
+
+
+.imagen-paciente-agenda {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Menú de opciones de cada cita */
+.estado-info {
+    position: relative;
+}
+
+.menu-acciones-cita-admin {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
+.btn-menu-cita-admin {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s, color .2s;
+}
+
+.btn-menu-cita-admin:hover {
+    background: #f1f5f9;
+    color: #0056e0;
+}
+
+.opciones-menu-cita-admin {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 185px;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, .15);
+    z-index: 1000;
+}
+
+.opciones-menu-cita-admin.abierto {
+    display: flex;
+    flex-direction: column;
+}
+
+.opciones-menu-cita-admin button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #334155;
+    text-align: left;
+    font: inherit;
+    font-size: .9rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.opciones-menu-cita-admin button:hover {
+    background: #f1f5f9;
+}
+
+.opciones-menu-cita-admin button.opcion-peligro {
+    color: #dc2626;
+}
+
+.opciones-menu-cita-admin button.opcion-peligro:hover {
+    background: #fef2f2;
+}
+
+/* Ajustes para el modal en pantallas pequeñas */
+#modalModificarCitaAdmin .modal-contenido {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#modalModificarCitaAdmin .cal-container {
+    z-index: 10010;
+}
+
+@media (max-width: 600px) {
+    #modalModificarCitaAdmin {
+        padding: 12px;
+        box-sizing: border-box;
+    }
+
+    #modalModificarCitaAdmin .modal-contenido {
+        width: 100%;
+        max-width: 500px;
+        padding: 1.2rem;
+    }
+
+    #modalModificarCitaAdmin .campo-doble {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+/* Menú flotante de opciones de las citas */
+.menu-flotante-admin {
+    position: fixed !important;
+    display: none;
+    min-width: 195px;
+    width: max-content;
+    max-width: calc(100vw - 20px);
+    padding: 6px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, .20);
+    z-index: 100000 !important;
+    box-sizing: border-box;
+}
+
+.menu-flotante-admin.abierto {
+    display: flex !important;
+    flex-direction: column;
+}
+
+.menu-flotante-admin button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 12px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #334155;
+    text-align: left;
+    font: inherit;
+    font-size: .9rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.menu-flotante-admin button:hover {
+    background: #f1f5f9;
+}
+
+.menu-flotante-admin button.opcion-peligro {
+    color: #dc2626;
+}
+
+.menu-flotante-admin button.opcion-peligro:hover {
+    background: #fef2f2;
+}
+
+
+
+/* =========================================================
+   MODALES UNIFICADOS — MISMO DISEÑO QUE pacientes.css
+   Aplicado a Citas y AdminDashboard
+========================================================= */
+
+/* Fondo y tarjeta */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, .58);
+    backdrop-filter: blur(4px);
+    box-sizing: border-box;
+}
+
+.modal-overlay *,
+.modal-overlay *::before,
+.modal-overlay *::after {
+    box-sizing: border-box;
+}
+
+.modal-overlay .modal-contenido {
+    width: min(850px, 96%);
+    max-width: 850px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 32px;
+    border: 1px solid #edf1f7;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(15, 23, 42, .22);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    color: #1b2a47;
+}
+
+/* Encabezado */
+.modal-overlay .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin: 0 0 22px;
+    padding: 0 0 16px;
+    border-bottom: 1px solid #edf1f7;
+}
+
+.modal-overlay .modal-header h3 {
+    margin: 0;
+    color: #172554;
+    font-size: 21px;
+    font-weight: 750;
+    letter-spacing: -.35px;
+}
+
+.modal-overlay .btn-cerrar {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 23px;
+    line-height: 1;
+    transition: .18s ease;
+}
+
+.modal-overlay .btn-cerrar:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Formulario, etiquetas y campos */
+.modal-overlay .formulario-cita {
+    width: 100%;
+    min-width: 0;
+}
+
+.modal-overlay .formulario-cita .campo {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.modal-overlay .formulario-cita .campo-doble {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+}
+
+.modal-overlay .formulario-cita .campo-doble > .campo {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.modal-overlay .formulario-cita label {
+    display: block;
+    margin: 0 0 7px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.modal-overlay .formulario-cita input:not([type="hidden"]),
+.modal-overlay .formulario-cita select,
+.modal-overlay .formulario-cita textarea {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    padding: 0 13px;
+    border: 1px solid #dbe3ee;
+    border-radius: 11px;
+    background: #fff;
+    color: #1e293b;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: normal;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .03);
+    transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.modal-overlay .formulario-cita textarea {
+    min-height: 90px;
+    padding: 12px 13px;
+    resize: vertical;
+}
+
+.modal-overlay .formulario-cita input:focus,
+.modal-overlay .formulario-cita select:focus,
+.modal-overlay .formulario-cita textarea:focus {
+    border-color: #6095f5;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .11);
+}
+
+/* Elementos de fecha personalizados y campos falsos */
+.modal-overlay .formulario-cita .input-falso {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 46px;
+    padding: 0 13px;
+    border: 1px solid #dbe3ee;
+    border-radius: 11px;
+    background: #fff;
+    color: #475569;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.modal-overlay .formulario-cita .campo > div[style*="display: flex"] {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.modal-overlay .formulario-cita .campo > div[style*="display: flex"] select {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Botones principales */
+.modal-overlay .formulario-cita button.ancho-total,
+.modal-overlay .formulario-cita .ancho-total {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    margin-top: 8px;
+    padding: 12px 18px;
+    border: 0;
+    border-radius: 11px;
+    background: #2563eb !important;
+    color: #fff !important;
+    font-size: 14px;
+    font-weight: 750;
+    box-shadow: 0 5px 13px rgba(37, 99, 235, .2);
+    transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+
+.modal-overlay .formulario-cita button.ancho-total:hover,
+.modal-overlay .formulario-cita .ancho-total:hover {
+    background: #1d4ed8 !important;
+    box-shadow: 0 7px 17px rgba(37, 99, 235, .25);
+    transform: translateY(-1px);
+}
+
+.modal-overlay .formulario-cita button:disabled {
+    opacity: .65;
+    cursor: wait;
+    transform: none;
+}
+
+/* Modales pequeños de confirmar / cancelar */
+#modalCancelarCitaAdmin .modal-contenido,
+#modalConfirmarCitaAdmin .modal-contenido {
+    width: min(440px, 100%);
+    max-width: 440px;
+    padding: 30px;
+    text-align: center;
+}
+
+#modalCancelarCitaAdmin .modal-contenido > div,
+#modalConfirmarCitaAdmin .modal-contenido > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px !important;
+}
+
+#modalCancelarCitaAdmin .btn-accion,
+#modalConfirmarCitaAdmin .modal-contenido button {
+    min-height: 44px;
+    padding: 11px 20px !important;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: .18s ease;
+}
+
+#modalCancelarCitaAdmin .btn-accion.secundario,
+#modalConfirmarCitaAdmin .btn-accion.secundario {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border-color: #e2e8f0 !important;
+}
+
+#modalCancelarCitaAdmin .btn-accion.peligro {
+    background: #dc2626 !important;
+    color: #fff !important;
+    border-color: #dc2626 !important;
+    box-shadow: 0 4px 10px rgba(220, 38, 38, .18);
+}
+
+#modalConfirmarCitaAdmin #btnAceptarConfirmacionAdmin {
+    background: #2563eb !important;
+    color: #fff !important;
+    border: 1px solid #2563eb !important;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+/* El calendario desplegable debe quedar por encima del contenido del modal */
+.modal-overlay .cal-container {
+    z-index: 10010;
+}
+
+/* Adaptación móvil equivalente a pacientes.css */
+@media (max-width: 600px) {
+    .modal-overlay {
+        padding: 12px;
+    }
+
+    .modal-overlay .modal-contenido {
+        width: 100%;
+        max-width: 100%;
+        max-height: 92vh;
+        padding: 21px 18px;
+        border-radius: 17px;
+    }
+
+    .modal-overlay .formulario-cita .campo-doble {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 390px) {
+    .modal-overlay .formulario-cita .campo-doble {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .modal-overlay .formulario-cita .campo-doble > .campo {
+        width: 100%;
+    }
+
+    #modalCancelarCitaAdmin .modal-contenido,
+    #modalConfirmarCitaAdmin .modal-contenido {
+        padding: 22px 18px;
+    }
+}
+
+/* Ajustar inputs del modal Agregar paciente */
+#modalPaciente input,
+#modalPaciente select,
+#modalPaciente textarea {
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    border-radius: 8px !important;
+    box-sizing: border-box;
+}
+
+/* Espacio entre campos */
+#modalPaciente .campo {
+    margin-bottom: 14px !important;
+}
+
+/* Textareas */
+#modalPaciente textarea {
+    height: auto !important;
+    min-height: 80px !important;
+}

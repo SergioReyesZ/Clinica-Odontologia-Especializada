@@ -3,7 +3,7 @@ const BUCKET_PACIENTES = "avatares_pacientes";
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Selección de elementos (lo que ya tenías para la información del usuario)
-    
+
     const contenedorPrincipal = document.querySelector('.contenedor-principal');
     const imgPerfil = document.querySelector('.btn-perfil .pfp');
     const txtNombreHeader = document.getElementById('header-nombre-usuario');
@@ -15,17 +15,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     const contenedorTarjetasCitas = document.getElementById('tarjetas');
     const contenedorTarjetasPacientes = document.getElementById('tarjetas-pacientes');
 
-    // 3. Funcionalidad para Cerrar Sesión
+    // ==========================================
+    // CERRAR SESIÓN
+    // ==========================================
+
     if (btnCerrarSesion) {
-        btnCerrarSesion.addEventListener('click', async (e) => {
+        btnCerrarSesion.addEventListener("click", async (e) => {
             e.preventDefault();
+            e.stopPropagation();
+
             try {
-                const { error } = await client.auth.signOut();
+                btnCerrarSesion.style.pointerEvents = "none";
+
+                const { error } = await client.auth.signOut({
+                    scope: "global"
+                });
+
                 if (error) throw error;
-                window.location.href = 'index.html';
-            } catch (err) {
-                console.error("Error al cerrar sesión:", err.message);
-                alert("Ocurrió un error al intentar cerrar sesión.");
+
+                window.location.replace("index.html");
+
+            } catch (error) {
+                console.error("Error al cerrar sesión:", error);
+                alert("No se pudo cerrar la sesión. Intenta nuevamente.");
+                btnCerrarSesion.style.pointerEvents = "auto";
             }
         });
     }
@@ -37,9 +50,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (authError || !user) {
             console.error("Error al obtener usuario:", authError?.message || "Usuario no autenticado");
 
-            window.location.href = 'index.html'; 
+            window.location.href = 'index.html';
             return;
-            
+
         }
 
         // Obtener datos del usuario
@@ -64,8 +77,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (txtBienvenida) txtBienvenida.textContent = `¡Hola ${nombre}!`;
 
         if (imgPerfil) {
-            imgPerfil.src = (avatar && avatar.trim() !== '') ? avatar : AVATAR_DEFAULT;
-            imgPerfil.onerror = () => { imgPerfil.src = AVATAR_DEFAULT; };
+            imgPerfil.src = (avatar && avatar.trim() !== '')
+                ? avatar
+                : AVATAR_DEFAULT;
+
+            imgPerfil.onerror = () => {
+                imgPerfil.src = AVATAR_DEFAULT;
+            };
+
+            // Esperar a que la fotografía esté lista
+            try {
+                await imgPerfil.decode();
+            } catch (error) {
+                console.warn("No se pudo cargar la fotografía de perfil.");
+            }
         }
 
         // --- NUEVA LÓGICA: RENDERIZAR CITAS ---
@@ -77,7 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <p style="text-align:center; padding:1rem;">
             Cargando tus citas...
         </p>
-    `;
+        `;
 
             // Obtener fecha y hora actual
             const ahora = new Date().toISOString();
@@ -147,20 +172,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         "Jue", "Vie", "Sáb"
                     ];
 
-                    const diaSemana = dias[fecha.getDay()];
-                    const diaNumero = fecha.getDate();
-                    const mes = meses[fecha.getMonth()];
+                    const diaSemana = dias[fecha.getUTCDay()];
+                    const diaNumero = fecha.getUTCDate();
+                    const mes = meses[fecha.getUTCMonth()];
 
-                    let horas = fecha.getHours();
-                    const ampm = horas >= 12 ? 'PM' : 'AM';
+                    const horas = String(fecha.getUTCHours()).padStart(2, '0');
+                    const minutos = String(fecha.getUTCMinutes()).padStart(2, '0');
 
-                    horas = horas % 12 || 12;
-
-                    const minutos = String(fecha.getMinutes()).padStart(2, '0');
-
-                    const horaFormateada =
-                        `${horas}:${minutos} ${ampm}`;
-
+                    const horaFormateada = `${horas}:${minutos}`;
                     const nombrePaciente = cita.paciente
                         ? `${cita.paciente.nombre} ${cita.paciente.apellido}`
                         : 'Desconocido';
@@ -232,12 +251,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-// --- NUEVA LÓGICA: RENDERIZAR PACIENTES ---
+        // --- NUEVA LÓGICA: RENDERIZAR PACIENTES ---
         if (contenedorTarjetasPacientes) {
             // 1. Consultar pacientes (agregamos 'avatar' al select)
             const { data: pacientesData, error: pacientesError } = await client
                 .from('Pacientes')
-                .select('id, nombre, apellido, fecha_nac, avatar') 
+                .select('id, nombre, apellido, fecha_nac, avatar')
                 .eq('cliente', user.id);
 
             if (pacientesError) {
@@ -294,10 +313,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
         console.error("Error inesperado cargando la sesión:", err);
     } finally {
-        // 4. Revelamos todo de golpe
+        // Mostrar dashboard cuando todos los datos estén preparados
         if (contenedorPrincipal) {
             contenedorPrincipal.classList.remove('cargando');
         }
+
+        // Retirar el estado de carga del body
+        document.body.classList.remove('dashboard-cargando');
     }
 });
 
@@ -447,6 +469,34 @@ let fechaSeleccionada = null;
 
 const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
+function obtenerFechaLocal() {
+    const ahora = new Date();
+    const año = ahora.getFullYear();
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    const dia = String(ahora.getDate()).padStart(2, '0');
+
+    return `${año}-${mes}-${dia}`;
+}
+
+function horaYaPaso(fecha, hora) {
+    if (fecha !== obtenerFechaLocal()) return false;
+
+    const ahora = new Date();
+    const [horas, minutos] = hora.split(':').map(Number);
+
+    return ahora.getHours() * 60 + ahora.getMinutes() >=
+        horas * 60 + minutos;
+}
+
+function diaSinHorarios(fecha, ultimaHora = "19:30:00") {
+    if (fecha !== obtenerFechaLocal()) return false;
+
+    const ahora = new Date();
+    const [horas, minutos] = ultimaHora.split(':').map(Number);
+
+    return ahora.getHours() * 60 + ahora.getMinutes() >=
+        horas * 60 + minutos;
+}
 
 function renderizarCalendario() {
     const diasGrid = document.getElementById('dias-calendario');
@@ -465,36 +515,29 @@ function renderizarCalendario() {
 
     const primerDia = new Date(añoCal, mesCal, 1).getDay();
 
-    const offsetLunes = primerDia === 0 ? 6 : primerDia - 1;
-
     const diasEnMes = new Date(
         añoCal,
         mesCal + 1,
         0
     ).getDate();
 
-    // Sá, Lu, Ma, Mi, Ju, Vi, Do.
-    const columnaPorDia = {
-        0: 7,
-        1: 2,
-        2: 3,
-        3: 4,
-        4: 5,
-        5: 6,
-        6: 1
-    };
-
     for (let i = 1; i <= diasEnMes; i++) {
         const fechaIteracion = new Date(añoCal, mesCal, i);
         const diaSemana = fechaIteracion.getDay();
 
-        const fila = Math.floor(
-            (i - 1 + offsetLunes) / 7
-        ) + 1;
-
-        const columna = columnaPorDia[diaSemana];
+        // Cálculo directo para semanas que empiezan en Domingo
+        const fila = Math.floor((i - 1 + primerDia) / 7) + 1;
+        const columna = diaSemana + 1;
 
         const esPasado = fechaIteracion < hoy;
+
+        const fechaLocal = [
+            fechaIteracion.getFullYear(),
+            String(fechaIteracion.getMonth() + 1).padStart(2, '0'),
+            String(fechaIteracion.getDate()).padStart(2, '0')
+        ].join('-');
+
+        const sinHorarios = diaSinHorarios(fechaLocal, "19:30:00");
 
         const esFinDeSemana =
             diaSemana === 6 || diaSemana === 0;
@@ -511,7 +554,7 @@ function renderizarCalendario() {
             div.classList.add('seleccionado');
         }
 
-        if (esPasado || esFinDeSemana) {
+        if (esPasado || esFinDeSemana || sinHorarios) {
             div.classList.add('disabled');
         } else {
             div.addEventListener('click', () => {
@@ -577,8 +620,12 @@ async function verificarHorariosOcupados(fechaStr) {
         // Recorrer los botones de hora y bloquear los ocupados
         document.querySelectorAll('.btn-hora').forEach(btn => {
             const valorHora = btn.dataset.valor;
+            const fechaSeleccionada = fechaStr;
 
-            if (horasOcupadas.includes(valorHora)) {
+            if (
+                horasOcupadas.includes(valorHora) ||
+                horaYaPaso(fechaSeleccionada, valorHora)
+            ) {
                 btn.disabled = true;
                 btn.classList.add('ocupada');
                 btn.style.backgroundColor = "#e2e8f0";
@@ -604,17 +651,16 @@ function renderizarHorariosDisponibles() {
     contenedor.innerHTML = '';
 
     const horarios = [
-        { texto: "4:30 PM", valor: "16:30:00" },
-        { texto: "5:00 PM", valor: "17:00:00" },
-        { texto: "5:30 PM", valor: "17:30:00" },
-        { texto: "6:00 PM", valor: "18:00:00" },
-        { texto: "6:30 PM", valor: "18:30:00" },
-        { texto: "7:00 PM", valor: "19:00:00" },
-        { texto: "7:30 PM", valor: "19:30:00" },
-        { texto: "8:00 PM", valor: "20:00:00" }
+        { texto: "16:30", valor: "16:30:00" },
+        { texto: "17:00", valor: "17:00:00" },
+        { texto: "17:30", valor: "17:30:00" },
+        { texto: "18:00", valor: "18:00:00" },
+        { texto: "18:30", valor: "18:30:00" },
+        { texto: "19:00", valor: "19:00:00" },
+        { texto: "19:30", valor: "19:30:00" }
     ];
 
-    horarios.ghforEach?.(h => { }); // (O simplemente mantén tu forEach normal)
+    horarios.forEach?.(h => { }); // (O simplemente mantén tu forEach normal)
 
     horarios.forEach(h => {
         const btn = document.createElement('button');

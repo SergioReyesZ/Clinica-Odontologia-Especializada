@@ -24,6 +24,8 @@
                 <a href="../recursos/usuarios.html" class="opcion activo">Usuarios</a>
                 <a href="../recursos/horarios.html" class="opcion">Horarios</a>
                 <a href="../recursos/bitacora.html" class="opcion">Bitácora</a>
+                <a href="../recursos/admServicios.html" class="opcion">Servicios</a>
+
                 <div class="linea-flotante"></div>
             </div>
 
@@ -36,19 +38,28 @@
                 </div>
                 <!-- El pequeño modal flotante -->
                 <div class="dropdown-perfil" id="dropdownPerfil">
-                    <a href="../recursos/cliPerfil.html" class="dropdown-item">
-                        <i class="bi bi-gear"></i> Configuración de cuenta
+
+                    <!-- Identidad del administrador -->
+                    <div class="dropdown-identidad">
+                        <strong id="admin-nombre-dropdown">Cargando...</strong>
+                        <span>Administrador</span>
+                    </div>
+
+                    <a href="perfil.html" class="dropdown-item">
+                        <i class="bi bi-gear"></i> Configuración de cuenta
                     </a>
                     <hr class="dropdown-divisor">
-                    <a href="../index.html" class="dropdown-item texto-peligro">
-                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                    <a href="#" id="btnCerrarSesion" class="dropdown-item texto-peligro">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                     </a>
                 </div>
             </div>
 
         </div>
     </div>
-<main class="contenedor" id="contenedor"><div id="notice" role="status" aria-live="polite"></div><section class="admin-module">
+    <main class="contenedor" id="contenedor">
+        <div id="notice" role="status" aria-live="polite"></div>
+        <section class="admin-module">
             <div class="panel">
                 <div class="panel-head">
                     <h2><i class="bi bi-person-gear"></i> Usuarios del sistema</h2><button class="primary"
@@ -75,8 +86,21 @@
                     </table>
                 </div>
             </div>
-        </section></main><div class="overlay hidden" id="modal"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="panel-head"><h2 id="modalTitle"></h2><button class="close" id="closeModal" aria-label="Cerrar">×</button></div><div id="modalContent"></div></div></div>
+        </section>
+    </main>
+    <div class="overlay hidden" id="modal">
+        <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="panel-head">
+                <h2 id="modalTitle"></h2><button class="close" id="closeModal" aria-label="Cerrar">×</button>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../scripts/app.js"></script>
+<script src="../scripts/seguridadAdmin.js"></script>
 <script src="../scripts/adminHeader.js"></script>
 <script src="../scripts/usuarios.js"></script>
+
 </html>

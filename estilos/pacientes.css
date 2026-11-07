@@ -413,3 +413,691 @@ td small {
 }
 
 @media(max-width:650px){.admin-module .panel{padding:15px}.admin-module .filters{flex-direction:column}.admin-module .filters input,.admin-module .filters select{flex-basis:auto}.admin-module .panel-head{flex-wrap:wrap}.formgrid{grid-template-columns:1fr}}
+
+/* Modal de paciente copiado del panel administrativo */
+/* ==========================================
+   ESTILOS DE LOS MODALES
+========================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    z-index: 9999; /* Asegura que esté por encima de todo */
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-contenido {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #182f2c;
+}
+
+.btn-cerrar {
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+}
+
+.btn-cerrar:hover {
+    color: #e74c3c;
+}
+
+.formulario-cita .campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.2rem;
+}
+
+.formulario-cita .campo-doble {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.formulario-cita .campo-doble .campo {
+    flex: 1;
+}
+
+.formulario-cita label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #525151;
+    font-size: 0.9rem;
+}
+
+.formulario-cita input,
+.formulario-cita select {
+    padding: 0.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+}
+
+.formulario-cita input:focus,
+.formulario-cita select:focus {
+    border-color: #0056e0;
+}
+
+.ancho-total {
+    width: 100%;
+    margin-top: 1rem;
+    justify-content: center;
+}
+
+
+
+/* Estilos del modal de edición y recortador copiados de cliPacientes */
+/* =====================================================
+   RECORTADOR DE FOTOGRAFÍA PARA AVATAR DE PACIENTE
+===================================================== */
+
+.modal-cropper {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .70);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.modal-cropper.activo {
+    display: flex;
+}
+
+.contenido-cropper {
+    background: #fff;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, .2);
+    animation: aparecerModal .25s ease;
+    box-sizing: border-box;
+}
+
+.encabezado-cropper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.encabezado-cropper h3 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.25rem;
+}
+
+.encabezado-cropper p {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: .88rem;
+}
+
+.cerrar-cropper {
+    border: none;
+    background: #f1f5f9;
+    color: #64748b;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.cerrar-cropper:hover {
+    background: #e2e8f0;
+}
+
+.area-cropper {
+    width: 100%;
+    height: 320px;
+    background: #111827;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.area-cropper img {
+    display: block;
+    max-width: 100%;
+}
+
+.area-cropper .cropper-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.area-cropper .cropper-view-box {
+    outline: 2px solid rgba(255, 255, 255, .9);
+}
+
+.area-cropper .cropper-line,
+.area-cropper .cropper-point {
+    display: none;
+}
+
+.controles-cropper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+.controles-cropper input {
+    flex: 1;
+    accent-color: #0056e0;
+    cursor: pointer;
+}
+
+.ayuda-cropper {
+    color: #64748b;
+    font-size: .82rem;
+    text-align: center;
+    margin: 12px 0 20px;
+}
+
+.botones-cropper {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cancelar-cropper,
+.btn-aceptar-cropper {
+    border: none;
+    border-radius: 10px;
+    padding: 11px 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-cancelar-cropper {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.btn-cancelar-cropper:hover {
+    background: #e2e8f0;
+}
+
+.btn-aceptar-cropper {
+    background: #0056e0;
+    color: #fff;
+}
+
+.btn-aceptar-cropper:hover {
+    background: #0045b3;
+}
+
+.btn-aceptar-cropper:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .contenido-cropper {
+        padding: 18px;
+    }
+
+    .area-cropper {
+        height: 280px;
+    }
+
+    .botones-cropper {
+        flex-direction: column-reverse;
+    }
+
+    .botones-cropper button {
+        width: 100%;
+    }
+}
+
+/* Modal de recorte siempre por encima de los demás */
+#modalCropperPaciente {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 100000 !important;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    padding: 15px;
+    box-sizing: border-box;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(5px);
+}
+
+#modalCropperPaciente.activo {
+    display: flex !important;
+}
+
+#modalCropperPaciente .contenido-cropper {
+    position: relative;
+    z-index: 100001;
+}
+/* Búsqueda y selección del padre o tutor en el modal de edición */
+.resultados-tutores {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 170px;
+    overflow-y: auto;
+    margin-top: 7px;
+}
+.resultados-tutores button {
+    width: 100%;
+    text-align: left;
+    padding: 10px 12px;
+    border: 1px solid #dbe3ee;
+    border-radius: 9px;
+    background: #f8fafc;
+    color: #334155;
+    cursor: pointer;
+}
+.resultados-tutores button:hover {
+    border-color: #0056e0;
+    background: #eff6ff;
+}
+.resultados-tutores button strong,
+.resultados-tutores button small {
+    display: block;
+}
+.resultados-tutores button small,
+.tutor-seleccionado {
+    color: #64748b;
+    font-size: 12px;
+}
+.tutor-seleccionado { display:block; margin-top:6px; }
+
+
+
+/* =========================================================
+   PULIDO VISUAL - PACIENTES (ADMIN)
+   Botones con jerarquía y modales/formularios uniformes
+========================================================= */
+
+/* Acciones de cada paciente: cada botón tiene una prioridad visual */
+.admin-module .actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.admin-module .actions button {
+    min-height: 36px;
+    padding: 8px 12px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height: 1;
+    transition: background .18s ease, border-color .18s ease,
+                color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+
+/* Historial: acción principal, azul */
+.admin-module .actions button[data-action="history"] {
+    color: #fff;
+    background: #2563eb;
+    box-shadow: 0 3px 8px rgba(37, 99, 235, .18);
+}
+.admin-module .actions button[data-action="history"]:hover {
+    background: #1d4ed8;
+    box-shadow: 0 5px 12px rgba(37, 99, 235, .24);
+    transform: translateY(-1px);
+}
+
+/* Editar: acción secundaria, neutra con acento violeta */
+.admin-module .actions button[data-action="edit"] {
+    color: #6d4acb;
+    background: #f4f0ff;
+    border-color: #e6ddff;
+}
+.admin-module .actions button[data-action="edit"]:hover {
+    color: #5936b5;
+    background: #ebe4ff;
+    border-color: #d5c7ff;
+    transform: translateY(-1px);
+}
+
+/* Eliminar: acción destructiva, roja */
+.admin-module .actions button[data-action="delete"] {
+    color: #dc2626;
+    background: #fff1f2;
+    border-color: #ffe0e4;
+}
+.admin-module .actions button[data-action="delete"]:hover {
+    color: #fff;
+    background: #dc2626;
+    border-color: #dc2626;
+    transform: translateY(-1px);
+}
+.admin-module .actions button:focus-visible,
+.modal-overlay button:focus-visible,
+.modal-overlay input:focus-visible,
+.modal-overlay select:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, .22);
+    outline-offset: 2px;
+}
+
+/* Modal de alta y edición: tarjeta limpia y consistente */
+.modal-overlay {
+    background: rgba(15, 23, 42, .58);
+    backdrop-filter: blur(4px);
+    padding: 20px;
+}
+
+.modal-overlay .modal-contenido {
+    width: min(850px, 96%);
+    max-width: 850px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 32px;
+    border: 1px solid #edf1f7;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(15, 23, 42, .22);
+    gap: 0;
+    box-sizing: border-box;
+}
+
+#modalPaciente .modal-header,
+#modalEditarPaciente .modal-header {
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #edf1f7;
+}
+
+#modalPaciente .modal-header h3,
+#modalEditarPaciente .modal-header h3 {
+    color: #172554;
+    font-size: 21px;
+    font-weight: 750;
+    letter-spacing: -.35px;
+}
+
+#modalPaciente .btn-cerrar,
+#modalEditarPaciente .btn-cerrar {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 23px;
+    transition: .18s ease;
+}
+#modalPaciente .btn-cerrar:hover,
+#modalEditarPaciente .btn-cerrar:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Campos: mismo alto, tipografía, bordes y separación */
+#modalPaciente .formulario-cita,
+#modalEditarPaciente .formulario-cita {
+    width: 100%;
+}
+
+#modalPaciente .formulario-cita .campo,
+#modalEditarPaciente .formulario-cita .campo {
+    min-width: 0;
+    margin-bottom: 16px;
+}
+
+#modalPaciente .formulario-cita .campo-doble,
+#modalEditarPaciente .formulario-cita .campo-doble {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    width: 100%;
+}
+
+#modalPaciente .formulario-cita .campo-doble > .campo,
+#modalEditarPaciente .formulario-cita .campo-doble > .campo {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+#modalPaciente .formulario-cita label,
+#modalEditarPaciente .formulario-cita label {
+    display: block;
+    margin: 0 0 7px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+#modalPaciente .formulario-cita input:not([type="hidden"]),
+#modalPaciente .formulario-cita select,
+#modalEditarPaciente .formulario-cita input:not([type="hidden"]),
+#modalEditarPaciente .formulario-cita select {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    padding: 0 13px;
+    border: 1px solid #dbe3ee;
+    border-radius: 11px;
+    background: #fff;
+    color: #1e293b;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: normal;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .03);
+    transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+#modalPaciente .formulario-cita input:focus,
+#modalPaciente .formulario-cita select:focus,
+#modalEditarPaciente .formulario-cita input:focus,
+#modalEditarPaciente .formulario-cita select:focus {
+    border-color: #6095f5;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .11);
+}
+
+/* Los tres selectores de fecha quedan exactamente a la misma altura */
+#modalPaciente #pac-fecha-mes,
+#modalPaciente #pac-fecha-dia,
+#modalPaciente #pac-fecha-anio {
+    height: 46px !important;
+    min-height: 46px;
+    padding: 0 9px !important;
+    flex: 1 1 0;
+}
+
+/* Botón de guardar/actualizar: ancho y altura consistentes */
+#modalPaciente .ancho-total,
+#modalEditarPaciente .ancho-total {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    margin-top: 8px;
+    padding: 12px 18px;
+    border: 0;
+    border-radius: 11px;
+    background: #2563eb !important;
+    color: #fff !important;
+    font-size: 14px;
+    font-weight: 750;
+    box-shadow: 0 5px 13px rgba(37, 99, 235, .2) !important;
+    transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+#modalPaciente .ancho-total:hover,
+#modalEditarPaciente .ancho-total:hover {
+    background: #1d4ed8 !important;
+    box-shadow: 0 7px 17px rgba(37, 99, 235, .25) !important;
+    transform: translateY(-1px);
+}
+#modalPaciente .ancho-total:disabled,
+#modalEditarPaciente .ancho-total:disabled {
+    opacity: .65;
+    cursor: wait;
+    transform: none;
+}
+
+/* Avisos de validación dentro del modal */
+#feedback-paciente,
+#feedback-editar-paciente {
+    min-height: 18px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* Modal de confirmación: botones con jerarquía clara */
+#modalEliminarPacienteAdmin .btn-accion.secundario {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    border: 1px solid #e2e8f0 !important;
+}
+#modalEliminarPacienteAdmin .btn-accion.secundario:hover {
+    background: #e2e8f0 !important;
+}
+#modalEliminarPacienteAdmin .btn-accion.peligro {
+    background: #dc2626 !important;
+    color: #fff !important;
+    border: 1px solid #dc2626 !important;
+    box-shadow: 0 4px 10px rgba(220, 38, 38, .18);
+}
+#modalEliminarPacienteAdmin .btn-accion.peligro:hover {
+    background: #b91c1c !important;
+}
+
+/* Adaptación móvil sin cambiar la estructura general */
+@media (max-width: 560px) {
+    .modal-overlay {
+        padding: 12px;
+        align-items: center;
+    }
+    .modal-overlay .modal-contenido {
+        padding: 21px 18px;
+        border-radius: 17px;
+    }
+    #modalPaciente .formulario-cita .campo-doble,
+    #modalEditarPaciente .formulario-cita .campo-doble {
+        gap: 10px;
+    }
+    #modalPaciente .formulario-cita label,
+    #modalEditarPaciente .formulario-cita label {
+        font-size: 12px;
+    }
+}
+@media (max-width: 390px) {
+    #modalPaciente .formulario-cita .campo-doble,
+    #modalEditarPaciente .formulario-cita .campo-doble {
+        flex-direction: column;
+        gap: 0;
+    }
+    #modalPaciente .formulario-cita .campo-doble > .campo,
+    #modalEditarPaciente .formulario-cita .campo-doble > .campo {
+        width: 100%;
+    }
+}
+
+/* Corrección definitiva del tamaño de los campos */
+#modalPaciente *,
+#modalEditarPaciente * {
+    box-sizing: border-box;
+}
+
+#modalPaciente .campo,
+#modalEditarPaciente .campo {
+    min-width: 0;
+    width: 100%;
+}
+
+#modalPaciente input:not([type="hidden"]),
+#modalPaciente select,
+#modalEditarPaciente input:not([type="hidden"]),
+#modalEditarPaciente select {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+#modalPaciente .campo-doble > .campo,
+#modalEditarPaciente .campo-doble > .campo {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Evitar que los selectores de fecha se desborden */
+#modalPaciente .campo-doble .campo > div {
+    min-width: 0;
+    width: 100%;
+}
+
+#modalPaciente #pac-fecha-mes,
+#modalPaciente #pac-fecha-dia,
+#modalPaciente #pac-fecha-anio {
+    min-width: 0;
+}
+
+/* Adaptación a pantallas pequeñas */
+@media (max-width: 600px) {
+    .modal-overlay .modal-contenido {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    #modalPaciente .campo-doble,
+    #modalEditarPaciente .campo-doble {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+/* Centrar fecha de nacimiento en Editar paciente */
+#modalEditarPaciente #edit-pac-fecha {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 0 10px !important;
+}

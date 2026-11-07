@@ -5,7 +5,6 @@
 }
 
 .contenedor-principal{
-    overflow: hidden;
     opacity: 1;
     transition: opacity 0.01s ease-in-out;
 }
@@ -465,4 +464,101 @@
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .servicios { animation: none; }
+}
+
+/* ==========================================
+   NOTIFICACIONES
+========================================== */
+
+.btn-notificaciones {
+    position: relative;
+}
+
+.contador-notificaciones {
+    position: absolute;
+    top: -6px;
+    right: -7px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e74c3c;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 50px;
+    border: 2px solid white;
+}
+
+.notificaciones-encabezado {
+    padding: 13px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #26364a;
+}
+
+#listaNotificaciones {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+#listaNotificaciones .notificacion-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 13px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    text-decoration: none;
+    white-space: normal;
+}
+
+#listaNotificaciones .notificacion-item > i {
+    color: #3688bd;
+    font-size: 17px;
+}
+
+#listaNotificaciones .notificacion-item.no-leida {
+    background: #eff7fc;
+}
+
+.notificacion-mensaje {
+    color: #334155;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.notificacion-fecha {
+    color: #8994a3;
+    font-size: 11px;
+}
+
+.sin-notificaciones {
+    padding: 20px 15px;
+    text-align: center;
+    color: #8994a3;
+    font-size: 13px;
+}
+
+/* ==========================================
+   IDENTIDAD DEL ADMINISTRADOR EN EL DROPDOWN
+========================================== */
+
+.dropdown-identidad {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 16px;
+}
+
+.dropdown-identidad strong {
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.dropdown-identidad span {
+    color: #888;
+    font-size: 12px;
 }

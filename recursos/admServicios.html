@@ -1,22 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio | Odontología Especializada</title>
+    <title>Servicios | Odontología Especializada</title>
     <link rel="icon" href="../iconos/favicon2.ico" type="image/x-icon">
     <link rel="stylesheet" href="../estilos/global.css">
     <link rel="stylesheet" href="../estilos/header.css">
-    <link rel="stylesheet" href="../estilos/adminDashboard.css">
+    <link rel="stylesheet" href="../estilos/admServicios.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
-
-<body id="cuerpo">
+<body>
     <div class="contenedor-principal">
         <div class="header" id="header">
             <img src="../iconos/logo.png" alt="logo">
-
             <div class="menu" id="menu">
                 <a href="../adminDashboard.html" class="opcion">Inicio</a>
                 <a href="../recursos/citas.html" class="opcion">Citas</a>
@@ -27,32 +24,133 @@
                 <a href="../recursos/admServicios.html" class="opcion activo">Servicios</a>
                 <div class="linea-flotante"></div>
             </div>
-
             <div class="perfil-contenedor">
-                <!-- Quitamos el onclick de aquí y le ponemos un ID para controlarlo con JS -->
                 <div class="perfil" id="btnPerfilDropdown">
                     <button class="btn-perfil"><img class="pfp" src="../iconos/perfil.png" alt=""></button>
                     <p>Administrador</p>
-                    <i class="bi bi-chevron-down flecha-perfil"></i> <!-- Opcional: una flechita para indicar menú -->
+                    <i class="bi bi-chevron-down flecha-perfil"></i>
                 </div>
-                <!-- El pequeño modal flotante -->
                 <div class="dropdown-perfil" id="dropdownPerfil">
+                    <div class="dropdown-identidad">
+                        <strong id="admin-nombre-dropdown">Cargando...</strong>
+                        <span>Administrador</span>
+                    </div>
                     <a href="../recursos/perfil.html" class="dropdown-item">
                         <i class="bi bi-gear"></i> Configuración de cuenta
                     </a>
                     <hr class="dropdown-divisor">
-                    <a href="../index.html" class="dropdown-item texto-peligro">
+                    <a href="#" id="btnCerrarSesion" class="dropdown-item texto-peligro">
                         <i class="bi bi-box-arrow-right"></i> Cerrar sesión
                     </a>
                 </div>
             </div>
-
         </div>
-
     </div>
 
+    <main class="servicios-admin" id="contenedor">
+        <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+        <section class="panel-servicios">
+            <div class="panel-head">
+                <div>
+                    <h2><i class="bi bi-clipboard2-pulse"></i> Administración de servicios</h2>
+                    <p class="subtitulo">Consulta y administra los tratamientos que ofrece la clínica.</p>
+                </div>
+                <button type="button" class="btn-primary" id="btnNuevoServicio">
+                    <i class="bi bi-plus-lg"></i> Nuevo servicio
+                </button>
+            </div>
+
+            <div class="resumen-servicios">
+                <div class="resumen-icono"><i class="bi bi-collection"></i></div>
+                <div>
+                    <strong id="totalServicios">—</strong>
+                    <span>Servicios registrados</span>
+                </div>
+            </div>
+
+            <div class="filtros-servicios">
+                <div class="buscador">
+                    <i class="bi bi-search"></i>
+                    <input type="search" id="buscarServicio" placeholder="Buscar por nombre o descripción...">
+                </div>
+                <button type="button" class="btn-secondary" id="btnLimpiarBusqueda">
+                    <i class="bi bi-x-circle"></i> Limpiar
+                </button>
+            </div>
+
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Servicio</th>
+                            <th>Descripción</th>
+                            <th>Costo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="serviciosBody">
+                        <tr><td colspan="4" class="estado-tabla">Cargando servicios...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal-overlay" id="modalServicio" style="display:none;">
+        <div class="modal-contenido" role="dialog" aria-modal="true" aria-labelledby="tituloModalServicio">
+            <div class="modal-header">
+                <div>
+                    <h3 id="tituloModalServicio"><i class="bi bi-plus-circle"></i> Nuevo servicio</h3>
+                    <p>Completa la información del servicio.</p>
+                </div>
+                <button type="button" class="btn-cerrar" id="btnCerrarModal" aria-label="Cerrar">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <form id="formServicio">
+                <input type="hidden" id="servicioId">
+                <label for="servicioNombre">Nombre del servicio</label>
+                <input type="text" id="servicioNombre" maxlength="100" placeholder="Ej. Limpieza dental" required>
+
+                <label for="servicioCosto">Costo (MXN)</label>
+                <div class="campo-costo">
+                    <span>$</span>
+                    <input type="number" id="servicioCosto" min="0.01" step="0.01" placeholder="0.00" required>
+                </div>
+
+                <label for="servicioDescripcion">Descripción</label>
+                <textarea id="servicioDescripcion" rows="4" placeholder="Describe brevemente en qué consiste el servicio..."></textarea>
+
+                <p id="feedbackServicio" class="feedback" aria-live="polite"></p>
+                <div class="modal-acciones">
+                    <button type="button" class="btn-secondary" id="btnCancelarModal">Cancelar</button>
+                    <button type="submit" class="btn-primary" id="btnGuardarServicio">
+                        <i class="bi bi-check-lg"></i> Guardar servicio
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalEliminarServicio" style="display:none;">
+        <div class="modal-contenido modal-confirmacion" role="dialog" aria-modal="true" aria-labelledby="tituloEliminar">
+            <div class="icono-eliminar"><i class="bi bi-trash3"></i></div>
+            <h3 id="tituloEliminar">¿Eliminar este servicio?</h3>
+            <p id="textoEliminar">Esta acción no se puede deshacer.</p>
+            <div class="modal-acciones">
+                <button type="button" class="btn-secondary" id="btnCancelarEliminar">Conservar servicio</button>
+                <button type="button" class="btn-danger" id="btnConfirmarEliminar">
+                    <i class="bi bi-trash3"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../scripts/app.js"></script>
+    <script src="../scripts/seguridadAdmin.js"></script>
+    <script src="../scripts/adminHeader.js"></script>
+    <script src="../scripts/admServicios.js"></script>
 </body>
-<script src="../scripts/adminHeader.js"></script>
-<script src="../scripts/dashboard.js"></script>
-<script src="../scripts/dashCitas.js"></script>
 </html>

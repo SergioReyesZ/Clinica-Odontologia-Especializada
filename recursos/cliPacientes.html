@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,32 +10,128 @@
     <link rel="stylesheet" href="../estilos/header.css">
     <link rel="stylesheet" href="../estilos/cliPacientes.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
 </head>
-<body>
-    
+
+<body class="dashboard-cargando">
+    <!-- SKELETON DE CARGA: MIS PACIENTES -->
+    <div class="skeleton-page" aria-label="Cargando pacientes">
+
+        <!-- HEADER: MISMA ESTRUCTURA DEL DASHBOARD -->
+        <div class="skeleton-header">
+            <div class="skeleton-logo skeleton"></div>
+
+            <div class="skeleton-menu">
+                <div class="skeleton skeleton-menu-item"></div>
+                <div class="skeleton skeleton-menu-item"></div>
+                <div class="skeleton skeleton-menu-item"></div>
+            </div>
+
+            <div class="skeleton-perfil">
+                <div class="skeleton skeleton-circulo"></div>
+                <div class="skeleton skeleton-nombre"></div>
+                <div class="skeleton skeleton-flecha"></div>
+            </div>
+        </div>
+
+        <!-- ENCABEZADO DE MIS PACIENTES -->
+        <div class="skeleton-pacientes-encabezado">
+            <div class="skeleton-pacientes-titulos">
+                <div class="skeleton skeleton-titulo-pacientes"></div>
+                <div class="skeleton skeleton-descripcion-pacientes"></div>
+            </div>
+
+            <div class="skeleton skeleton-boton-pacientes"></div>
+        </div>
+
+        <!-- TARJETAS DE PACIENTES -->
+        <div class="skeleton-grid-pacientes">
+
+            <div class="skeleton-tarjeta-paciente">
+                <div class="skeleton-paciente-encabezado">
+                    <div class="skeleton skeleton-avatar-paciente"></div>
+                    <div class="skeleton-paciente-textos">
+                        <div class="skeleton skeleton-nombre-paciente"></div>
+                        <div class="skeleton skeleton-dato-paciente"></div>
+                    </div>
+                </div>
+                <div class="skeleton-detalles-paciente">
+                    <div class="skeleton skeleton-linea-paciente"></div>
+                    <div class="skeleton skeleton-linea-paciente"></div>
+                </div>
+                <div class="skeleton-acciones-paciente">
+                    <div class="skeleton skeleton-accion-paciente"></div>
+                    <div class="skeleton skeleton-accion-paciente"></div>
+                </div>
+            </div>
+
+            <div class="skeleton-tarjeta-paciente">
+                <div class="skeleton-paciente-encabezado">
+                    <div class="skeleton skeleton-avatar-paciente"></div>
+                    <div class="skeleton-paciente-textos">
+                        <div class="skeleton skeleton-nombre-paciente"></div>
+                        <div class="skeleton skeleton-dato-paciente"></div>
+                    </div>
+                </div>
+                <div class="skeleton-detalles-paciente">
+                    <div class="skeleton skeleton-linea-paciente"></div>
+                    <div class="skeleton skeleton-linea-paciente"></div>
+                </div>
+                <div class="skeleton-acciones-paciente">
+                    <div class="skeleton skeleton-accion-paciente"></div>
+                    <div class="skeleton skeleton-accion-paciente"></div>
+                </div>
+            </div>
+
+            <div class="skeleton-tarjeta-paciente">
+                <div class="skeleton-paciente-encabezado">
+                    <div class="skeleton skeleton-avatar-paciente"></div>
+                    <div class="skeleton-paciente-textos">
+                        <div class="skeleton skeleton-nombre-paciente"></div>
+                        <div class="skeleton skeleton-dato-paciente"></div>
+                    </div>
+                </div>
+                <div class="skeleton-detalles-paciente">
+                    <div class="skeleton skeleton-linea-paciente"></div>
+                    <div class="skeleton skeleton-linea-paciente"></div>
+                </div>
+                <div class="skeleton-acciones-paciente">
+                    <div class="skeleton skeleton-accion-paciente"></div>
+                    <div class="skeleton skeleton-accion-paciente"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- FIN SKELETON -->
     <!-- CONTENEDOR PRINCIPAL DE LA PÁGINA -->
     <div class="contenedor-principal cargando">
-        
+
         <div class="header" id="header">
             <img src="../iconos/logo.png" alt="logo">
-            
+
             <div class="menu" id="menu">
                 <a href="../dashboard.html" class="opcion">Inicio</a>
                 <a href="cliCitas.html" class="opcion">Citas</a>
                 <a href="#" class="opcion activo">Pacientes</a>
                 <div class="linea-flotante"></div>
             </div>
-            
+
             <div class="perfil-contenedor">
-                <button class="btn-notificaciones" id="btnNotificacionesDropdown"><i class="bi bi-bell"></i></button>
+
+                <button class="btn-notificaciones" id="btnNotificacionesDropdown" type="button">
+                    <i class="bi bi-bell"></i>
+                    <span id="contadorNotificaciones" class="contador-notificaciones" style="display: none;">0</span>
+                </button>
+
                 <div class="dropdown-notificaciones" id="dropdownNotificaciones">
-                    <a href="cliCitas.html" class="dropdown-item">
-                        <i class="bi bi-calendar-check"></i> Cita confirmada: Mateo Ramírez
-                    </a>
-                    <hr class="dropdown-divisor">
-                    <a href="cliCitas.html" class="dropdown-item">
-                        <i class="bi bi-clock-history"></i> Recordatorio: Tu cita es mañana
-                    </a>
+                    <div class="notificaciones-encabezado">
+                        <strong>Notificaciones</strong>
+                    </div>
+
+                    <div id="listaNotificaciones">
+                        <p class="sin-notificaciones">Cargando notificaciones...</p>
+                    </div>
                 </div>
 
                 <div class="perfil" id="btnPerfilDropdown">
@@ -42,7 +139,7 @@
                     <p id="header-nombre-usuario"></p>
                     <i class="bi bi-chevron-down flecha-perfil"></i>
                 </div>
-                
+
                 <div class="dropdown-perfil" id="dropdownPerfil">
                     <a href="perfil.html" class="dropdown-item">
                         <i class="bi bi-gear"></i> Configuración de cuenta
@@ -54,7 +151,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="encabezado-seccion" id="contenedor">
             <div>
                 <h2>Mis Pacientes</h2>
@@ -129,7 +226,9 @@
                     </div>
                 </div>
                 <p id="feedback-paciente" style="text-align: center; margin-top: 10px;"></p>
-                <button type="submit" class="btn agregar-cita ancho-total" id="btnGuardarPaciente" style="background-color: #0056e0; box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3);">Guardar Paciente</button>
+                <button type="submit" class="btn agregar-cita ancho-total" id="btnGuardarPaciente"
+                    style="background-color: #0056e0; box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3);">Guardar
+                    Paciente</button>
             </form>
         </div>
     </div>
@@ -140,15 +239,18 @@
                 <h3>Editar Paciente</h3>
                 <button class="btn-cerrar" onclick="cerrarModalEditar()"><i class="bi bi-x"></i></button>
             </div>
-            
+
             <form class="formulario-cita" id="formEditarPaciente">
                 <input type="hidden" id="edit-pac-id">
 
                 <div class="campo" style="align-items: center; text-align: center; margin-bottom: 1.5rem;">
                     <label style="margin-bottom: 0.5rem;">Foto del Paciente</label>
-                    <div style="position: relative; display: inline-block; cursor: pointer;" onclick="document.getElementById('inputAvatarPaciente').click()">
-                        <img id="edit-avatarPreview" src="../iconos/perfil.png" alt="Avatar" class="pfp" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #cbd5e1;">
-                        <div style="position: absolute; bottom: 0; right: 0; background: #0056e0; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
+                    <div style="position: relative; display: inline-block; cursor: pointer;"
+                        onclick="document.getElementById('inputAvatarPaciente').click()">
+                        <img id="edit-avatarPreview" src="../iconos/perfil.png" alt="Avatar" class="pfp"
+                            style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #cbd5e1;">
+                        <div
+                            style="position: absolute; bottom: 0; right: 0; background: #0056e0; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
                             <i class="bi bi-camera"></i>
                         </div>
                     </div>
@@ -169,7 +271,8 @@
                 <div class="campo-doble">
                     <div class="campo">
                         <label>Fecha de Nacimiento</label>
-                        <input type="date" id="edit-pac-fecha" disabled style="background-color: #f1f5f9; cursor: not-allowed;">
+                        <input type="date" id="edit-pac-fecha" disabled
+                            style="background-color: #f1f5f9; cursor: not-allowed;">
                     </div>
 
                     <div class="campo">
@@ -182,14 +285,61 @@
                 </div>
 
                 <p id="feedback-editar-paciente" style="text-align: center; margin-top: 10px;"></p>
-                <button type="submit" class="btn agregar-cita ancho-total" id="btnActualizarPaciente" style="background-color: #0056e0; box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3);">Actualizar Datos</button>
+                <button type="submit" class="btn agregar-cita ancho-total" id="btnActualizarPaciente"
+                    style="background-color: #0056e0; box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3);">Actualizar
+                    Datos</button>
             </form>
         </div>
     </div>
 
+
+    <!-- MODAL PARA RECORTAR LA FOTO DEL PACIENTE -->
+    <div class="modal-cropper" id="modalCropperPaciente">
+        <div class="contenido-cropper">
+            <div class="encabezado-cropper">
+                <div>
+                    <h3>Recortar fotografía</h3>
+                    <p>Ajusta la imagen para que se vea correctamente en el perfil del paciente.</p>
+                </div>
+                <button type="button" id="cerrarCropperPaciente" class="cerrar-cropper"
+                    aria-label="Cerrar recortador">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="area-cropper">
+                <img id="imagenCropperPaciente" src="" alt="Imagen del paciente para recortar">
+            </div>
+
+            <div class="controles-cropper">
+                <i class="bi bi-zoom-out"></i>
+                <input type="range" id="zoomCropperPaciente" min="0" max="100" value="50">
+                <i class="bi bi-zoom-in"></i>
+            </div>
+
+            <p class="ayuda-cropper">
+                Arrastra la fotografía para acomodarla y utiliza la barra para acercar o alejar.
+            </p>
+
+            <div class="botones-cropper">
+                <button type="button" id="cancelarCropperPaciente" class="btn-cancelar-cropper">
+                    Cancelar
+                </button>
+                <button type="button" id="aceptarCropperPaciente" class="btn-aceptar-cropper">
+                    <i class="bi bi-check-lg"></i> Aceptar cambios
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../scripts/app.js"></script>
+    <script src="../scripts/seguridadCliente.js"></script>
     <script src="../scripts/cliHeader.js"></script>
     <script src="../scripts/cliPacientes.js"></script>
+    <script src="../scripts/notificaciones.js"></script>
+
 </body>
+
 </html>

@@ -1,16 +1,287 @@
-(()=>{'use strict';
-const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const key='odontologia_admin_demo_v1';
-const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-const seed=()=>({users:[{id:1,name:'Administrador',last:'Clínica',email:'admin@ejemplo.test',role:'Administrador'},{id:2,name:'Sofía',last:'Morales',email:'sofia@ejemplo.test',role:'Cliente'},{id:3,name:'Virginia',last:'Hernández Sánchez',email:'virginia@ejemplo.test',role:'Odontólogo'}],patients:[{id:1,name:'Mateo',last:'Ramírez',birth:'2018-05-12',userId:2,notes:''}],schedules:[{doctorId:3,days:[1,2,3,4,5],start:'16:30',end:'20:00'}],appointments:[],audit:[]});
-let db;try{db=JSON.parse(localStorage.getItem(key))||seed()}catch{db=seed()}
-for(const k of ['users','patients','schedules','appointments','audit'])db[k]??=[];
-const save=()=>localStorage.setItem(key,JSON.stringify(db)),next=a=>Math.max(0,...a.map(x=>x.id))+1;
-const user=id=>db.users.find(x=>x.id===Number(id)),patient=id=>db.patients.find(x=>x.id===Number(id)),fullname=x=>x?`${x.name} ${x.last}`:'No disponible';
-const fmt=d=>d?new Date(d+'T12:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}):'—';
-const notice=t=>{$('#notice').textContent=t;setTimeout(()=>{$('#notice').textContent=''},4500)};
-const log=(action,id,detail)=>db.audit.unshift({date:new Date().toLocaleString('es-MX'),action,id,detail,actor:'Administrador (demo)'});
+(() => {
+  'use strict';
 
-function render(){$('#schedules').innerHTML=db.users.filter(u=>u.role==='Odontólogo').map(d=>{const s=db.schedules.find(x=>x.doctorId===d.id)||{days:[],start:'16:30',end:'20:00'};return `<div class="schedule-row"><h3>${esc(fullname(d))}</h3><form class="scheduleForm" data-id="${d.id}"><div class="checkdays">${['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].map((n,i)=>`<label><input type="checkbox" name="day" value="${i}" ${s.days.includes(i)?'checked':''}>${n}</label>`).join('')}</div><label>Entrada<input name="start" type="time" value="${s.start}" required></label><label>Salida<input name="end" type="time" value="${s.end}" required></label><button class="primary">Guardar horario</button></form></div>`}).join('')||'<p>Primero registra un usuario con rol Odontólogo.</p>'}
-document.addEventListener('submit',e=>{const f=e.target;if(!f.classList.contains('scheduleForm'))return;e.preventDefault();const v=Object.fromEntries(new FormData(f)),days=[...f.querySelectorAll('input[name=day]:checked')].map(x=>Number(x.value));if(!days.length||v.start>=v.end)return notice('Selecciona días y una jornada válida.');const did=Number(f.dataset.id),s=db.schedules.find(x=>x.doctorId===did);if(s)Object.assign(s,{days,start:v.start,end:v.end});else db.schedules.push({doctorId:did,days,start:v.start,end:v.end});save();render();notice('Horario guardado.')});render();
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
+
+  const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  let odontologos = [];
+  let horarios = [];
+  let guardando = false;
+
+  function aviso(mensaje, error = false) {
+    const notice = $('#notice');
+    if (!notice) return;
+    notice.textContent = mensaje;
+    notice.style.background = error ? '#fef2f2' : '#e8f5e9';
+    notice.style.color = error ? '#b91c1c' : '#256334';
+    notice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function normalizarDia(valor) {
+    const texto = String(valor ?? '').trim().toLocaleLowerCase('es-MX')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    const equivalencias = {
+      domingo: 0, dom: 0, '0': 0,
+      lunes: 1, lun: 1, '1': 1,
+      martes: 2, mar: 2, '2': 2,
+      miercoles: 3, mie: 3, mié: 3, '3': 3,
+      jueves: 4, jue: 4, '4': 4,
+      viernes: 5, vie: 5, '5': 5,
+      sabado: 6, sab: 6, '6': 6
+    };
+
+    return Object.prototype.hasOwnProperty.call(equivalencias, texto)
+      ? equivalencias[texto]
+      : -1;
+  }
+
+  function horaInput(valor, predeterminada) {
+    if (!valor) return predeterminada;
+    return String(valor).slice(0, 5);
+  }
+
+  function nombreCompleto(usuario) {
+    return [usuario?.nombre, usuario?.apellido].filter(Boolean).join(' ') || 'Odontólogo';
+  }
+
+  function obtenerHorariosDoctor(doctorId) {
+    return horarios.filter(h => Number(h.odontologo) === Number(doctorId));
+  }
+
+  function render() {
+    const contenedor = $('#schedules');
+    if (!contenedor) return;
+
+    if (!odontologos.length) {
+      contenedor.innerHTML = '<p class="emptymsg">No hay odontólogos registrados. Primero registra un usuario con rol Odontólogo y crea su registro en la tabla Odontologos.</p>';
+      return;
+    }
+
+    contenedor.innerHTML = odontologos.map(doctor => {
+      const registros = obtenerHorariosDoctor(doctor.id);
+      const diasSeleccionados = [...new Set(
+        registros.map(h => normalizarDia(h.dia_semana)).filter(d => d >= 0)
+      )];
+
+      const primerHorario = registros[0];
+      const entrada = horaInput(primerHorario?.hora_inicio, '16:30');
+      const salida = horaInput(primerHorario?.hora_fin, '20:00');
+
+      return `
+        <div class="schedule-row">
+          <h3>${esc(nombreCompleto(doctor.usuario))}</h3>
+          <form class="scheduleForm" data-id="${Number(doctor.id)}">
+            <div class="checkdays">
+              ${DIAS.map((dia, indice) => `
+                <label>
+                  <input type="checkbox" name="day" value="${indice}"
+                    ${diasSeleccionados.includes(indice) ? 'checked' : ''}>
+                  ${dia.slice(0, 3)}
+                </label>
+              `).join('')}
+            </div>
+            <label>Entrada
+              <input name="start" type="time" value="${esc(entrada)}" required>
+            </label>
+            <label>Salida
+              <input name="end" type="time" value="${esc(salida)}" required>
+            </label>
+            <button class="primary" type="submit">Guardar horario</button>
+          </form>
+          <small class="muted">La jornada indicada se aplicará a todos los días seleccionados.</small>
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function cargarDatos() {
+    const contenedor = $('#schedules');
+    if (contenedor) contenedor.innerHTML = '<p class="emptymsg">Cargando odontólogos y horarios...</p>';
+
+    if (typeof client === 'undefined' || !client) {
+      throw new Error('No se encontró el cliente de Supabase. Verifica que app.js se cargue antes que horarios.js.');
+    }
+
+    // Primero se obtienen los registros reales de odontólogos.
+    const { data: doctoresDB, error: errorDoctores } = await client
+      .from('Odontologos')
+      .select('id, Usuario')
+      .order('id');
+
+    if (errorDoctores) throw errorDoctores;
+
+    const doctores = doctoresDB || [];
+    if (!doctores.length) {
+      odontologos = [];
+      horarios = [];
+      render();
+      return;
+    }
+
+    // Los nombres y apellidos están en Usuarios, relacionados por Odontologos.Usuario.
+    const idsUsuarios = doctores.map(d => d.Usuario).filter(Boolean);
+    const { data: usuariosDB, error: errorUsuarios } = await client
+      .from('Usuarios')
+      .select('id, nombre, apellido')
+      .in('id', idsUsuarios);
+
+    if (errorUsuarios) throw errorUsuarios;
+
+    const usuariosPorId = new Map((usuariosDB || []).map(u => [u.id, u]));
+
+    odontologos = doctores.map(d => ({
+      id: d.id,
+      usuarioId: d.Usuario,
+      usuario: usuariosPorId.get(d.Usuario) || null
+    }));
+
+    const idsOdontologos = doctores.map(d => d.id);
+    const { data: horariosDB, error: errorHorarios } = await client
+      .from('Horarios')
+      .select('id, dia_semana, hora_inicio, hora_fin, odontologo')
+      .in('odontologo', idsOdontologos)
+      .order('id');
+
+    if (errorHorarios) throw errorHorarios;
+
+    horarios = horariosDB || [];
+    render();
+  }
+
+  async function guardarHorario(form) {
+    if (guardando) return;
+    guardando = true;
+
+    const boton = form.querySelector('button[type="submit"]');
+    const textoOriginal = boton?.textContent || 'Guardar horario';
+    if (boton) {
+      boton.disabled = true;
+      boton.textContent = 'Guardando...';
+    }
+
+    try {
+      const doctorId = Number(form.dataset.id);
+      const entrada = form.elements.start.value;
+      const salida = form.elements.end.value;
+      const dias = [...form.querySelectorAll('input[name="day"]:checked')]
+        .map(input => Number(input.value));
+
+      if (!doctorId || !entrada || !salida || entrada >= salida || !dias.length) {
+        throw new Error('Selecciona al menos un día y define una jornada válida. La salida debe ser posterior a la entrada.');
+      }
+
+      const existentes = obtenerHorariosDoctor(doctorId);
+      const conservarIds = new Set();
+
+      // Actualiza los días que ya existen e inserta únicamente los días nuevos.
+      for (const diaIndice of dias) {
+        const nombreDia = DIAS[diaIndice];
+        const coincidencias = existentes.filter(
+          h => normalizarDia(h.dia_semana) === diaIndice
+        );
+
+        if (coincidencias.length) {
+          const principal = coincidencias[0];
+
+          const { error: errorActualizar } = await client
+            .from('Horarios')
+            .update({
+              dia_semana: nombreDia,
+              hora_inicio: `${entrada}:00`,
+              hora_fin: `${salida}:00`
+            })
+            .eq('id', principal.id);
+
+          if (errorActualizar) throw errorActualizar;
+          conservarIds.add(principal.id);
+
+          // Si había registros duplicados del mismo día, se limpian.
+          const duplicados = coincidencias.slice(1).map(h => h.id);
+          if (duplicados.length) {
+            const { error: errorDuplicados } = await client
+              .from('Horarios')
+              .delete()
+              .in('id', duplicados);
+
+            if (errorDuplicados) throw errorDuplicados;
+          }
+        } else {
+          const { error: errorInsertar } = await client
+            .from('Horarios')
+            .insert([{
+              dia_semana: nombreDia,
+              hora_inicio: `${entrada}:00`,
+              hora_fin: `${salida}:00`,
+              odontologo: doctorId
+            }]);
+
+          if (errorInsertar) throw errorInsertar;
+        }
+      }
+
+      // Elimina los días que estaban guardados y se desmarcaron en el formulario.
+      const quitarIds = existentes
+        .filter(h => !dias.includes(normalizarDia(h.dia_semana)))
+        .map(h => h.id);
+
+      if (quitarIds.length) {
+        const { error: errorEliminar } = await client
+          .from('Horarios')
+          .delete()
+          .in('id', quitarIds);
+
+        if (errorEliminar) throw errorEliminar;
+      }
+
+      await cargarDatos();
+      aviso('Horario guardado correctamente en Supabase.');
+    } catch (error) {
+      console.error('Error al guardar horario:', error);
+      aviso(`No se pudo guardar el horario: ${error.message || 'Error desconocido'}`, true);
+    } finally {
+      guardando = false;
+      if (boton) {
+        boton.disabled = false;
+        boton.textContent = textoOriginal;
+      }
+    }
+  }
+
+  document.addEventListener('submit', event => {
+    const form = event.target;
+    if (!form.matches('.scheduleForm')) return;
+    event.preventDefault();
+    guardarHorario(form);
+  });
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      await cargarDatos();
+    } catch (error) {
+      console.error('Error al cargar horarios:', error);
+      const contenedor = $('#schedules');
+      if (contenedor) {
+        contenedor.innerHTML = `
+          <div class="warning">
+            No se pudieron cargar los horarios desde Supabase.<br>
+            ${esc(error.message || 'Error desconocido')}
+          </div>
+        `;
+      }
+    }
+  });
+
+  // Los scripts del proyecto pueden cargarse al final del body, cuando DOMContentLoaded ya ocurrió.
+  if (document.readyState !== 'loading') {
+    cargarDatos().catch(error => {
+      console.error('Error al iniciar horarios:', error);
+      const contenedor = $('#schedules');
+      if (contenedor) contenedor.innerHTML =
+        `<div class="warning">No se pudieron cargar los horarios: ${esc(error.message || 'Error desconocido')}</div>`;
+    });
+  }
 })();

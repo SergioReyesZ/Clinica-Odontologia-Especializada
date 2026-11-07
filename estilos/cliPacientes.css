@@ -349,3 +349,486 @@ body{
     background-color: #0045b3;
     transform: scale(1.03);
 }
+/* ==========================================
+   SKELETON PAGE - MIS PACIENTES
+   Mismo estilo del dashboard
+========================================== */
+
+/* Estado de carga */
+body.dashboard-cargando {
+    overflow: hidden;
+}
+
+body.dashboard-cargando .contenedor-principal {
+    visibility: hidden !important;
+}
+
+body.dashboard-cargando .skeleton-page {
+    display: block !important;
+    visibility: visible;
+    opacity: 1;
+}
+
+.skeleton-page {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding-bottom: 2rem;
+    background: #fff;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition: opacity .25s ease, visibility .25s ease;
+}
+
+body:not(.dashboard-cargando) .skeleton-page {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* ANIMACIÓN: IGUAL AL DASHBOARD */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        #edf2f7 25%,
+        #f8fafc 50%,
+        #edf2f7 75%
+    );
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s ease-in-out infinite;
+    border-radius: 10px;
+}
+
+@keyframes skeletonShimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* HEADER: MISMAS MEDIDAS DEL DASHBOARD */
+.skeleton-header {
+    min-height: 85px;
+    padding: 0 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    box-sizing: border-box;
+}
+
+.skeleton-logo {
+    width: 150px;
+    height: 45px;
+}
+
+.skeleton-menu {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+}
+
+.skeleton-menu-item {
+    width: 65px;
+    height: 17px;
+}
+
+.skeleton-perfil {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.skeleton-circulo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.skeleton-nombre {
+    width: 115px;
+    height: 16px;
+}
+
+.skeleton-flecha {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* ENCABEZADO DE PACIENTES */
+.skeleton-pacientes-encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin: 25px 25px 0;
+    padding: 2rem;
+    border-radius: 20px;
+    box-sizing: border-box;
+    background: linear-gradient(
+        to bottom,
+        rgba(236, 253, 245, 0.95) 80%,
+        rgba(236, 253, 245, 0) 100%
+    );
+}
+
+.skeleton-pacientes-titulos {
+    flex: 1;
+}
+
+.skeleton-titulo-pacientes {
+    width: 220px;
+    height: 29px;
+    margin-bottom: 13px;
+}
+
+.skeleton-descripcion-pacientes {
+    width: 360px;
+    max-width: 90%;
+    height: 14px;
+}
+
+.skeleton-boton-pacientes {
+    width: 205px;
+    height: 52px;
+    border-radius: 15px;
+}
+
+/* GRID DE TARJETAS */
+.skeleton-grid-pacientes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.skeleton-tarjeta-paciente {
+    min-width: 0;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-sizing: border-box;
+}
+
+.skeleton-paciente-encabezado {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.skeleton-avatar-paciente {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.skeleton-paciente-textos {
+    flex: 1;
+    min-width: 0;
+}
+
+.skeleton-nombre-paciente {
+    width: 165px;
+    max-width: 90%;
+    height: 19px;
+    margin-bottom: 10px;
+}
+
+.skeleton-dato-paciente {
+    width: 90px;
+    height: 13px;
+}
+
+.skeleton-detalles-paciente {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.skeleton-linea-paciente {
+    width: 75%;
+    height: 14px;
+}
+
+.skeleton-linea-paciente:last-child {
+    width: 60%;
+}
+
+.skeleton-acciones-paciente {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.skeleton-accion-paciente {
+    flex: 1;
+    height: 45px;
+    border-radius: 15px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+    .skeleton-header {
+        min-height: 70px;
+        padding: 0 18px;
+    }
+
+    .skeleton-logo {
+        width: 110px;
+        height: 38px;
+    }
+
+    .skeleton-menu {
+        display: none;
+    }
+
+    .skeleton-perfil {
+        gap: 10px;
+    }
+
+    .skeleton-nombre,
+    .skeleton-flecha {
+        display: none;
+    }
+
+    .skeleton-pacientes-encabezado {
+        align-items: flex-start;
+        flex-direction: column;
+        margin: 18px 15px 0;
+        padding: 1.5rem;
+        gap: 1.2rem;
+    }
+
+    .skeleton-titulo-pacientes {
+        width: 190px;
+    }
+
+    .skeleton-descripcion-pacientes {
+        width: 260px;
+    }
+
+    .skeleton-boton-pacientes {
+        width: 180px;
+        height: 46px;
+    }
+
+    .skeleton-grid-pacientes {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem 15px;
+    }
+}
+
+/* =====================================================
+   RECORTADOR DE FOTOGRAFÍA PARA AVATAR DE PACIENTE
+===================================================== */
+
+.modal-cropper {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .70);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.modal-cropper.activo {
+    display: flex;
+}
+
+.contenido-cropper {
+    background: #fff;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, .2);
+    animation: aparecerModal .25s ease;
+    box-sizing: border-box;
+}
+
+.encabezado-cropper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.encabezado-cropper h3 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.25rem;
+}
+
+.encabezado-cropper p {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: .88rem;
+}
+
+.cerrar-cropper {
+    border: none;
+    background: #f1f5f9;
+    color: #64748b;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.cerrar-cropper:hover {
+    background: #e2e8f0;
+}
+
+.area-cropper {
+    width: 100%;
+    height: 320px;
+    background: #111827;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.area-cropper img {
+    display: block;
+    max-width: 100%;
+}
+
+.area-cropper .cropper-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.area-cropper .cropper-view-box {
+    outline: 2px solid rgba(255, 255, 255, .9);
+}
+
+.area-cropper .cropper-line,
+.area-cropper .cropper-point {
+    display: none;
+}
+
+.controles-cropper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+.controles-cropper input {
+    flex: 1;
+    accent-color: #0056e0;
+    cursor: pointer;
+}
+
+.ayuda-cropper {
+    color: #64748b;
+    font-size: .82rem;
+    text-align: center;
+    margin: 12px 0 20px;
+}
+
+.botones-cropper {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cancelar-cropper,
+.btn-aceptar-cropper {
+    border: none;
+    border-radius: 10px;
+    padding: 11px 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-cancelar-cropper {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.btn-cancelar-cropper:hover {
+    background: #e2e8f0;
+}
+
+.btn-aceptar-cropper {
+    background: #0056e0;
+    color: #fff;
+}
+
+.btn-aceptar-cropper:hover {
+    background: #0045b3;
+}
+
+.btn-aceptar-cropper:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .contenido-cropper {
+        padding: 18px;
+    }
+
+    .area-cropper {
+        height: 280px;
+    }
+
+    .botones-cropper {
+        flex-direction: column-reverse;
+    }
+
+    .botones-cropper button {
+        width: 100%;
+    }
+}
+
+/* Modal de recorte siempre por encima de los demás */
+#modalCropperPaciente {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 100000 !important;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    padding: 15px;
+    box-sizing: border-box;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(5px);
+}
+
+#modalCropperPaciente.activo {
+    display: flex !important;
+}
+
+#modalCropperPaciente .contenido-cropper {
+    position: relative;
+    z-index: 100001;
+}

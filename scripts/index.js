@@ -55,6 +55,7 @@ const inputApellido = document.getElementById('reg-apellido');
 const inputTelefono = document.getElementById('reg-telefono'); 
 const inputCorreo = document.getElementById('reg-correo');
 const inputPassword = document.getElementById('reg-password');
+const inputConfirmPassword = document.getElementById('reg-confirm-password'); // Nuevo
 const feedbackRegistro = document.getElementById('feedback-registro');
 
 btnRegistrarse.addEventListener('click', async () => {
@@ -63,11 +64,12 @@ btnRegistrarse.addEventListener('click', async () => {
     const telefono = inputTelefono.value.trim(); 
     const email = inputCorreo.value.trim();
     const password = inputPassword.value.trim();
+    const confirmPassword = inputConfirmPassword.value.trim(); // Nuevo
 
     feedbackRegistro.style.color = "#e74c3c"; // Rojo para errores
 
     // 1. Validar campos vacíos
-    if (!email || !password || !nombre || !apellido) {
+    if (!email || !password || !nombre || !apellido || !confirmPassword) { 
         feedbackRegistro.textContent = "Por favor, llena todos los campos.";
         return;
     }
@@ -92,7 +94,11 @@ btnRegistrarse.addEventListener('click', async () => {
         feedbackRegistro.textContent = "La contraseña debe tener al menos 6 caracteres.";
         return;
     }
-
+    // 5. Validar que las contraseñas coincidan (Nuevo)
+    if (password !== confirmPassword) {
+        feedbackRegistro.textContent = "Las contraseñas no coinciden.";
+        return;
+    }
     try {
         btnRegistrarse.disabled = true;
         feedbackRegistro.style.color = "#3498db";
@@ -106,7 +112,7 @@ btnRegistrarse.addEventListener('click', async () => {
                 data: { 
                     nombre: nombre, 
                     apellido: apellido,
-                    telefono: telefono 
+                    telefono: telefono || null
                 }
             }
         });
@@ -159,16 +165,33 @@ formLogin.addEventListener('submit', async (e) => {
         feedbackLogin.style.color = "#3498db";
         feedbackLogin.textContent = "Iniciando sesión...";
 
-        const { data, error } = await client.auth.signInWithPassword({
+        // 1. Iniciar sesión con Supabase
+        const { data: authData, error: authError } = await client.auth.signInWithPassword({
             email: email,
             password: password
         });
 
-        if (error) throw error;
+        if (authError) throw authError;
+
+        // 2. Consultar el rol del usuario en la tabla pública
+        const userId = authData.user.id;
+        const { data: userData, error: userError } = await client
+            .from('Usuarios')
+            .select('rol')
+            .eq('id', userId)
+            .single();
+
+        if (userError) throw userError;
 
         feedbackLogin.style.color = "#2ecc71";
         feedbackLogin.textContent = "¡Bienvenido! Redirigiendo...";
-        window.location.href = 'dashboard.html';
+
+        // 3. Redirigir dependiendo del rol (2 = Administrador)
+        if (userData.rol === 2) {
+            window.location.href = 'adminDashboard.html';
+        } else {
+            window.location.href = 'dashboard.html';
+        }
 
     } catch (error) {
         console.error("Error al iniciar sesión:", error.message);

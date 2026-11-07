@@ -413,3 +413,488 @@ td small {
 }
 
 @media(max-width:650px){.admin-module .panel{padding:15px}.admin-module .filters{flex-direction:column}.admin-module .filters input,.admin-module .filters select{flex-basis:auto}.admin-module .panel-head{flex-wrap:wrap}.formgrid{grid-template-columns:1fr}}
+
+/* =========================================
+   USUARIOS REALES - TABLA Y MODAL DE EDICIÓN
+   ========================================= */
+#notice.notice-error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.usuario-identidad {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 190px;
+}
+
+.usuario-identidad > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.usuario-identidad small {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.usuario-avatar {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #0056e0;
+    font-size: 18px;
+}
+
+.usuario-avatar.grande {
+    width: 54px;
+    height: 54px;
+    flex-basis: 54px;
+    font-size: 25px;
+}
+
+.pill.rol-1 {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.pill.rol-2 {
+    background: #f3e8ff;
+    color: #7e22ce;
+}
+
+.pill.rol-3 {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.btn-editar-usuario {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid #bfdbfe !important;
+    border-radius: 9px !important;
+    padding: 8px 11px !important;
+    color: #1d4ed8 !important;
+    background: #eff6ff !important;
+    font-weight: 600;
+    transition: .2s ease;
+}
+
+.btn-editar-usuario:hover {
+    background: #dbeafe !important;
+    border-color: #93c5fd !important;
+}
+
+/* El modal conserva la estructura existente, con apariencia de perfil.html */
+#modal .dialog {
+    width: min(650px, 100%);
+    max-height: min(90vh, 850px);
+    overflow-y: auto;
+    padding: 28px;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 18px 50px rgba(15, 23, 42, .20);
+}
+
+#modal .panel-head {
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eef2f7;
+}
+
+#modal .panel-head h2 {
+    color: #1e293b;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+#modal .close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #64748b;
+    line-height: 1;
+    transition: .2s ease;
+}
+
+#modal .close:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.formulario-usuario {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.usuario-modal-identidad {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 13px;
+    background: #f8fafc;
+}
+
+.usuario-modal-identidad > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.usuario-modal-identidad strong {
+    color: #1e293b;
+    font-size: 15px;
+}
+
+.usuario-modal-identidad small,
+.campo-usuario small {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.45;
+}
+
+.titulo-form-usuario {
+    margin: 5px 0 0;
+    padding-bottom: 9px;
+    color: #334155;
+    font-size: 15px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.campos-usuario-dobles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.campo-usuario {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.campo-usuario input,
+.campo-usuario select {
+    width: 100%;
+    min-width: 0;
+    height: 43px;
+    padding: 9px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    outline: none;
+    background: #f8fafc;
+    color: #334155;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+}
+
+.campo-usuario input:focus,
+.campo-usuario select:focus {
+    border-color: #0056e0;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 86, 224, .10);
+}
+
+.campo-usuario input:disabled {
+    background: #f1f5f9;
+    color: #64748b;
+    cursor: not-allowed;
+}
+
+.linea-usuario {
+    width: 100%;
+    margin: 2px 0;
+    border: 0;
+    border-top: 1px dashed #cbd5e1;
+}
+
+.ayuda-usuario-modal {
+    margin: 0;
+    padding: 11px 13px;
+    border-radius: 9px;
+    background: #f0f7ff;
+    color: #475569;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.ayuda-usuario-modal.error {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.acciones-usuario-modal {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.btn-cancelar-usuario,
+.btn-guardar-usuario {
+    min-height: 42px;
+    padding: 10px 17px;
+    border: 0;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: .2s ease;
+}
+
+.btn-cancelar-usuario {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.btn-cancelar-usuario:hover {
+    background: #e2e8f0;
+}
+
+.btn-guardar-usuario {
+    background: #0056e0;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 86, 224, .18);
+}
+
+.btn-guardar-usuario:hover {
+    background: #0045b3;
+}
+
+.btn-guardar-usuario:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+@media (max-width: 650px) {
+    #modal .dialog {
+        padding: 19px;
+        max-height: 92vh;
+    }
+
+    .campos-usuario-dobles {
+        grid-template-columns: 1fr;
+    }
+
+    .acciones-usuario-modal {
+        flex-direction: column-reverse;
+    }
+
+    .acciones-usuario-modal button {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   MODALES DE USUARIOS: SIEMPRE POR ENCIMA DEL HEADER
+========================================================= */
+#modal.overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 1000000 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, .62);
+    backdrop-filter: blur(4px);
+}
+#modal.overlay.hidden { display: none !important; }
+#modal .dialog {
+    position: relative;
+    z-index: 1000001;
+    width: min(650px, 100%);
+    max-height: calc(100dvh - 40px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    margin: auto;
+    padding: 27px;
+    background: #fff;
+    border-radius: 19px;
+}
+#modal .formulario-usuario {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+#modal .campos-usuario-dobles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+#modal .campo-usuario {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 700;
+}
+#modal .campo-usuario input,
+#modal .campo-usuario select {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #f8fafc;
+    color: #1e293b;
+    font: inherit;
+    font-weight: 400;
+    outline: none;
+}
+#modal .campo-usuario input:focus,
+#modal .campo-usuario select:focus {
+    border-color: #2563eb;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .11);
+}
+#modal .campo-usuario input:disabled {
+    background: #f1f5f9;
+    color: #64748b;
+}
+#modal .acciones-usuario-modal {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+#modal .btn-cancelar-usuario,
+#modal .btn-guardar-usuario,
+#modal .btn-confirmar-eliminar-usuario {
+    min-height: 43px;
+    padding: 10px 17px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .18s ease;
+}
+#modal .btn-cancelar-usuario {
+    color: #475569;
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+}
+#modal .btn-cancelar-usuario:hover { background: #e2e8f0; }
+#modal .btn-guardar-usuario {
+    color: #fff;
+    background: #2563eb;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, .18);
+}
+#modal .btn-guardar-usuario:hover { background: #1d4ed8; }
+#modal .btn-confirmar-eliminar-usuario {
+    color: #fff;
+    background: #dc2626;
+    box-shadow: 0 4px 10px rgba(220, 38, 38, .18);
+}
+#modal .btn-confirmar-eliminar-usuario:hover { background: #b91c1c; }
+#modal button:disabled { opacity: .6; cursor: wait; }
+#modal .ayuda-usuario-modal {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.5;
+}
+#modal .ayuda-usuario-modal.error {
+    color: #b91c1c;
+}
+#modal .confirmar-eliminar-usuario {
+    padding: 8px 2px 2px;
+    text-align: center;
+}
+#modal .confirmar-eliminar-usuario > i {
+    display: block;
+    margin: 3px 0 14px;
+    color: #ef4444;
+    font-size: 56px;
+}
+#modal .confirmar-eliminar-usuario h3 {
+    margin: 0 0 10px;
+    color: #1e293b;
+    font-size: 20px;
+}
+#modal .confirmar-eliminar-usuario > p:not(.ayuda-usuario-modal) {
+    margin: 0 0 23px;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+#modal .confirmar-eliminar-usuario .acciones-usuario-modal {
+    justify-content: center;
+    margin-bottom: 12px;
+}
+.btn-eliminar-usuario {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 8px 11px !important;
+    border: 1px solid #fecaca !important;
+    border-radius: 9px !important;
+    background: #fff1f2 !important;
+    color: #dc2626 !important;
+    font-size: 12.5px;
+    font-weight: 700;
+    transition: .18s ease;
+}
+.btn-eliminar-usuario:hover {
+    background: #dc2626 !important;
+    border-color: #dc2626 !important;
+    color: #fff !important;
+}
+@media (max-width: 560px) {
+    #modal.overlay { padding: 12px; }
+    #modal .dialog {
+        max-height: calc(100dvh - 24px);
+        padding: 20px 17px;
+        border-radius: 16px;
+    }
+    #modal .campos-usuario-dobles { grid-template-columns: 1fr; gap: 13px; }
+    #modal .acciones-usuario-modal { flex-direction: column-reverse; }
+    #modal .acciones-usuario-modal button { width: 100%; }
+}
+
+.usuario-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.btn-perfil .pfp {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.usuario-avatar.grande img {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    object-fit: cover;
+}

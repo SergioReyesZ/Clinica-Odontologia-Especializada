@@ -12,8 +12,112 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 
-<body>
-    <div class="contenedor-principal">
+<body class="dashboard-cargando">
+    <!-- SKELETON LOADER: CLI CITAS -->
+    <div class="skeleton-page" id="skeletonPage">
+
+        <!-- ENCABEZADO: MISMA ESTRUCTURA QUE EL HEADER REAL -->
+        <div class="skeleton-header">
+
+            <div class="skeleton-logo skeleton"></div>
+
+            <div class="skeleton-menu">
+                <div class="skeleton skeleton-menu-item"></div>
+                <div class="skeleton skeleton-menu-item"></div>
+                <div class="skeleton skeleton-menu-item"></div>
+            </div>
+
+            <div class="skeleton-perfil">
+
+                <!-- Foto, nombre y flecha del perfil -->
+                <div class="skeleton-perfil-usuario">
+                    <div class="skeleton skeleton-circulo skeleton-avatar"></div>
+                    <div class="skeleton skeleton-nombre"></div>
+                    <div class="skeleton skeleton-flecha"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Encabezado de sección -->
+        <div class="skeleton-seccion">
+            <div class="skeleton-seccion-texto">
+                <div class="skeleton-line skeleton-titulo"></div>
+                <div class="skeleton-line skeleton-descripcion"></div>
+            </div>
+            <div class="skeleton-boton"></div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="skeleton-filtros">
+            <div class="skeleton-line skeleton-filtro activo"></div>
+            <div class="skeleton-line skeleton-filtro"></div>
+            <div class="skeleton-line skeleton-filtro"></div>
+        </div>
+
+        <!-- Tarjetas de citas -->
+        <div class="skeleton-grid-citas">
+
+            <div class="skeleton-tarjeta-cita">
+                <div class="skeleton-line skeleton-estado"></div>
+                <div class="skeleton-cita-contenido">
+                    <div class="skeleton-fecha"></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton-line skeleton-servicio"></div>
+                        <div class="skeleton-line skeleton-detalle"></div>
+                        <div class="skeleton-line skeleton-detalle corto"></div>
+                        <div class="skeleton-line skeleton-detalle"></div>
+                    </div>
+                </div>
+                <div class="skeleton-line skeleton-divisor"></div>
+                <div class="skeleton-acciones">
+                    <div class="skeleton-accion"></div>
+                    <div class="skeleton-accion"></div>
+                    <div class="skeleton-accion"></div>
+                </div>
+            </div>
+
+            <div class="skeleton-tarjeta-cita">
+                <div class="skeleton-line skeleton-estado"></div>
+                <div class="skeleton-cita-contenido">
+                    <div class="skeleton-fecha"></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton-line skeleton-servicio"></div>
+                        <div class="skeleton-line skeleton-detalle"></div>
+                        <div class="skeleton-line skeleton-detalle corto"></div>
+                        <div class="skeleton-line skeleton-detalle"></div>
+                    </div>
+                </div>
+                <div class="skeleton-line skeleton-divisor"></div>
+                <div class="skeleton-acciones">
+                    <div class="skeleton-accion"></div>
+                    <div class="skeleton-accion"></div>
+                    <div class="skeleton-accion"></div>
+                </div>
+            </div>
+
+            <div class="skeleton-tarjeta-cita">
+                <div class="skeleton-line skeleton-estado"></div>
+                <div class="skeleton-cita-contenido">
+                    <div class="skeleton-fecha"></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton-line skeleton-servicio"></div>
+                        <div class="skeleton-line skeleton-detalle"></div>
+                        <div class="skeleton-line skeleton-detalle corto"></div>
+                        <div class="skeleton-line skeleton-detalle"></div>
+                    </div>
+                </div>
+                <div class="skeleton-line skeleton-divisor"></div>
+                <div class="skeleton-acciones">
+                    <div class="skeleton-accion"></div>
+                    <div class="skeleton-accion"></div>
+                    <div class="skeleton-accion"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="contenedor-principal cargando">
 
         <div class="header" id="header">
             <img src="../iconos/logo.png" alt="logo">
@@ -24,29 +128,26 @@
                 <div class="linea-flotante"></div>
             </div>
             <div class="perfil-contenedor">
-                <button class="btn-notificaciones" id="btnNotificacionesDropdown"><i class="bi bi-bell"></i></button>
+
+                <button class="btn-notificaciones" id="btnNotificacionesDropdown" type="button">
+                    <i class="bi bi-bell"></i>
+                    <span id="contadorNotificaciones" class="contador-notificaciones" style="display: none;">0</span>
+                </button>
+
                 <div class="dropdown-notificaciones" id="dropdownNotificaciones">
-                    <a href="recursos/cliCitas.html" class="dropdown-item">
-                        <i class="bi bi-calendar-check"></i> Cita confirmada: Mateo Ramírez
-                    </a>
+                    <div class="notificaciones-encabezado">
+                        <strong>Notificaciones</strong>
+                    </div>
 
-                    <hr class="dropdown-divisor">
-
-                    <a href="recursos/cliCitas.html" class="dropdown-item">
-                        <i class="bi bi-clock-history"></i> Recordatorio: Tu cita es mañana
-                    </a>
-
-                    <hr class="dropdown-divisor">
-
-                    <a href="recursos/cliCitas.html" class="dropdown-item texto-peligro">
-                        <i class="bi bi-calendar-x"></i> Cita cancelada: Ana López
-                    </a>
+                    <div id="listaNotificaciones">
+                        <p class="sin-notificaciones">Cargando notificaciones...</p>
+                    </div>
                 </div>
 
                 <div class="perfil" id="btnPerfilDropdown">
-                    <button class="btn-perfil"><img src="../iconos/perfil.png" alt=""></button>
+                    <button class="btn-perfil"><img class="pfp" src="../iconos/perfil.png" alt=""></button>
                     <p id="header-nombre-usuario"></p>
-                    <i class="bi bi-chevron-down flecha-perfil"></i> <!-- Opcional: una flechita para indicar menú -->
+                    <i class="bi bi-chevron-down flecha-perfil"></i>
                 </div>
 
                 <div class="dropdown-perfil" id="dropdownPerfil">
@@ -149,7 +250,7 @@
 
                 <!-- Selector de Hora -->
                 <div class="campo" style="margin-top: 1rem;">
-                    <label>Horario disponible (4:30 PM - 8:00 PM)</label>
+                    <label>Horario disponible (16:30 - 20:00)</label>
                     <div class="horarios-grid" id="horarios-contenedor"></div>
                 </div>
 
@@ -272,10 +373,13 @@
         function abrirModal() { document.getElementById('modalNuevaCita').style.display = 'flex'; }
         function cerrarModal() { document.getElementById('modalNuevaCita').style.display = 'none'; }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../scripts/app.js"></script>
+    <script src="../scripts/seguridadCliente.js"></script>
+    <script src="../scripts/cliHeader.js"></script>
+    <script src="../scripts/cliCitas.js"></script>
+    <script src="../scripts/notificaciones.js"></script>
+
 </body>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../scripts/app.js"></script>
-<script src="../scripts/cliHeader.js"></script>
-<script src="../scripts/cliCitas.js"></script>
 
 </html>
