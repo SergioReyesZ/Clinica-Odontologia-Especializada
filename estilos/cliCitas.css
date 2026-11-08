@@ -830,3 +830,153 @@ body:not(.dashboard-cargando) .contenedor-principal {
     }
 
 }
+
+/* ==============================================
+   SOLUCIÓN SCROLL MÓVIL - MIS CITAS
+   iPhone 12 y demás celulares
+============================================== */
+
+@media (max-width: 760px) {
+
+    html,
+    body {
+        height: auto !important;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto !important;
+    }
+
+    body {
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    /* Permitir que la página crezca según sus citas */
+    .contenedor-principal {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow: visible !important;
+        padding-bottom: 25px;
+        box-sizing: border-box;
+    }
+
+    /* Encabezado debajo del header fijo */
+    .encabezado-seccion {
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        box-sizing: border-box;
+    }
+
+    /* Filtros */
+    .filtros-citas {
+        width: auto;
+        max-width: 100%;
+        flex-wrap: wrap;
+        padding: 15px 14px;
+        gap: 7px;
+        box-sizing: border-box;
+    }
+
+    .filtro {
+        padding: 9px 13px;
+        font-size: 13px;
+    }
+
+    /* Listado completo de citas */
+    .grid-citas {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+
+        width: 100%;
+        height: auto !important;
+        min-height: 0;
+        max-height: none !important;
+
+        padding: 5px 14px 25px;
+        gap: 14px;
+
+        overflow: visible !important;
+        box-sizing: border-box;
+    }
+
+    .grid-citas.oculto {
+        display: none !important;
+    }
+
+    /* Tarjetas */
+    .tarjeta-cita-detalle {
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        box-sizing: border-box;
+        padding: 16px;
+        gap: 13px;
+    }
+
+    .cita-header,
+    .cita-body,
+    .cita-footer {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .cita-body {
+        align-items: center;
+        gap: 12px;
+    }
+
+    .info-bloque {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .info-bloque h3 {
+        font-size: 16px;
+        line-height: 1.35;
+    }
+
+    .info-bloque p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .cita-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .btn-accion {
+        min-width: 0;
+        min-height: 42px;
+        font-size: 12px;
+    }
+
+}
+
+@media (max-width: 390px) {
+
+    .grid-citas {
+        padding-left: 11px;
+        padding-right: 11px;
+        gap: 12px;
+    }
+
+    .tarjeta-cita-detalle {
+        padding: 13px;
+    }
+
+    .fecha-bloque {
+        min-width: 52px;
+        padding: 10px;
+    }
+
+    .fecha-bloque .dia {
+        font-size: 25px;
+    }
+
+}

@@ -1,0 +1,225 @@
+/* =========================================================
+   RESPONSIVE GLOBAL — Odontología Especializada
+   Se carga después de los estilos de cada página.
+   Mantiene intacto el diseño de escritorio.
+========================================================= */
+/* Estas reglas se limitan a pantallas pequeñas para no alterar medidas
+   ni proporciones del diseño original en computadora. */
+@media (max-width: 1050px) {
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { max-width: 100%; overflow-x: clip; }
+    img, video, iframe { max-width: 100%; }
+    button, input, select, textarea { max-width: 100%; }
+}
+
+/* Encabezado compartido: mismo lenguaje visual de header.css */
+.header { min-width: 0; }
+.header .hamburger-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #dce5f2;
+    border-radius: 12px;
+    background: #fff;
+    color: #1b2a47;
+    font-size: 1.8rem;
+    line-height: 1;
+    box-shadow: 0 3px 10px rgba(27, 42, 71, .07);
+}
+.header .hamburger-btn:focus-visible,
+.header .opcion:focus-visible,
+.header .header-btn:focus-visible {
+    outline: 3px solid rgba(0, 86, 224, .25);
+    outline-offset: 3px;
+}
+
+@media (max-width: 1050px) {
+    .header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: .55rem .75rem;
+        padding: .65rem clamp(.8rem, 3vw, 1.25rem);
+    }
+    .header > img {
+        order: 0;
+        width: clamp(88px, 18vw, 125px);
+        max-height: 48px;
+        object-fit: contain;
+        flex: 0 0 auto;
+    }
+    .header .hamburger-btn { display: inline-flex; order: 1; margin-left: auto; }
+    .header .perfil-contenedor { order: 2; flex: 0 0 auto; }
+    .header .menu {
+        display: none;
+        order: 3;
+        flex: 1 0 100%;
+        width: 100%;
+        min-width: 0;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: .2rem;
+        padding: .55rem 0 .2rem;
+        margin: 0;
+        border-top: 1px solid #e8edf4;
+    }
+    .header .menu.activo { display: flex; }
+    .header .menu .opcion {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 44px;
+        padding: .7rem .9rem;
+        border-radius: 10px;
+        font-size: 1rem;
+        line-height: 1.25;
+        white-space: normal;
+        transform: none;
+    }
+    .header .menu .opcion:hover,
+    .header .menu .opcion.activo {
+        background: #edf4ff;
+        color: #2c4894;
+    }
+    .header .linea-flotante { display: none !important; }
+    .header .botones {
+        display: none;
+        order: 4;
+        flex: 1 0 100%;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: .55rem;
+        padding: .25rem 0 .45rem;
+        border-top: 1px solid #e8edf4;
+    }
+    .header .botones.activo { display: flex; }
+    .header .botones .header-btn { width: 100%; min-height: 44px; padding: .7rem 1rem; font-size: .95rem; }
+    .header .perfil { gap: .35rem; }
+    .header .btn-perfil img { width: 38px; height: 38px; object-fit: cover; }
+    .header .dropdown-perfil, .header .dropdown-notificaciones { right: 0; max-width: min(290px, calc(100vw - 24px)); }
+}
+
+@media (max-width: 760px) {
+    .contenedor-principal { width: 100%; min-width: 0; }
+    .contenedor, .admin-module, .citas-modulo { width: 100%; min-width: 0; max-width: 100%; }
+    .contenedor { padding: 16px 14px; }
+    .encabezado-seccion {
+        width: auto;
+        margin: 16px 14px 0;
+        padding: 1.15rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        border-radius: 15px;
+    }
+    .encabezado-seccion h2 { font-size: clamp(1.25rem, 5vw, 1.65rem); line-height: 1.25; }
+    .encabezado-seccion p { font-size: .92rem; line-height: 1.5; }
+    .grid-citas { grid-template-columns: minmax(0, 1fr); padding: 0 14px 20px; gap: 1rem; }
+    .two, .quick { grid-template-columns: minmax(0, 1fr) !important; }
+    .panel, .admin-module .panel { min-width: 0; padding: 16px; }
+    .panel-head { flex-wrap: wrap; align-items: flex-start; }
+    .panel-head > * { min-width: 0; max-width: 100%; }
+    .filtros-citas { flex-wrap: wrap; gap: .45rem; padding: 1rem 14px; }
+    .filtro { padding: .55rem .8rem; font-size: .9rem; }
+    .cita-body { align-items: flex-start; gap: .85rem; }
+    .cita-footer { flex-wrap: wrap; }
+    .btn-accion { min-width: 0; }
+
+    /* Tablas: se conserva su información y se permite desplazamiento dentro de la tabla. */
+    .tabla-contenedor, .table-wrap, .tabla-wrapper, .admin-module .table-wrap,
+    .citas-modulo .table-wrap { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { max-width: 100%; }
+    .admin-module table, .citas-modulo table { min-width: 620px; }
+
+    /* Formularios y cuadrículas */
+    .campo-doble, .formgrid, .form-grid, .formulario-grid, .grid-formulario {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+    .campo, .formgrid > *, .form-grid > *, .formulario-grid > *, .grid-formulario > * { min-width: 0; }
+    input, select, textarea { min-width: 0; }
+
+    /* Modales: nunca deben rebasar la pantalla; el contenido sí puede desplazarse. */
+    .modal-overlay, .overlay, .alerta-overlay {
+        padding: 12px;
+        align-items: center;
+        overflow-y: auto;
+    }
+    .modal-contenido, .modal, .modal-content, .modal-card,
+    .overlay > .panel, .alerta-contenido {
+        width: 100%;
+        max-width: 560px;
+        max-height: calc(100dvh - 24px);
+        margin: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 1.1rem;
+        border-radius: 16px;
+    }
+    .modal-header, .modal-footer, .modal-acciones, .acciones-usuario-modal {
+        flex-wrap: wrap;
+        gap: .65rem;
+    }
+    .modal-footer button, .modal-acciones button, .acciones-usuario-modal button { min-height: 42px; }
+}
+
+@media (max-width: 480px) {
+    .header { padding: .6rem .75rem; gap: .45rem .6rem; }
+    .header > img { width: 92px; max-height: 42px; }
+    .header .hamburger-btn { width: 42px; height: 42px; flex-basis: 42px; font-size: 1.65rem; }
+    .header .perfil p, .header .flecha-perfil { display: none; }
+    .header .btn-perfil img { width: 35px; height: 35px; }
+    .header .dropdown-perfil, .header .dropdown-notificaciones { position: fixed; top: 62px; right: 10px; left: auto; width: min(280px, calc(100vw - 20px)); min-width: 0; }
+    .contenedor { padding: 13px 11px; }
+    .encabezado-seccion { margin: 13px 11px 0; padding: 1rem; }
+    .panel, .admin-module .panel { padding: 13px; border-radius: 14px; }
+    .tarjeta-cita-detalle { padding: 1rem; }
+    .cita-footer { flex-direction: column; }
+    .cita-footer .btn-accion { width: 100%; }
+    .alerta-contenido { padding: 1.1rem; width: 100%; }
+}
+
+@media (max-width: 360px) {
+    .header > img { width: 82px; }
+    .header .perfil-contenedor { margin-left: auto; }
+    .header .btn-perfil img { width: 32px; height: 32px; }
+    .cita-body { flex-direction: column; }
+}
+
+/* Páginas auxiliares que todavía utilizan navegación lateral antigua. */
+@media (max-width: 760px) {
+    .menu-lateral {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        padding: 10px;
+        gap: 8px;
+        border-bottom: 1px solid #e5eaf1;
+        box-shadow: 0 3px 12px rgba(27, 42, 71, .06);
+    }
+    .menu-lateral > .menu,
+    .menu-lateral > .opciones {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+    .menu-lateral .logo { width: 88px; max-height: 42px; object-fit: contain; margin: 0 8px 0 0; }
+    .menu-lateral .titulo-menu { display: none; }
+    .menu-lateral .opcion { width: auto; min-height: 38px; margin: 0; padding: 8px 10px; font-size: .85rem; }
+    .menu-lateral .opcion li { font-size: .85rem; }
+    .menu-lateral .perfil-menu { width: auto; margin: 0; padding: 5px; gap: 7px; }
+    .menu-lateral .linea-separadora { display: none; }
+}

@@ -832,3 +832,160 @@ body:not(.dashboard-cargando) .skeleton-page {
     position: relative;
     z-index: 100001;
 }
+
+/* ==============================================
+   SOLUCIÓN SCROLL MÓVIL - MIS PACIENTES
+   iPhone 12 y demás celulares
+============================================== */
+
+@media (max-width: 760px) {
+
+    html,
+    body {
+        height: auto !important;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto !important;
+    }
+
+    body {
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    /* Permitir crecimiento natural de la página */
+    .contenedor-principal {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow: visible !important;
+        padding-bottom: 25px;
+        box-sizing: border-box;
+    }
+
+    /* Encabezado */
+    .encabezado-seccion {
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        box-sizing: border-box;
+    }
+
+    /* Listado completo de pacientes */
+    .grid-pacientes {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+
+        width: 100%;
+        height: auto !important;
+        min-height: 0;
+        max-height: none !important;
+
+        padding: 10px 14px 25px;
+        gap: 14px;
+
+        overflow: visible !important;
+        box-sizing: border-box;
+    }
+
+    /* Tarjetas individuales */
+    .tarjeta-paciente-detalle {
+        display: flex;
+        flex-direction: column;
+
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        height: auto;
+
+        padding: 16px;
+        gap: 13px;
+
+        box-sizing: border-box;
+    }
+
+    .paciente-info-principal {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-width: 0;
+        gap: 12px;
+    }
+
+    .avatar-grande {
+        flex: 0 0 48px;
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
+    }
+
+    .datos-personales {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .datos-personales h3 {
+        font-size: 15px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    .etiqueta-parentesco {
+        display: inline-block;
+        font-size: 11px;
+        margin-top: 4px;
+    }
+
+    /* Información personal */
+    .paciente-detalles {
+        width: 100%;
+        min-width: 0;
+        padding: 12px;
+        box-sizing: border-box;
+        gap: 9px;
+    }
+
+    .paciente-detalles p {
+        font-size: 13px;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    /* Acciones de cada paciente */
+    .tarjeta-paciente-detalle .acciones,
+    .tarjeta-paciente-detalle .acciones-paciente {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .tarjeta-paciente-detalle .btn-accion {
+        min-height: 42px;
+        font-size: 12px;
+    }
+
+}
+
+@media (max-width: 390px) {
+
+    .grid-pacientes {
+        padding: 9px 11px 22px;
+        gap: 12px;
+    }
+
+    .tarjeta-paciente-detalle {
+        padding: 13px;
+    }
+
+    .paciente-detalles {
+        padding: 10px;
+    }
+
+    .paciente-detalles p {
+        font-size: 12px;
+    }
+
+}

@@ -1293,3 +1293,661 @@ button {
     height: auto !important;
     min-height: 80px !important;
 }
+
+/* =====================================================
+   RESPONSIVE ADMIN DASHBOARD
+   iPhone 12 + demás dispositivos móviles
+   No modifica header ni escritorio.
+===================================================== */
+
+@media (max-width: 760px) {
+
+    /* PRESENTACIÓN Y ACCIONES RÁPIDAS */
+
+    .contenedor-principal > #contenedor {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+
+        width: 100%;
+        height: auto;
+        padding: 14px;
+        gap: 14px;
+
+        box-sizing: border-box;
+    }
+
+    .contenedor-principal > #contenedor > .encabezado-texto,
+    .contenedor-principal > #contenedor > .acciones-rapidas {
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+
+        box-sizing: border-box;
+        border-radius: 16px;
+    }
+
+    .encabezado-texto {
+        padding: 22px 18px;
+    }
+
+    .encabezado-texto h1 {
+        font-size: clamp(21px, 5vw, 26px);
+        line-height: 1.25;
+        margin: 12px 0;
+    }
+
+    .encabezado-texto .eslogan-2 {
+        font-size: 11px;
+        letter-spacing: 1.5px;
+    }
+
+    .descripcion-corta {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* ACCIONES RÁPIDAS */
+
+    .acciones-rapidas {
+        padding: 16px;
+    }
+
+    .acciones-rapidas .panel-head {
+        margin-bottom: 12px;
+    }
+
+    .acciones-rapidas .panel-head h2 {
+        font-size: 17px;
+    }
+
+    .panel-rapido {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        width: 100%;
+    }
+
+    .superior,
+    .inferior {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: stretch;
+        justify-content: stretch;
+
+        width: 100%;
+        gap: 9px;
+    }
+
+    .btn-rapido {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        width: 100%;
+        min-width: 0;
+        min-height: 54px;
+
+        padding: 10px;
+        gap: 8px;
+
+        font-size: 12px;
+        line-height: 1.35;
+
+        box-sizing: border-box;
+        overflow-wrap: anywhere;
+    }
+
+    .btn-rapido i {
+        flex-shrink: 0;
+        font-size: 17px;
+    }
+
+    /* AGENDA */
+
+    .agenda {
+        width: auto;
+        min-width: 0;
+        max-width: none;
+
+        margin: 8px 14px 22px;
+        padding: 15px;
+
+        box-sizing: border-box;
+        border-radius: 16px;
+    }
+
+    /* BUSCADOR */
+
+    .agenda-buscador {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+
+        width: 100%;
+        margin-bottom: 20px;
+        gap: 8px;
+    }
+
+    .buscador-campo {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        min-height: 46px;
+
+        padding: 0 12px;
+        box-sizing: border-box;
+    }
+
+    .agenda .buscador-campo input {
+        width: 100%;
+        min-width: 0;
+        font-size: 14px;
+    }
+
+    #resultado-busqueda {
+        font-size: 12px;
+    }
+
+    /* ENCABEZADO AGENDA */
+
+    .agenda-header {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+
+        width: 100%;
+        gap: 12px;
+    }
+
+    .titulo-fecha {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .titulo-fecha .titulo {
+        font-size: 22px;
+        line-height: 1.3;
+    }
+
+    #mes-anio-actual {
+        font-size: 17px;
+    }
+
+    .botones-fecha {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        width: 100%;
+        gap: 9px;
+    }
+
+    .btnfecha {
+        min-width: 42px;
+        min-height: 42px;
+        padding: 9px 12px;
+        font-size: 14px;
+    }
+
+    .agenda-calendario-anchor {
+        position: relative;
+    }
+
+    /* DÍAS DE LA SEMANA */
+
+    .div-dias {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+
+        width: 100%;
+        justify-content: stretch;
+        align-items: stretch;
+
+        gap: 3px;
+        margin: 12px 0 18px;
+    }
+
+    .div-dias .dia {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+        min-width: 0;
+        height: 65px;
+
+        margin: 0;
+        padding: 5px 1px;
+
+        gap: 5px;
+        box-sizing: border-box;
+        border-radius: 10px;
+    }
+
+    .dia p {
+        margin: 0;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .dia .titulo {
+        font-size: 16px;
+        line-height: 1.2;
+    }
+
+    .dia.actual {
+        box-shadow: 0 4px 10px rgba(37, 112, 211, .2);
+    }
+
+    /* SECCIÓN CITAS DEL DÍA */
+
+    .agenda > .citas {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+
+        width: 100%;
+        gap: 10px;
+    }
+
+    .agenda > .citas .titulo-fecha {
+        width: 100%;
+    }
+
+    .agenda > .citas .titulo-fecha .titulo {
+        font-size: 20px;
+    }
+
+    #contador-citas-agenda {
+        font-size: 14px;
+    }
+
+    .agenda > .citas .select {
+        display: block;
+
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 45px;
+
+        padding: 10px 13px;
+        font-size: 14px;
+
+        box-sizing: border-box;
+    }
+
+    /* LISTADO DE CITAS */
+
+    #lista-citas-agenda {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        margin-top: 8px;
+    }
+
+    .citas-pacientes {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        align-items: center;
+        justify-content: stretch;
+
+        width: 100%;
+        min-width: 0;
+
+        margin-top: 12px;
+        padding: 12px 5px;
+        gap: 8px;
+
+        box-sizing: border-box;
+        border-radius: 12px;
+    }
+
+    .citas-pacientes:hover {
+        transform: none;
+    }
+
+    .hora-paciente {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        gap: 9px;
+    }
+
+    .hora {
+        flex: 0 0 auto;
+        min-width: 0;
+    }
+
+    .hora .titulo {
+        font-size: 14px;
+    }
+
+    .hora p {
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .separador-vertical {
+        flex: 0 0 2px;
+        height: 38px;
+    }
+
+    .paciente {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        gap: 8px;
+    }
+
+    .paciente .titulo {
+        font-size: 13px;
+        line-height: 1.3;
+        overflow-wrap: anywhere;
+    }
+
+    .paciente p {
+        font-size: 11px;
+        line-height: 1.3;
+    }
+
+    .foto-paciente {
+        flex: 0 0 38px;
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+    }
+
+    .imagen-paciente-agenda {
+        width: 38px;
+        height: 38px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .btn.estado {
+        padding: 7px 9px;
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    .btn.three-dots {
+        padding: 5px;
+        font-size: 17px;
+    }
+
+    /* CALENDARIO FLOTANTE */
+
+    .agenda-calendario-popover {
+        position: fixed;
+
+        width: min(300px, calc(100vw - 24px));
+        max-width: calc(100vw - 24px);
+        max-height: calc(100dvh - 24px);
+
+        padding: 13px;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        box-sizing: border-box;
+        z-index: 10000;
+    }
+
+    .agenda-calendario-popover .cal-grid {
+        width: 100%;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 3px;
+    }
+
+    .agenda-calendario-popover .dias-grid {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        grid-template-rows: repeat(6, 32px);
+        gap: 3px;
+    }
+
+    .agenda-calendario-popover .cal-day {
+        width: 100%;
+        min-width: 0;
+        height: 32px;
+        padding: 0;
+        font-size: 12px;
+    }
+
+    .agenda-calendario-popover .cal-dow {
+        font-size: 10px;
+    }
+
+    .agenda-calendario-popover .cal-mes-nav h4 {
+        font-size: 15px;
+    }
+
+    /* MODALES */
+
+    .modal-overlay {
+        padding: 12px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .modal-overlay .modal-contenido,
+    .modal-contenido {
+        width: 100%;
+        max-width: 520px;
+        max-height: calc(100dvh - 24px);
+        min-width: 0;
+
+        padding: 19px 16px;
+        margin: auto;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        box-sizing: border-box;
+        border-radius: 17px;
+    }
+
+    .modal-header {
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .modal-header h3 {
+        font-size: 18px;
+        line-height: 1.3;
+    }
+
+    .modal-overlay .formulario-cita {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .modal-overlay .formulario-cita .campo {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .modal-overlay .formulario-cita .campo-doble {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        gap: 0;
+    }
+
+    .modal-overlay .formulario-cita .campo-doble > .campo {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .modal-overlay .formulario-cita input:not([type="hidden"]),
+    .modal-overlay .formulario-cita select,
+    .modal-overlay .formulario-cita textarea {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 44px;
+
+        padding: 10px 12px;
+        font-size: 14px;
+
+        box-sizing: border-box;
+    }
+
+    .modal-overlay .formulario-cita label {
+        font-size: 13px;
+    }
+
+    .modal-overlay .cal-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 12px;
+        box-sizing: border-box;
+    }
+
+    .modal-overlay .cal-grid,
+    .modal-overlay .dias-grid {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 3px;
+    }
+
+    .modal-overlay .cal-day {
+        min-width: 0;
+        padding: 7px 0;
+        font-size: 12px;
+    }
+
+    .modal-overlay .horarios-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .modal-overlay .btn-hora {
+        min-width: 0;
+        padding: 9px 3px;
+        font-size: 12px;
+    }
+
+}
+
+
+/* CELULARES PEQUEÑOS */
+
+@media (max-width: 390px) {
+
+    .contenedor-principal > #contenedor {
+        padding: 11px;
+        gap: 11px;
+    }
+
+    .encabezado-texto {
+        padding: 18px 14px;
+    }
+
+    .encabezado-texto h1 {
+        font-size: 21px;
+    }
+
+    .acciones-rapidas {
+        padding: 13px;
+    }
+
+    .btn-rapido {
+        padding: 9px 7px;
+        font-size: 11px;
+    }
+
+    .agenda {
+        margin: 7px 11px 18px;
+        padding: 12px;
+    }
+
+    .div-dias {
+        gap: 2px;
+    }
+
+    .div-dias .dia {
+        height: 60px;
+    }
+
+    .dia p {
+        font-size: 10px;
+    }
+
+    .dia .titulo {
+        font-size: 15px;
+    }
+
+    .citas-pacientes {
+        gap: 6px;
+        padding: 10px 2px;
+    }
+
+    .hora-paciente {
+        gap: 6px;
+    }
+
+    .paciente {
+        gap: 6px;
+    }
+
+    .foto-paciente,
+    .imagen-paciente-agenda {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+
+    .paciente .titulo {
+        font-size: 12px;
+    }
+
+    .btn.estado {
+        padding: 6px 7px;
+        font-size: 9px;
+    }
+
+    .modal-overlay .modal-contenido {
+        padding: 16px 13px;
+    }
+
+}
+
+
+/* CELULARES MUY ESTRECHOS */
+
+@media (max-width: 350px) {
+
+    .superior,
+    .inferior {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .btn-rapido {
+        min-height: 45px;
+        font-size: 13px;
+    }
+
+    .citas-pacientes {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .citas-pacientes > .hora-paciente {
+        grid-column: 1;
+    }
+
+    .citas-pacientes > .btn.estado {
+        grid-column: 1;
+        justify-self: start;
+    }
+
+    .citas-pacientes > .btn.three-dots {
+        grid-column: 2;
+        grid-row: 1 / 3;
+    }
+
+}

@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Función auxiliar para posicionar la línea
     const posicionarLinea = (elemento) => {
+        if (!linea || !elemento) return;
+
         const anchoOpcion = elemento.offsetWidth;
         const posicionIzquierda = elemento.offsetLeft;
 
@@ -15,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Detectar si ya hay una opción activa al cargar
     const opcionActivaInicial = document.querySelector(".opcion.activo");
-    if (opcionActivaInicial) {
+    if (menu && linea && opcionActivaInicial) {
         menu.classList.add("tiene-activo");
         posicionarLinea(opcionActivaInicial);
     }
@@ -33,15 +35,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    menu.addEventListener("mouseleave", () => {
-        const opcionActiva = document.querySelector(".opcion.activo");
-        if (opcionActiva) {
-            posicionarLinea(opcionActiva);
-        } else {
-            menu.classList.remove("tiene-activo");
-            linea.style.opacity = "0";
-        }
-    });
+    if (menu && linea) {
+        menu.addEventListener("mouseleave", () => {
+            const opcionActiva = document.querySelector(".opcion.activo");
+            if (opcionActiva) {
+                posicionarLinea(opcionActiva);
+            } else {
+                menu.classList.remove("tiene-activo");
+                linea.style.opacity = "0";
+            }
+        });
+    }
 
     // Solución al volver atrás en el navegador (BFCache)
     window.addEventListener("pageshow", (e) => {
@@ -56,10 +60,37 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuNav = document.getElementById("menu");
     const botonesHeader = document.getElementById("botones");
 
-    if (btnMenu) {
+    if (btnMenu && menuNav) {
+        const cerrarMenu = () => {
+            menuNav.classList.remove("activo");
+            if (botonesHeader) botonesHeader.classList.remove("activo");
+            btnMenu.setAttribute("aria-expanded", "false");
+            btnMenu.setAttribute("aria-label", "Abrir menú");
+        };
+
         btnMenu.addEventListener("click", () => {
-            menuNav.classList.toggle("activo");
-            botonesHeader.classList.toggle("activo");
+            const abierto = menuNav.classList.toggle("activo");
+            if (botonesHeader) botonesHeader.classList.toggle("activo", abierto);
+            btnMenu.setAttribute("aria-expanded", String(abierto));
+            btnMenu.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
+        });
+
+        menuNav.querySelectorAll("a.opcion").forEach(enlace => {
+            enlace.addEventListener("click", cerrarMenu);
+        });
+
+        if (botonesHeader) {
+            botonesHeader.querySelectorAll("button, a").forEach(control => {
+                control.addEventListener("click", cerrarMenu);
+            });
+        }
+
+        document.addEventListener("click", evento => {
+            if (!evento.target?.closest?.("#header")) cerrarMenu();
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 1050) cerrarMenu();
         });
     }
 });
@@ -86,8 +117,14 @@ window.addEventListener('load', () => {
 
     // Ejecutamos una vez que todo cargó
     ajustarMargen();
-    
-    // Y cada que cambien el tamaño de la ventana
+
+    // El encabezado cambia de altura cuando se despliega el menú móvil.
+    // ResizeObserver mantiene el contenido debajo del header sin saltos ni solapamientos.
+    if (header && 'ResizeObserver' in window) {
+        const observadorHeader = new ResizeObserver(ajustarMargen);
+        observadorHeader.observe(header);
+    }
+
     window.addEventListener('resize', ajustarMargen);
 });
 
@@ -101,7 +138,7 @@ window.addEventListener('load', () => {
         // Abrir/cerrar al dar clic en el perfil
         btnPerfil.addEventListener('click', (e) => {
             e.stopPropagation(); // Evita que el clic se propague al resto de la página
-            dropdownNotificaciones.classList.remove('mostrar'); // Cierra el dropdown de notificaciones si está abierto
+            if (dropdownNotificaciones) dropdownNotificaciones.classList.remove('mostrar'); // Cierra notificaciones si existen
             dropdownPerfil.classList.toggle('mostrar');
         });
 
@@ -117,7 +154,7 @@ window.addEventListener('load', () => {
         // Abrir/cerrar al dar clic en el botón de notificaciones
         btnNotificaciones.addEventListener('click', (e) => {
             e.stopPropagation();
-            dropdownPerfil.classList.remove('mostrar'); // Cierra el dropdown de perfil si está abierto
+            if (dropdownPerfil) dropdownPerfil.classList.remove('mostrar'); // Cierra el dropdown de perfil si existe
             dropdownNotificaciones.classList.toggle('mostrar');
         });
 
