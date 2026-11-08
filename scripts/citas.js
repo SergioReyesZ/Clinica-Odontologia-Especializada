@@ -36,8 +36,10 @@
     let modifyingId = null;
 
     const ACTIVE_STATES = ["PENDIENTE", "CONFIRMADA"];
-    const TIMES = ["16:30:00","17:00:00","17:30:00","18:00:00",
-                   "18:30:00","19:00:00","19:30:00"];
+    const TIMES = ["16:30:00","17:00:00","17:30:00","18:00:00","18:30:00","19:00:00","19:30:00"];
+    let newDoctorSchedules = [];
+    let modifyDoctorSchedules = [];
+    let modifySlotRequest = 0;
 
     function notice(message, error = false) {
         const el = $("notice");
@@ -200,17 +202,38 @@
         render();
     }
 
-    function openNewAppointment() {
+    async function populateDentistSelects(){
+        const selects=[$("cita-odontologo"),$("mod-cita-odontologo-admin")].filter(Boolean);
+        if(!selects.length)return;
+        const previous=selects.map(s=>s.value);
+        selects.forEach(s=>{s.disabled=true;s.innerHTML='<option value="">Cargando odontólogos...</option>';});
+        try{
+            const {data,error}=await client.from("Odontologos")
+                .select("id, Usuarios!Odontologos_Usuario_fkey(nombre, apellido)")
+                .order("id");
+            if(error)throw error;
+            const rows=(data||[]).filter(o=>o.Usuarios);
+            selects.forEach((s,i)=>{
+                s.innerHTML='<option value="" disabled selected>Selecciona odontólogo</option>';
+                rows.forEach(o=>{const op=document.createElement("option");op.value=o.id;op.textContent=`${o.Usuarios.nombre} ${o.Usuarios.apellido}`;s.appendChild(op);});
+                if(previous[i]&&rows.some(o=>String(o.id)===String(previous[i])))s.value=previous[i];
+                s.disabled=false;
+            });
+        }catch(err){console.error("No se pudieron cargar los odontólogos:",err);selects.forEach(s=>{s.innerHTML='<option value="">Error al cargar odontólogos</option>';s.disabled=false;});}
+    }
+
+    async function openNewAppointment() {
         $("modalNuevaCita").style.display = "flex";
         $("formNuevaCita")?.reset();
-        $("cita-fecha").value = "";
-        $("cita-hora").value = "";
+        $("cita-fecha").value = ""; $("cita-hora").value = "";
         $("texto-fecha-seleccionada").textContent = "Selecciona una fecha";
         $("calendario-flotante").style.display = "none";
         $("feedback-cita").textContent = "";
         slotCheckRequest++;
         newCalMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
         populateAppointmentSelects();
+        await populateDentistSelects();
+        await loadDoctorSchedules("cita-odontologo", "new");
         renderNewDateCalendar();
         renderNewHours();
     }
@@ -260,110 +283,73 @@
     }
 
     function renderNewDateCalendar() {
-        const grid = $("dias-calendario");
-        if (!grid) return;
-
-        const y = newCalMonth.getFullYear();
-        const m = newCalMonth.getMonth();
-        const today = dateFromISO(todayLocal());
-
-        $("mes-año-display").textContent =
-            newCalMonth.toLocaleDateString("es-MX", {month:"long", year:"numeric"});
-
-        const firstDay = new Date(y, m, 1).getDay();
-        const days = new Date(y, m + 1, 0).getDate();
-        grid.innerHTML = "";
-
-        for (let n = 1; n <= days; n++) {
-            const d = new Date(y, m, n);
-            const date = localISO(d);
-            const btn = document.createElement("button");
-
-            btn.type = "button";
-            btn.className = "cal-day";
-            btn.textContent = n;
-            btn.style.gridColumnStart = d.getDay() + 1;
-
-            const isPast = d < today;
-            const isWeekend = d.getDay() === 0 || d.getDay() === 6;
-            const noHoursLeft = dayHasNoMoreHours(date, "19:30:00");
-
-            if (date === $("cita-fecha")?.value) btn.classList.add("seleccionado");
-
-            if (isPast || isWeekend || noHoursLeft) {
-                btn.classList.add("disabled");
-                btn.disabled = true;
-            } else {
-                btn.addEventListener("click", async () => {
-                    $("cita-fecha").value = date;
-                    $("cita-hora").value = "";
-                    $("horarios-contenedor")?.querySelectorAll(".btn-hora")
-                        .forEach(x => x.classList.remove("seleccionada"));
-                    $("texto-fecha-seleccionada").textContent =
-                        `${pad(n)}/${pad(m + 1)}/${y}`;
-                    $("calendario-flotante").style.display = "none";
-
-                    renderNewHours();
-                    await checkNewSlots();
-                });
-            }
-
+        const grid=$("dias-calendario"); if(!grid)return;
+        const y=newCalMonth.getFullYear(),m=newCalMonth.getMonth(),today=dateFromISO(todayLocal());
+        $("mes-año-display").textContent=newCalMonth.toLocaleDateString("es-MX",{month:"long",year:"numeric"});
+        const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate();
+        const names=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+        grid.innerHTML="";
+        for(let n=1;n<=days;n++){
+            const d=new Date(y,m,n),date=localISO(d),btn=document.createElement("button");
+            btn.type="button";btn.className="cal-day";btn.textContent=n;btn.style.gridColumnStart=d.getDay()+1;
+            const configured=newDoctorSchedules.some(h=>normalize(h.dia_semana)===normalize(names[d.getDay()]));
+            if(date===$("cita-fecha")?.value)btn.classList.add("seleccionado");
+            if(d<today||!configured||!$("cita-odontologo")?.value){btn.classList.add("disabled");btn.disabled=true;}
+            else btn.addEventListener("click",async()=>{
+                $("cita-fecha").value=date;$("cita-hora").value="";
+                $("texto-fecha-seleccionada").textContent=`${pad(n)}/${pad(m+1)}/${y}`;
+                $("calendario-flotante").style.display="none";
+                renderNewHours();await checkNewSlots();
+            });
             grid.appendChild(btn);
         }
-
-        const prev = $("prev-month");
-        if (prev) {
-            prev.disabled = y === today.getFullYear() && m === today.getMonth();
-        }
+        const prev=$("prev-month");if(prev)prev.disabled=y===today.getFullYear()&&m===today.getMonth();
     }
 
     function renderNewHours() {
-        const box = $("horarios-contenedor");
-        if (!box) return;
-
-        box.innerHTML = "";
-        TIMES.forEach(t => {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "btn-hora";
-            btn.dataset.valor = t;
-            btn.textContent = t.slice(0, 5);
-            btn.addEventListener("click", () => {
-                if (btn.disabled) return;
-
-                box.querySelectorAll(".btn-hora")
-                    .forEach(x => x.classList.remove("seleccionada"));
-                btn.classList.add("seleccionada");
-                $("cita-hora").value = t;
-            });
+        const box=$("horarios-contenedor");if(!box)return;
+        const date=$("cita-fecha")?.value;box.innerHTML="";
+        if(!date){box.innerHTML="<p>Selecciona una fecha para consultar horarios.</p>";return;}
+        const dayNames=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+        const dateObj=dateFromISO(date);
+        const cfg=newDoctorSchedules.find(h=>normalize(h.dia_semana)===normalize(dayNames[dateObj.getDay()]));
+        if(!cfg){box.innerHTML="<p>El odontólogo no tiene horarios configurados este día.</p>";return;}
+        for(let m=minutesOf(cfg.hora_inicio);m+30<=minutesOf(cfg.hora_fin);m+=30){
+            const t=`${pad(Math.floor(m/60))}:${pad(m%60)}:00`,btn=document.createElement("button");
+            btn.type="button";btn.className="btn-hora";btn.dataset.valor=t;btn.textContent=t.slice(0,5);
+            btn.addEventListener("click",()=>{if(btn.disabled)return;box.querySelectorAll(".btn-hora").forEach(x=>x.classList.remove("seleccionada"));btn.classList.add("seleccionada");$("cita-hora").value=t;});
             box.appendChild(btn);
-        });
+        }
+        if(!box.children.length)box.innerHTML="<p>No hay horarios configurados para este día.</p>";
+    }
+    function minutesOf(value){const p=String(value||"").slice(0,8).split(":").map(Number);return (p[0]||0)*60+(p[1]||0);}
+    async function loadDoctorSchedules(selectId,mode){
+        const doctor=$(selectId)?.value;
+        if(mode==="new")newDoctorSchedules=[];else modifyDoctorSchedules=[];
+        if(!doctor)return;
+        try{
+            const {data,error}=await client.from("Horarios").select("dia_semana,hora_inicio,hora_fin").eq("odontologo",Number(doctor));
+            if(error)throw error;
+            if(mode==="new")newDoctorSchedules=data||[];else modifyDoctorSchedules=data||[];
+        }catch(err){
+            console.error("Error al cargar horarios del odontólogo:",err);
+            const box=$(mode==="new"?"horarios-contenedor":"horarios-contenedor-mod-admin");
+            if(box)box.innerHTML="<p>No se pudieron cargar los horarios del odontólogo.</p>";
+        }
     }
 
     // Igual que adminDashboard: consulta la función RPC de Supabase,
     // no depende de la caché local de citas que puede estar desactualizada.
-    async function fetchOccupiedHours(date, doctorId) {
-        const { data, error } = await client.rpc(
-            "obtener_horarios_ocupados",
-            { p_fecha: date }
-        );
-        if (error) throw error;
-
-        return (data || [])
-            .filter(c => String(c.odontologo) === String(doctorId))
-            .map(c => {
-                // Se conserva la conversión UTC que utiliza adminDashboard.
-                const dateObj = new Date(c.fecha_hora);
-                const h = pad(dateObj.getUTCHours());
-                const m = pad(dateObj.getUTCMinutes());
-                const s = pad(dateObj.getUTCSeconds());
-                return `${h}:${m}:${s}`;
-            });
+    async function fetchOccupiedHours(date, doctorId, excludeId=null) {
+        const {data,error}=await client.rpc("obtener_horarios_ocupados",{p_fecha:date});
+        if(error)throw error;
+        return (data||[]).filter(c=>String(c.odontologo)===String(doctorId)&&String(c.id)!==String(excludeId))
+            .map(c=>String(c.fecha_hora||"").includes("T")?String(c.fecha_hora).split("T")[1].slice(0,8):"");
     }
 
     async function checkNewSlots() {
         const date = $("cita-fecha")?.value;
-        const doctor = $("cita-odontologo")?.value || "1";
+        const doctor = $("cita-odontologo")?.value;
         const box = $("horarios-contenedor");
         if (!box || !date) return;
 
@@ -464,64 +450,73 @@
         } finally { btn.disabled = false; }
     }
 
-    function openModify(id) {
-        const c = citas.find(x => String(x.id)===String(id));
-        if (!c) return;
-        modifyingId = id;
-        $("modalModificarCitaAdmin").style.display = "flex";
-        $("mod-cita-id-admin").value = id;
-        $("mod-cita-paciente-admin").value = patientName(c.paciente);
-        $("mod-cita-servicio-admin").innerHTML = servicios.map(s =>
-            `<option value="${safe(s.id)}" ${String(s.id)===String(c.servicio)?"selected":""}>${safe(s.nombre)}</option>`).join("");
-        $("mod-cita-odontologo-admin").value = c.odontologo || "1";
-        const date = dateTimeForDay(c);
-        $("mod-cita-fecha-admin").value = date;
-        $("texto-fecha-seleccionada-mod-admin").textContent = formatDate(date);
-        $("mod-cita-hora-admin").value = timeOf(c.fecha_hora)+":00";
-        $("costo-mod-cita-admin").textContent = money(service(c.servicio)?.costo);
+    async function openModify(id) {
+        const c=citas.find(x=>String(x.id)===String(id));if(!c)return;
+        modifyingId=id;$("modalModificarCitaAdmin").style.display="flex";
+        await populateDentistSelects();
+        $("mod-cita-id-admin").value=id;$("mod-cita-paciente-admin").value=patientName(c.paciente);
+        $("mod-cita-servicio-admin").innerHTML=servicios.map(s=>`<option value="${safe(s.id)}" ${String(s.id)===String(c.servicio)?"selected":""}>${safe(s.nombre)}</option>`).join("");
+        $("mod-cita-odontologo-admin").value=c.odontologo||"";
+        const date=dateTimeForDay(c),oldTime=timeOf(c.fecha_hora)+":00";
+        $("mod-cita-fecha-admin").value=date;$("texto-fecha-seleccionada-mod-admin").textContent=formatDate(date);
+        $("mod-cita-hora-admin").value=oldTime;$("costo-mod-cita-admin").textContent=money(service(c.servicio)?.costo);
+        modifyMonth=dateFromISO(date);modifyMonth.setDate(1);
+        await loadDoctorSchedules("mod-cita-odontologo-admin","modify");
         renderModifyCalendar(date);
-        renderModifyHours(date, id, timeOf(c.fecha_hora)+":00");
+        await renderModifyHours(date,id,oldTime);
     }
 
     let modifyMonth = new Date();
     function renderModifyCalendar(selected) {
-        const grid = $("dias-calendario-mod-admin");
-        if (!grid) return;
-        const y=modifyMonth.getFullYear(), m=modifyMonth.getMonth(), first=new Date(y,m,1).getDay();
-        const days=new Date(y,m+1,0).getDate();
+        const grid=$("dias-calendario-mod-admin");if(!grid)return;
+        const y=modifyMonth.getFullYear(),m=modifyMonth.getMonth(),today=dateFromISO(todayLocal());
         $("mes-año-display-mod-admin").textContent=modifyMonth.toLocaleDateString("es-MX",{month:"long",year:"numeric"});
-        grid.innerHTML="";
+        const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate();
+        const names=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];grid.innerHTML="";
         for(let n=1;n<=days;n++){
-            const date=localISO(new Date(y,m,n)), d=dateFromISO(date), btn=document.createElement("button");
-            btn.type="button";btn.className="cal-day"+(date===selected?" seleccionado":"");btn.textContent=n;
-            btn.style.gridColumnStart=d.getDay()+1;
-            if(date<localISO(new Date())||[0,6].includes(d.getDay()))btn.classList.add("disabled");
-            else btn.addEventListener("click",()=>{
-                $("mod-cita-fecha-admin").value=date;
+            const d=new Date(y,m,n),date=localISO(d),btn=document.createElement("button");
+            btn.type="button";btn.className="cal-day"+(date===selected?" seleccionado":"");btn.textContent=n;btn.style.gridColumnStart=d.getDay()+1;
+            const configured=modifyDoctorSchedules.some(h=>normalize(h.dia_semana)===normalize(names[d.getDay()]));
+            if(d<today||!configured) {btn.classList.add("disabled");btn.disabled=true;}
+            else btn.addEventListener("click",async()=>{
+                $("mod-cita-fecha-admin").value=date;$("mod-cita-hora-admin").value="";
                 $("texto-fecha-seleccionada-mod-admin").textContent=formatDate(date);
-                renderModifyCalendar(date);renderModifyHours(date,modifyingId,null);
+                renderModifyCalendar(date);await renderModifyHours(date,modifyingId,null);
             });
             grid.appendChild(btn);
         }
+        const prev=$("prev-month-mod-admin");if(prev)prev.disabled=y===today.getFullYear()&&m===today.getMonth();
     }
-
-    function renderModifyHours(date,id,oldTime) {
+    async function renderModifyHours(date,id,oldTime) {
         const box=$("horarios-contenedor-mod-admin");if(!box)return;
         box.innerHTML="";
-        const doctor=$("mod-cita-odontologo-admin").value||"1";
-        const occupied=new Set(citas.filter(c=>String(c.id)!==String(id)&&dateTimeForDay(c)===date&&
-            String(c.odontologo||1)===String(doctor)&&ACTIVE_STATES.includes(status(c)))
-            .map(c=>timeOf(c.fecha_hora)+":00"));
-        TIMES.forEach(t=>{
-            const btn=document.createElement("button");btn.type="button";btn.className="btn-hora";
-            btn.dataset.valor=t;btn.textContent=t.slice(0,5);
-            const blocked=(occupied.has(t)&&t!==oldTime)||(date===localISO(new Date())&&t.slice(0,5)<=`${pad(new Date().getHours())}:${pad(new Date().getMinutes())}`&&t!==oldTime);
-            btn.disabled=blocked;btn.classList.toggle("ocupada",blocked);
-            if(t===oldTime&&!blocked)btn.classList.add("seleccionada");
+        const dayNames=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+        const cfg=modifyDoctorSchedules.find(h=>normalize(h.dia_semana)===normalize(dayNames[dateFromISO(date).getDay()]));
+        if(!cfg){box.innerHTML="<p>El odontólogo no tiene horarios configurados este día.</p>";$("mod-cita-hora-admin").value="";return;}
+        for(let m=minutesOf(cfg.hora_inicio);m+30<=minutesOf(cfg.hora_fin);m+=30){
+            const t=`${pad(Math.floor(m/60))}:${pad(m%60)}:00`,btn=document.createElement("button");
+            btn.type="button";btn.className="btn-hora";btn.dataset.valor=t;btn.textContent=t.slice(0,5);
             btn.addEventListener("click",()=>{if(btn.disabled)return;box.querySelectorAll(".btn-hora").forEach(x=>x.classList.remove("seleccionada"));btn.classList.add("seleccionada");$("mod-cita-hora-admin").value=t;});
             box.appendChild(btn);
-        });
-        $("mod-cita-hora-admin").value=oldTime||"";
+        }
+        const request=++modifySlotRequest,buttons=[...box.querySelectorAll(".btn-hora")];
+        const originalAppointment=citas.find(c=>String(c.id)===String(id));
+        const originalSlot=dateTimeForDay(originalAppointment||{})===date
+            ? timeOf(originalAppointment?.fecha_hora)+":00" : null;
+        const slotToKeep=oldTime||originalSlot;
+        buttons.forEach(b=>b.disabled=true);
+        try{
+            const occupied=await fetchOccupiedHours(date,$("mod-cita-odontologo-admin").value,id);
+            if(request!==modifySlotRequest)return;
+            buttons.forEach(btn=>{
+                const busy=occupied.includes(btn.dataset.valor)&&btn.dataset.valor!==slotToKeep;
+                const passed=hourAlreadyPassed(date,btn.dataset.valor)&&btn.dataset.valor!==slotToKeep;
+                btn.disabled=busy||passed;btn.classList.toggle("ocupada",btn.disabled);
+                btn.style.backgroundColor=btn.disabled?"#e2e8f0":"";btn.style.color=btn.disabled?"#94a3b8":"";btn.style.cursor=btn.disabled?"not-allowed":"pointer";
+                if(btn.dataset.valor===slotToKeep&&!btn.disabled)btn.classList.add("seleccionada");
+            });
+            $("mod-cita-hora-admin").value=oldTime||originalSlot||"";
+        }catch(err){console.error(err);buttons.forEach(b=>{b.disabled=true;b.classList.add("ocupada");});}
     }
 
     async function saveModify(e) {
@@ -535,7 +530,16 @@
             String(c.odontologo||1)===String(doctor)&&timeOf(c.fecha_hora)===time.slice(0,5)&&ACTIVE_STATES.includes(status(c)));
         if(collision){feedback.textContent="Ese horario ya está ocupado.";return;}
         try{
-            btn.disabled=true;feedback.textContent="Guardando cambios...";
+            btn.disabled=true;feedback.textContent="Verificando disponibilidad...";
+            const occupiedNow=await fetchOccupiedHours(date,$("mod-cita-odontologo-admin").value,id);
+            const originalAppointment=citas.find(c=>String(c.id)===String(id));
+            const unchangedOriginalSlot=originalAppointment&&dateTimeForDay(originalAppointment)===date&&
+                time===timeOf(originalAppointment.fecha_hora)+":00";
+            if(occupiedNow.includes(time)&&!unchangedOriginalSlot){
+                feedback.textContent="Ese horario ya está ocupado. Selecciona otro.";
+                feedback.style.color="#dc2626";await renderModifyHours(date,id,null);return;
+            }
+            feedback.textContent="Guardando cambios...";
             const {error}=await client.from("Citas").update({
                 servicio:Number(serviceId),odontologo:Number(doctor),fecha_hora:`${date}T${time}`
             }).eq("id",id);
@@ -584,7 +588,7 @@
         <div class="header"><img src="../iconos/logo.png" alt="Logo"><h2>Odontología Especializada</h2>
         <p>Jesús Elías Piña #1003, Col. Del Pueblo<br>Tampico, Tamaulipas, C.P. 89190</p>
         <p>Tel: 833 695 7177 | hola@odontologia.com</p><h3 class="comprobante-title">COMPROBANTE DE CITA</h3></div>
-        <div class="details"><p><strong>Folio / ID de Cita:</strong> #0045${safe(id)}</p>
+        <div class="details"><p><strong>Folio / ID de Cita:</strong> #${safe(id)}</p>
         <p><strong>Paciente:</strong> ${safe(paciente)}</p><p><strong>Odontólogo:</strong> Dra. Virginia Hernández Sánchez</p>
         <p><strong>Servicio Programado:</strong> ${safe(servicioNombre)}</p><p><strong>Fecha de la Cita:</strong> ${safe(fecha)}</p>
         <p><strong>Hora de la Cita:</strong> ${safe(hora)}</p></div>
@@ -634,6 +638,19 @@
             if(cost) cost.textContent=money(item?.costo)+" MXN";
         });
         $("formModificarCitaAdmin")?.addEventListener("submit",saveModify);
+        $("cita-odontologo")?.addEventListener("change",async()=>{
+            $("cita-fecha").value="";$("cita-hora").value="";
+            $("texto-fecha-seleccionada").textContent="Selecciona una fecha";
+            $("horarios-contenedor").innerHTML="<p>Consultando horarios...</p>";
+            await loadDoctorSchedules("cita-odontologo","new");
+            renderNewDateCalendar();renderNewHours();
+        });
+        $("mod-cita-odontologo-admin")?.addEventListener("change",async()=>{
+            $("mod-cita-hora-admin").value="";
+            const date=$("mod-cita-fecha-admin").value;
+            await loadDoctorSchedules("mod-cita-odontologo-admin","modify");
+            if(date){renderModifyCalendar(date);await renderModifyHours(date,modifyingId,null);}
+        });
         $("mod-cita-servicio-admin")?.addEventListener("change",()=>{
             $("costo-mod-cita-admin").textContent=money(service($("mod-cita-servicio-admin").value)?.costo);
         });

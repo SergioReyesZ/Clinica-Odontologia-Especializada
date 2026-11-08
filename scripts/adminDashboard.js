@@ -1381,6 +1381,20 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 btn.disabled = true;
                 feedback.style.color = "#3498db";
+                feedback.textContent = "Verificando disponibilidad...";
+                const {data:ocupadas,error:consultaError}=await client.rpc("obtener_horarios_ocupados",{p_fecha:fecha});
+                if(consultaError)throw consultaError;
+                const original=(citasAdminCache||[]).find(c=>String(c.id)===String(id));
+                const mismoHorarioOriginal=original&&String(original.fecha_hora||"").slice(0,10)===fecha&&
+                    String(original.fecha_hora).split("T")[1]?.slice(0,8)===hora;
+                const colision=(ocupadas||[]).some(c=>String(c.odontologo)===String(odontologo)&&
+                    String(c.fecha_hora||"").split("T")[1]?.slice(0,8)===hora);
+                if(colision&&!mismoHorarioOriginal){
+                    feedback.style.color="#dc2626";
+                    feedback.textContent="Ese horario acaba de ser ocupado. Selecciona otro.";
+                    await renderizarHorariosModificarAdminAsync(fecha,null);
+                    return;
+                }
                 feedback.textContent = "Guardando cambios...";
 
                 const { error } = await client.from("Citas")
@@ -1681,3 +1695,250 @@ document.addEventListener("click", cerrarMenusCitasAdmin);
 window.addEventListener("scroll", cerrarMenusCitasAdmin, true);
 
 window.addEventListener("resize", cerrarMenusCitasAdmin);
+
+
+
+
+async function cargarOdontologosModalesAdmin(){
+    const selects=[document.getElementById("cita-odontologo"),document.getElementById("mod-cita-odontologo-admin")].filter(Boolean);
+    if(!selects.length)return;
+    const selected=selects.map(s=>s.value);
+    selects.forEach(s=>{s.disabled=true;s.innerHTML='<option value="">Cargando odontólogos...</option>';});
+    try{
+        const {data,error}=await client.from("Odontologos").select(`id, Usuarios!Odontologos_Usuario_fkey(nombre, apellido)`).order("id");
+        if(error)throw error;
+        const rows=(data||[]).filter(o=>o.Usuarios);
+        selects.forEach((s,i)=>{
+            s.innerHTML='<option value="" disabled selected>Selecciona odontólogo</option>';
+            rows.forEach(o=>{const op=document.createElement("option");op.value=o.id;op.textContent=`${o.Usuarios.nombre} ${o.Usuarios.apellido}`;s.appendChild(op);});
+            if(selected[i]&&rows.some(o=>String(o.id)===String(selected[i])))s.value=selected[i];
+            s.disabled=false;
+        });
+    }catch(e){console.error("Error cargando odontólogos:",e);selects.forEach(s=>{s.innerHTML='<option value="">No se pudieron cargar los odontólogos</option>';s.disabled=false;});}
+}
+
+/* ==========================================================
+   HORARIOS DINÁMICOS POR ODONTÓLOGO (NUEVA Y MODIFICAR)
+   Replica el comportamiento de cliCitas: tabla Horarios + RPC.
+   ========================================================== */
+let horariosNuevaCitaAdmin = [];
+let solicitudNuevaAdmin = 0;
+let solicitudModAdmin = 0;
+
+function normalizarDiaAdmin(valor){
+    return String(valor||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+}
+function minutosHorarioAdmin(valor){
+    const p=String(valor||"").slice(0,8).split(":").map(Number);
+    return (p[0]||0)*60+(p[1]||0);
+}
+function horaFormatoAdmin(min){
+    return `${String(Math.floor(min/60)).padStart(2,"0")}:${String(min%60).padStart(2,"0")}:00`;
+}
+function fechaISOAdmin(d){
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+async function obtenerConfiguracionHorariosAdmin(odontologoId){
+    if(!odontologoId)return [];
+    const {data,error}=await client.from("Horarios")
+        .select("dia_semana, hora_inicio, hora_fin")
+        .eq("odontologo",Number(odontologoId));
+    if(error)throw error;
+    return data||[];
+}
+function crearBotonesHorarioAdmin(contenedor, configuracion, fecha, inputHora, onSelect){
+    if(!contenedor)return;
+    contenedor.innerHTML="";
+    if(!fecha){contenedor.innerHTML="<p>Selecciona una fecha para consultar horarios.</p>";return;}
+    const fechaObj=new Date(`${fecha}T12:00:00`);
+    const dias=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+    const horario=configuracion.find(h=>normalizarDiaAdmin(h.dia_semana)===normalizarDiaAdmin(dias[fechaObj.getDay()]));
+    if(!horario){contenedor.innerHTML="<p>El odontólogo no tiene horarios configurados este día.</p>";return;}
+    const inicio=minutosHorarioAdmin(horario.hora_inicio),fin=minutosHorarioAdmin(horario.hora_fin);
+    let cantidad=0;
+    for(let m=inicio;m+30<=fin;m+=30){
+        const valor=horaFormatoAdmin(m),btn=document.createElement("button");
+        btn.type="button";btn.className="btn-hora";btn.textContent=valor.slice(0,5);btn.dataset.valor=valor;
+        btn.addEventListener("click",()=>{if(btn.disabled)return;contenedor.querySelectorAll(".btn-hora").forEach(x=>x.classList.remove("seleccionada"));btn.classList.add("seleccionada");document.getElementById(inputHora).value=valor;});
+        contenedor.appendChild(btn);cantidad++;
+    }
+    if(!cantidad)contenedor.innerHTML="<p>No hay horarios configurados para este día.</p>";
+}
+async function verificarDisponibilidadAdmin(fecha, odontologo, contenedor, horaOriginal=null, idCitaExcluir=null, solicitudTipo="nueva"){
+    if(!fecha||!odontologo||!contenedor)return;
+    const solicitud=solicitudTipo==="modificar"?++solicitudModAdmin:++solicitudNuevaAdmin;
+    const botones=[...contenedor.querySelectorAll(".btn-hora")];
+    botones.forEach(b=>{b.disabled=true;b.title="Verificando disponibilidad";});
+    try{
+        const {data,error}=await client.rpc("obtener_horarios_ocupados",{p_fecha:fecha});
+        if(error)throw error;
+        const horas=(data||[]).filter(c=>String(c.odontologo)===String(odontologo)&&String(c.id)!==String(idCitaExcluir))
+            .map(c=>{const raw=String(c.fecha_hora||"");return raw.includes("T")?raw.split("T")[1].slice(0,8):"";});
+        if(solicitud!==(solicitudTipo==="modificar"?solicitudModAdmin:solicitudNuevaAdmin))return;
+        botones.forEach(btn=>{
+            const ocupada=horas.includes(btn.dataset.valor)&&btn.dataset.valor!==horaOriginal;
+            const pasada=horaYaPaso(fecha,btn.dataset.valor)&&btn.dataset.valor!==horaOriginal;
+            const bloqueado=ocupada||pasada;
+            btn.disabled=bloqueado;btn.classList.toggle("ocupada",bloqueado);
+            btn.title=ocupada?"Horario ocupado":pasada?"Este horario ya pasó":"Horario disponible";
+            btn.style.backgroundColor=bloqueado?"#e2e8f0":"";btn.style.color=bloqueado?"#94a3b8":"";btn.style.cursor=bloqueado?"not-allowed":"pointer";
+            if(btn.dataset.valor===horaOriginal&&!bloqueado)btn.classList.add("seleccionada");
+        });
+    }catch(error){
+        console.error("Error al consultar horarios ocupados:",error);
+        botones.forEach(b=>{b.disabled=true;b.classList.add("ocupada");b.title="No se pudo verificar disponibilidad";});
+        const fb=document.getElementById(solicitudTipo==="modificar"?"feedback-modificar-admin":"feedback-cita");
+        if(fb){fb.style.color="#dc2626";fb.textContent="No se pudieron consultar los horarios. Intenta nuevamente.";}
+    }
+}
+async function cargarHorariosNuevaCitaAdmin(){
+    const doctor=document.getElementById("cita-odontologo")?.value;
+    const box=document.getElementById("horarios-contenedor");
+    const solicitud=++solicitudNuevaAdmin;horariosNuevaCitaAdmin=[];
+    if(box)box.innerHTML="<p>Consultando horarios del odontólogo...</p>";
+    if(!doctor){if(box)box.innerHTML="<p>Selecciona un odontólogo.</p>";return;}
+    try{
+        const data=await obtenerConfiguracionHorariosAdmin(doctor);
+        if(solicitud!==solicitudNuevaAdmin)return;
+        horariosNuevaCitaAdmin=data;
+        renderizarCalendario();
+        const fecha=document.getElementById("cita-fecha")?.value;
+        if(fecha)renderizarHorariosDisponibles(fecha);
+        else if(box)box.innerHTML="<p>Selecciona una fecha para ver sus horarios.</p>";
+    }catch(error){console.error(error);if(box)box.innerHTML="<p>No se pudieron cargar los horarios.</p>";}
+}
+function renderizarCalendario(){
+    const grid=document.getElementById("dias-calendario"),titulo=document.getElementById("mes-año-display"),prev=document.getElementById("prev-month");
+    if(!grid||!titulo)return;
+    const hoy=new Date();hoy.setHours(0,0,0,0);grid.innerHTML="";titulo.textContent=`${nombresMeses[mesCal]} ${añoCal}`;
+    const primer=new Date(añoCal,mesCal,1).getDay(),total=new Date(añoCal,mesCal+1,0).getDate();
+    const dias=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+    for(let n=1;n<=total;n++){
+        const f=new Date(añoCal,mesCal,n),iso=fechaISOAdmin(f),div=document.createElement("div");
+        div.className="cal-day";div.textContent=n;div.style.gridRowStart=Math.floor((n-1+primer)/7)+1;div.style.gridColumnStart=f.getDay()+1;
+        const tiene=horariosNuevaCitaAdmin.some(h=>normalizarDiaAdmin(h.dia_semana)===normalizarDiaAdmin(dias[f.getDay()]));
+        if(fechaSeleccionada&&f.getTime()===fechaSeleccionada.getTime())div.classList.add("seleccionado");
+        if(f<hoy||!tiene||!document.getElementById("cita-odontologo")?.value)div.classList.add("disabled");
+        else div.addEventListener("click",()=>seleccionarFechaCita(f,div));
+        grid.appendChild(div);
+    }
+    if(prev)prev.disabled=mesCal===hoy.getMonth()&&añoCal===hoy.getFullYear();
+}
+function seleccionarFechaCita(fecha,elementoDiv){
+    fechaSeleccionada=fecha;
+    document.querySelectorAll("#dias-calendario .cal-day").forEach(x=>x.classList.remove("seleccionado"));
+    elementoDiv.classList.add("seleccionado");
+    const iso=fechaISOAdmin(fecha),d=String(fecha.getDate()).padStart(2,"0"),m=String(fecha.getMonth()+1).padStart(2,"0");
+    document.getElementById("cita-fecha").value=iso;
+    document.getElementById("texto-fecha-seleccionada").textContent=`${d}/${m}/${fecha.getFullYear()}`;
+    document.getElementById("calendario-flotante").style.display="none";
+    document.getElementById("cita-hora").value="";
+    renderizarHorariosDisponibles(iso);
+}
+function renderizarHorariosDisponibles(fecha=document.getElementById("cita-fecha")?.value){
+    const box=document.getElementById("horarios-contenedor");
+    crearBotonesHorarioAdmin(box,horariosNuevaCitaAdmin,fecha,"cita-hora");
+    if(fecha)verificarDisponibilidadAdmin(fecha,document.getElementById("cita-odontologo")?.value,box,null,null,"nueva");
+}
+const abrirModalCitaAdminAnterior=abrirModalCita;
+async function abrirModalCita(){
+    document.getElementById("modalNuevaCita").style.display="flex";
+    document.getElementById("formNuevaCita")?.reset();
+    document.getElementById("cita-fecha").value="";document.getElementById("cita-hora").value="";
+    document.getElementById("texto-fecha-seleccionada").textContent="Selecciona una fecha";
+    document.getElementById("horarios-contenedor").innerHTML="<p>Selecciona odontólogo y fecha.</p>";
+    fechaSeleccionada=null;mesCal=new Date().getMonth();añoCal=new Date().getFullYear();
+    await cargarSelectsModalCita();
+    await cargarOdontologosModalesAdmin();
+    await cargarHorariosNuevaCitaAdmin();
+    renderizarCalendario();
+}
+document.addEventListener("DOMContentLoaded",()=>{
+    document.getElementById("cita-odontologo")?.addEventListener("change",async()=>{
+        fechaSeleccionada=null;document.getElementById("cita-fecha").value="";document.getElementById("cita-hora").value="";
+        document.getElementById("texto-fecha-seleccionada").textContent="Selecciona una fecha";
+        await cargarHorariosNuevaCitaAdmin();
+    });
+    document.getElementById("mod-cita-odontologo-admin")?.addEventListener("change",async()=>{
+        const fecha=document.getElementById("mod-cita-fecha-admin").value;
+        document.getElementById("mod-cita-hora-admin").value="";
+        if(!fecha)return;
+        await renderizarHorariosModificarAdminAsync(fecha,null);
+    });
+});
+async function renderizarHorariosModificarAdminAsync(fecha,horaOriginal=null){
+    const doctor=document.getElementById("mod-cita-odontologo-admin")?.value;
+    const box=document.getElementById("horarios-contenedor-mod-admin");
+    const id=document.getElementById("mod-cita-id-admin")?.value;
+    const citaOriginal=(citasAdminCache||[]).find(c=>String(c.id)===String(id));
+    const horaOriginalMismaFecha=citaOriginal&&String(citaOriginal.fecha_hora||"").slice(0,10)===fecha
+        ? String(citaOriginal.fecha_hora).split("T")[1]?.slice(0,8) : null;
+    const horaAConservar=horaOriginal||horaOriginalMismaFecha;
+    let config=[];
+    try{config=await obtenerConfiguracionHorariosAdmin(doctor);}
+    catch(e){console.error(e);if(box)box.innerHTML="<p>No se pudieron cargar los horarios del odontólogo.</p>";return;}
+    crearBotonesHorarioAdmin(box,config,fecha,"mod-cita-hora-admin");
+    await verificarDisponibilidadAdmin(fecha,doctor,box,horaAConservar,id,"modificar");
+}
+function verificarHorariosModificarAdmin(fecha,idCitaActual,horaOriginal=null){
+    return renderizarHorariosModificarAdminAsync(fecha,horaOriginal);
+}
+function renderizarHorariosModificarAdmin(){
+    const fecha=document.getElementById("mod-cita-fecha-admin")?.value;
+    if(fecha)return renderizarHorariosModificarAdminAsync(fecha,document.getElementById("mod-cita-hora-admin")?.value||null);
+}
+function seleccionarFechaModificarAdmin(fecha,elemento){
+    document.querySelectorAll("#dias-calendario-mod-admin .cal-day").forEach(x=>x.classList.remove("seleccionado"));
+    elemento.classList.add("seleccionado");
+    document.getElementById("mod-cita-fecha-admin").value=fecha;
+    const [a,m,d]=fecha.split("-");
+    document.getElementById("texto-fecha-seleccionada-mod-admin").textContent=`${d}/${m}/${a}`;
+    cerrarCalendarioModificarAdmin();
+    document.getElementById("mod-cita-hora-admin").value="";
+    renderizarHorariosModificarAdminAsync(fecha,null);
+}
+const abrirModalModificarAdminAnterior=abrirModalModificarAdmin;
+async function abrirModalModificarAdmin(idCita){
+    const cita=citasAdminCache.find(c=>String(c.id)===String(idCita));
+    if(!cita){alert("No se encontró la cita.");return;}
+    const paciente=pacientesAdminCache.find(p=>String(p.id)===String(cita.paciente));
+    await cargarOdontologosModalesAdmin();
+    const servicio=serviciosAdminCache.find(s=>String(s.id)===String(cita.servicio));
+    const select=document.getElementById("mod-cita-servicio-admin");
+    select.innerHTML='<option value="" disabled>Selecciona servicio</option>'+serviciosAdminCache.map(s=>`<option value="${s.id}">${s.nombre} ($${s.costo||0} MXN)</option>`).join("");
+    document.getElementById("mod-cita-id-admin").value=cita.id;
+    document.getElementById("mod-cita-paciente-admin").value=paciente?`${paciente.nombre||""} ${paciente.apellido||""}`.trim():"Paciente no encontrado";
+    document.getElementById("mod-cita-servicio-admin").value=cita.servicio;
+    document.getElementById("mod-cita-odontologo-admin").value=cita.odontologo||"";
+    const raw=String(cita.fecha_hora),fecha=raw.split("T")[0],hora=(raw.split("T")[1]||"").slice(0,8);
+    const [a,m,d]=fecha.split("-");
+    document.getElementById("mod-cita-fecha-admin").value=fecha;
+    document.getElementById("mod-cita-hora-admin").value=hora;
+    document.getElementById("texto-fecha-seleccionada-mod-admin").textContent=`${d}/${m}/${a}`;
+    calendarioModificarAdmin.mes=Number(m)-1;calendarioModificarAdmin.anio=Number(a);
+    document.getElementById("costo-mod-cita-admin").textContent=`$${Number(servicio?.costo||0).toFixed(2)} MXN`;
+    document.getElementById("modalModificarCitaAdmin").style.display="flex";
+    renderizarCalendarioModificarAdmin();
+    renderizarHorariosModificarAdminAsync(fecha,hora);
+}
+
+
+document.getElementById("formNuevaCita")?.addEventListener("submit",async function(e){
+    e.preventDefault();e.stopImmediatePropagation();
+    const feedback=document.getElementById("feedback-cita"),btn=document.getElementById("btnConfirmarCita");
+    const paciente=document.getElementById("cita-paciente").value,servicio=document.getElementById("cita-servicio").value;
+    const odontologo=document.getElementById("cita-odontologo").value,fecha=document.getElementById("cita-fecha").value,hora=document.getElementById("cita-hora").value;
+    if(!paciente||!servicio||!odontologo||!fecha||!hora){feedback.style.color="#dc2626";feedback.textContent="Completa los campos y selecciona un horario disponible.";return;}
+    try{
+        btn.disabled=true;feedback.style.color="#2563eb";feedback.textContent="Verificando disponibilidad...";
+        const {data,error}=await client.rpc("obtener_horarios_ocupados",{p_fecha:fecha});if(error)throw error;
+        const busy=(data||[]).some(c=>String(c.odontologo)===String(odontologo)&&String(c.fecha_hora||"").split("T")[1]?.slice(0,8)===hora);
+        if(busy||horaYaPaso(fecha,hora)){feedback.style.color="#dc2626";feedback.textContent="Ese horario ya no está disponible. Selecciona otro.";await verificarHorariosOcupados(fecha);return;}
+        feedback.textContent="Agendando cita...";
+        const {error:insertError}=await client.from("Citas").insert([{fecha_hora:`${fecha}T${hora}`,estado:"PENDIENTE",paciente:Number(paciente),odontologo:Number(odontologo),servicio:Number(servicio)}]);
+        if(insertError)throw insertError;
+        feedback.style.color="#16a34a";feedback.textContent="¡Cita agendada exitosamente!";
+        setTimeout(()=>window.location.reload(),900);
+    }catch(err){console.error(err);feedback.style.color="#dc2626";feedback.textContent="No se pudo agendar: "+err.message;}
+    finally{btn.disabled=false;}
+},true);

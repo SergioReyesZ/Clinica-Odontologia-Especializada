@@ -11,12 +11,35 @@ let calActual = {
     modo: 'agendar'
 };
 const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-const franjasHorarias = [
-    { texto: "16:30", valor: "16:30:00" }, { texto: "17:00", valor: "17:00:00" },
-    { texto: "17:30", valor: "17:30:00" }, { texto: "18:00", valor: "18:00:00" },
-    { texto: "18:30", valor: "18:30:00" }, { texto: "19:00", valor: "19:00:00" },
-    { texto: "19:30", valor: "19:30:00" }
+const nombresDias = [
+    "Domingo", "Lunes", "Martes",
+    "Miércoles", "Jueves", "Viernes", "Sábado"
 ];
+
+let horariosOdontologo = {
+    agendar: [],
+    modificar: []
+};
+
+function normalizarDia(dia) {
+    return String(dia || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+}
+
+function convertirHoraMinutos(hora) {
+    const partes = String(hora).substring(0, 8).split(":");
+    return Number(partes[0]) * 60 + Number(partes[1]);
+}
+
+function formatoHora(minutos) {
+    const horas = Math.floor(minutos / 60);
+    const mins = minutos % 60;
+
+    return `${String(horas).padStart(2, "0")}:${String(mins).padStart(2, "0")}:00`;
+}
 
 // ==========================================
 // CONTROL DE PESTAÑAS (VISTAS)
@@ -298,12 +321,21 @@ async function cargarSelectsModalCita() {
     const { data: { user } } = await client.auth.getUser();
 
     const selectPacientes = document.getElementById('cita-paciente');
+
     if (user && selectPacientes) {
-        const { data: pacientes } = await client.from('Pacientes').select('id, nombre, apellido').eq('cliente', user.id);
-        selectPacientes.innerHTML = '<option value="" disabled selected>Selecciona paciente</option>' +
-            (pacientes || []).map(p => `<option value="${p.id}">${p.nombre} ${p.apellido}</option>`).join('');
+        const { data: pacientes } = await client
+            .from('Pacientes')
+            .select('id, nombre, apellido')
+            .eq('cliente', user.id);
+
+        selectPacientes.innerHTML =
+            '<option value="" disabled selected>Selecciona paciente</option>' +
+            (pacientes || []).map(p =>
+                `<option value="${p.id}">${p.nombre} ${p.apellido}</option>`
+            ).join('');
     }
 
+    await cargarSelectOdontologos();
     await cargarCatalogoServicios();
 }
 
@@ -378,6 +410,39 @@ function inicializarEventosCalendarios() {
     });
     document.getElementById('prev-month-mod')?.addEventListener('click', () => cambiarMes(-1, 'modificar'));
     document.getElementById('next-month-mod')?.addEventListener('click', () => cambiarMes(1, 'modificar'));
+    document.getElementById("cita-odontologo")
+        ?.addEventListener("change", async () => {
+
+            calActual.fechaSeleccionada = null;
+
+            document.getElementById("cita-fecha").value = "";
+            document.getElementById("cita-hora").value = "";
+
+            document.getElementById("texto-fecha-seleccionada").textContent =
+                "Selecciona una fecha";
+
+            await cargarHorariosOdontologo("agendar");
+
+            renderizarCalendario("agendar");
+            renderizarHorariosDisponibles("agendar");
+        });
+
+    document.getElementById("mod-cita-odontologo")
+        ?.addEventListener("change", async () => {
+
+            calActual.fechaSeleccionada = null;
+
+            document.getElementById("mod-cita-fecha").value = "";
+            document.getElementById("mod-cita-hora").value = "";
+
+            document.getElementById("texto-fecha-seleccionada-mod").textContent =
+                "Selecciona una fecha";
+
+            await cargarHorariosOdontologo("modificar");
+
+            renderizarCalendario("modificar");
+            renderizarHorariosDisponibles("modificar");
+        });
 }
 
 function cambiarMes(direccion, modo) {
@@ -457,12 +522,19 @@ function renderizarCalendario(modo) {
         // Comprobar si el día ya pasó
         const esPasado = fechaIteracion < hoy;
 
-        // Comprobar si ya no quedan horarios disponibles
-        const sinHorarios = diaSinHorarios(fechaLocal, "19:30:00");
+        const selectorId = modo === "modificar"
+            ? "mod-cita-odontologo"
+            : "cita-odontologo";
 
-        // Solamente sábado y domingo son fines de semana.
-        const esFinDeSemana =
-            diaSemana === 6 || diaSemana === 0;
+        const odontologoSeleccionado =
+            document.getElementById(selectorId)?.value;
+
+        const diaConfigurado = horariosOdontologo[modo].some(h =>
+            normalizarDia(h.dia_semana) ===
+            normalizarDia(nombresDias[diaSemana])
+        );
+
+        const sinHorarios = !odontologoSeleccionado || !diaConfigurado;
 
         const div = document.createElement('div');
         div.classList.add('cal-day');
@@ -480,7 +552,7 @@ function renderizarCalendario(modo) {
             div.classList.add('seleccionado');
         }
 
-        if (esPasado || esFinDeSemana || sinHorarios) {
+        if (esPasado || sinHorarios) {
             div.classList.add('disabled');
         } else {
             div.addEventListener('click', () => {
@@ -518,11 +590,18 @@ function seleccionarFechaCita(fecha, elementoDiv, modo) {
     document.querySelectorAll(`#horarios-contenedor${uiPrefijo} .btn-hora`).forEach(el => el.classList.remove('seleccionada'));
     document.getElementById(`${inputPrefijo}-hora`).value = '';
 
+    renderizarHorariosDisponibles(modo, fechaFormateada);
     verificarHorariosOcupados(fechaFormateada, modo);
 }
 
 async function verificarHorariosOcupados(fechaStr, modo, horaOriginalParaIgnorar = null) {
-    const odontologoId = 1;
+    const selectorId = modo === 'modificar'
+        ? 'mod-cita-odontologo'
+        : 'cita-odontologo';
+
+    const odontologoId = document.getElementById(selectorId)?.value;
+
+    if (!odontologoId) return;
     const prefijoUi = modo === 'modificar' ? '-mod' : '';
 
     try {
@@ -560,20 +639,57 @@ async function verificarHorariosOcupados(fechaStr, modo, horaOriginalParaIgnorar
         });
     } catch (err) { console.error("Error al verificar horarios ocupados:", err.message); }
 }
-
-function renderizarHorariosDisponibles(modo) {
-    const prefijo = modo === 'modificar' ? '-mod' : '';
+function renderizarHorariosDisponibles(modo, fechaStr = null) {
+    const prefijo = modo === "modificar" ? "-mod" : "";
     const contenedor = document.getElementById(`horarios-contenedor${prefijo}`);
-    if (!contenedor) return;
-    contenedor.innerHTML = '';
 
-    franjasHorarias.forEach(h => {
-        const btn = document.createElement('button');
-        btn.type = 'button'; btn.classList.add('btn-hora'); btn.textContent = h.texto;
-        btn.dataset.valor = h.valor;
-        btn.addEventListener('click', () => seleccionarHoraCita(h.valor, btn, modo));
+    if (!contenedor) return;
+
+    contenedor.innerHTML = "";
+
+    if (!fechaStr) {
+        return;
+    }
+
+    const fecha = new Date(`${fechaStr}T12:00:00`);
+    const dia = nombresDias[fecha.getDay()];
+
+    const horarioDia = horariosOdontologo[modo].find(h =>
+        normalizarDia(h.dia_semana) === normalizarDia(dia)
+    );
+
+    if (!horarioDia) {
+        contenedor.innerHTML = "<p>El odontólogo no tiene horarios disponibles este día.</p>";
+        return;
+    }
+
+    const inicio = convertirHoraMinutos(horarioDia.hora_inicio);
+    const fin = convertirHoraMinutos(horarioDia.hora_fin);
+
+    let cantidad = 0;
+
+    for (let minuto = inicio; minuto + 30 <= fin; minuto += 30) {
+        const valor = formatoHora(minuto);
+        const texto = valor.substring(0, 5);
+
+        const btn = document.createElement("button");
+
+        btn.type = "button";
+        btn.classList.add("btn-hora");
+        btn.textContent = texto;
+        btn.dataset.valor = valor;
+
+        btn.addEventListener("click", () => {
+            seleccionarHoraCita(valor, btn, modo);
+        });
+
         contenedor.appendChild(btn);
-    });
+        cantidad++;
+    }
+
+    if (cantidad === 0) {
+        contenedor.innerHTML = "<p>No hay horarios configurados para este día.</p>";
+    }
 }
 
 function seleccionarHoraCita(valor, boton, modo) {
@@ -588,12 +704,22 @@ function seleccionarHoraCita(valor, boton, modo) {
 // ==========================================
 // MODALES: ABRIR Y CERRAR
 // ==========================================
-function abrirModal() {
-    calActual = { mes: new Date().getMonth(), año: new Date().getFullYear(), fechaSeleccionada: null, modo: 'agendar' };
-    renderizarCalendario('agendar');
-    renderizarHorariosDisponibles('agendar');
-    cargarSelectsModalCita();
-    document.getElementById('modalNuevaCita').style.display = 'flex';
+async function abrirModal() {
+    calActual = {
+        mes: new Date().getMonth(),
+        año: new Date().getFullYear(),
+        fechaSeleccionada: null,
+        modo: "agendar"
+    };
+
+    document.getElementById("modalNuevaCita").style.display = "flex";
+
+    await cargarSelectsModalCita();
+
+    await cargarHorariosOdontologo("agendar");
+
+    renderizarCalendario("agendar");
+    renderizarHorariosDisponibles("agendar");
 }
 
 function cerrarModal() {
@@ -925,4 +1051,107 @@ function descargarComprobante(id, paciente, servicio, fecha, hora, costo) {
         </html>
     `);
     ventanaImpresion.document.close();
+}
+
+
+async function cargarSelectOdontologos() {
+    const selects = [
+        document.getElementById('cita-odontologo'),
+        document.getElementById('mod-cita-odontologo')
+    ].filter(Boolean);
+
+    if (!selects.length) return;
+
+    selects.forEach(select => {
+        select.innerHTML = '<option value="">Cargando odontólogos...</option>';
+        select.disabled = true;
+    });
+
+    try {
+        const { data: odontologos, error } = await client
+            .from('Odontologos')
+            .select(`
+                id,
+                Usuario,
+                Usuarios!Odontologos_Usuario_fkey (
+                    nombre,
+                    apellido
+                )
+            `)
+            .order('id');
+
+        if (error) throw error;
+
+        console.log('Datos obtenidos de Odontologos:', odontologos);
+
+        if (!odontologos || odontologos.length === 0) {
+            throw new Error('La tabla Odontologos no devolvió registros.');
+        }
+
+        const opciones = odontologos
+            .filter(o => o.Usuarios)
+            .map(o => ({
+                id: o.id,
+                nombre: `${o.Usuarios.nombre} ${o.Usuarios.apellido}`
+            }));
+
+        console.log('Odontólogos disponibles:', opciones);
+
+        if (!opciones.length) {
+            throw new Error(
+                'Se encontraron odontólogos, pero no sus usuarios relacionados. Revisa la política RLS de Usuarios.'
+            );
+        }
+
+        selects.forEach(select => {
+            select.innerHTML =
+                '<option value="" disabled selected>Selecciona odontólogo</option>';
+
+            opciones.forEach(odontologo => {
+                const option = document.createElement('option');
+                option.value = odontologo.id;
+                option.textContent = odontologo.nombre;
+
+                select.appendChild(option);
+            });
+
+            select.disabled = false;
+        });
+
+    } catch (error) {
+        console.error('Error al cargar odontólogos:', error);
+
+        selects.forEach(select => {
+            select.innerHTML =
+                '<option value="">No se pudieron cargar los odontólogos</option>';
+            select.disabled = false;
+        });
+    }
+}
+
+async function cargarHorariosOdontologo(modo) {
+    const selectorId = modo === "modificar"
+        ? "mod-cita-odontologo"
+        : "cita-odontologo";
+
+    const odontologoId = document.getElementById(selectorId)?.value;
+
+    horariosOdontologo[modo] = [];
+
+    if (!odontologoId) return;
+
+    try {
+        const { data, error } = await client
+            .from("Horarios")
+            .select("dia_semana, hora_inicio, hora_fin")
+            .eq("odontologo", Number(odontologoId));
+
+        if (error) throw error;
+
+        horariosOdontologo[modo] = data || [];
+
+    } catch (error) {
+        console.error("Error al cargar horarios del odontólogo:", error);
+        horariosOdontologo[modo] = [];
+    }
 }

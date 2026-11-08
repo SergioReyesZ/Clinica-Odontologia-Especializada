@@ -532,8 +532,6 @@ async function registrarPaciente(e) {
 
         await cargarPacientes();
 
-        alert("¡Paciente registrado correctamente!");
-
     } catch (error) {
 
         console.error(error);
@@ -983,8 +981,6 @@ async function actualizarPaciente(e) {
         cerrarModalEditar();
 
         await cargarPacientes();
-
-        alert("¡Paciente actualizado correctamente!");
 
     } catch (error) {
 
