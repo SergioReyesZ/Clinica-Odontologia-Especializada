@@ -189,8 +189,14 @@ formLogin.addEventListener('submit', async (e) => {
         // 3. Redirigir dependiendo del rol (2 = Administrador)
         if (userData.rol === 2) {
             window.location.href = 'adminDashboard.html';
-        } else {
+        } 
+
+        if (userData.rol === 1) {
             window.location.href = 'dashboard.html';
+        }
+
+        if(userData.rol === 3) {
+            window.location.href = 'odontologoDashboard.html'
         }
 
     } catch (error) {

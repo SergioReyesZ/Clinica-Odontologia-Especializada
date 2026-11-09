@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const menu = document.querySelector(".menu");
     const opciones = document.querySelectorAll(".opcion");
     const linea = document.querySelector(".linea-flotante");
@@ -105,7 +105,7 @@ window.addEventListener('load', () => {
     const ajustarMargen = () => {
         if (header) {
             const headerHeight = header.offsetHeight;
-            
+
             // Aplica el margen al contenedor que exista en la página actual
             if (content) {
                 content.style.marginTop = `${headerHeight + 25}px`;
@@ -127,108 +127,111 @@ window.addEventListener('load', () => {
 
     window.addEventListener('resize', ajustarMargen);
 });
+document.addEventListener("DOMContentLoaded", async () => {
 
 // Lógica para el dropdown del perfil
-    const btnPerfil = document.getElementById('btnPerfilDropdown');
-    const dropdownPerfil = document.getElementById('dropdownPerfil');
-    const btnNotificaciones = document.getElementById('btnNotificacionesDropdown');
-    const dropdownNotificaciones = document.getElementById('dropdownNotificaciones');
+const btnPerfil = document.getElementById('btnPerfilDropdown');
+const dropdownPerfil = document.getElementById('dropdownPerfil');
+const btnNotificaciones = document.getElementById('btnNotificacionesDropdown');
+const dropdownNotificaciones = document.getElementById('dropdownNotificaciones');
 
-    if (btnPerfil && dropdownPerfil) {
-        // Abrir/cerrar al dar clic en el perfil
-        btnPerfil.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita que el clic se propague al resto de la página
-            if (dropdownNotificaciones) dropdownNotificaciones.classList.remove('mostrar'); // Cierra notificaciones si existen
-            dropdownPerfil.classList.toggle('mostrar');
-        });
+if (btnPerfil && dropdownPerfil) {
+    // Abrir/cerrar al dar clic en el perfil
+    btnPerfil.addEventListener('click', (e) => {
+        e.stopPropagation(); // Evita que el clic se propague al resto de la página
+        if (dropdownNotificaciones) dropdownNotificaciones.classList.remove('mostrar'); // Cierra notificaciones si existen
+        dropdownPerfil.classList.toggle('mostrar');
+    });
 
-        // Cerrar el modal al hacer clic en cualquier otro lado
-        document.addEventListener('click', (e) => {
-            if (!dropdownPerfil.contains(e.target) && !btnPerfil.contains(e.target)) {
-                dropdownPerfil.classList.remove('mostrar');
-            }
-        });
-    }
+    // Cerrar el modal al hacer clic en cualquier otro lado
+    document.addEventListener('click', (e) => {
+        if (!dropdownPerfil.contains(e.target) && !btnPerfil.contains(e.target)) {
+            dropdownPerfil.classList.remove('mostrar');
+        }
+    });
+}
 
-    if (btnNotificaciones && dropdownNotificaciones) {
-        // Abrir/cerrar al dar clic en el botón de notificaciones
-        btnNotificaciones.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (dropdownPerfil) dropdownPerfil.classList.remove('mostrar'); // Cierra el dropdown de perfil si existe
-            dropdownNotificaciones.classList.toggle('mostrar');
-        });
+if (btnNotificaciones && dropdownNotificaciones) {
+    // Abrir/cerrar al dar clic en el botón de notificaciones
+    btnNotificaciones.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (dropdownPerfil) dropdownPerfil.classList.remove('mostrar'); // Cierra el dropdown de perfil si existe
+        dropdownNotificaciones.classList.toggle('mostrar');
+    });
 
-        // Cerrar el modal al hacer clic en cualquier otro lado
-        document.addEventListener('click', (e) => {
-            if (!dropdownNotificaciones.contains(e.target) && !btnNotificaciones.contains(e.target)) {
-                dropdownNotificaciones.classList.remove('mostrar');
-            }
-        });
-    }
+    // Cerrar el modal al hacer clic en cualquier otro lado
+    document.addEventListener('click', (e) => {
+        if (!dropdownNotificaciones.contains(e.target) && !btnNotificaciones.contains(e.target)) {
+            dropdownNotificaciones.classList.remove('mostrar');
+        }
+    });
+}
 
-    /* OBTENER DATOS DE USUARIO DESDE SUPABASE */
-document.addEventListener('DOMContentLoaded', async () => {
-    const contenedorPrincipal = document.querySelector('.contenedor-principal');
-    const imgPerfil = document.querySelector('.btn-perfil .pfp');
-    const txtNombreHeader = document.getElementById('header-nombre-usuario');
-    const txtBienvenida = document.getElementById('bienvenida-usuario');
-    const btnCerrarSesion = document.getElementById('btnCerrarSesion');
-    const AVATAR_DEFAULT = '../iconos/perfil.png';
+/* OBTENER DATOS DE USUARIO DESDE SUPABASE */
+const contenedorPrincipal = document.querySelector('.contenedor-principal');
+const imgPerfil = document.querySelector('.btn-perfil .pfp');
+const txtNombreHeader = document.getElementById('header-nombre-usuario');
+const txtBienvenida = document.getElementById('bienvenida-usuario');
+const btnCerrarSesion = document.getElementById('btnCerrarSesion');
+const AVATAR_DEFAULT = '../iconos/perfil.png';
 
-    // Funcionalidad de cerrar sesión
-    if (btnCerrarSesion) {
-        btnCerrarSesion.addEventListener('click', async (e) => {
-            e.preventDefault(); 
-            try {
-                const { error } = await client.auth.signOut();
-                if (error) throw error;
-                window.location.href = '../index.html';
-            } catch (err) {
-                console.error("Error al cerrar sesión:", err.message);
-                alert("Ocurrió un error al intentar cerrar sesión.");
-            }
-        });
-    }
+// Funcionalidad de cerrar sesión
+if (btnCerrarSesion) {
+    btnCerrarSesion.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            const { error } = await client.auth.signOut({
+                scope: "global"
+            });
 
-    try {
-        const { data: { user }, error: authError } = await client.auth.getUser();
-
-        if (authError || !user) {
+            if (error) throw error;
             window.location.href = '../index.html';
-            return;
+        } catch (err) {
+            console.error("Error al cerrar sesión:", err.message);
+            alert("Ocurrió un error al intentar cerrar sesión.");
         }
+    });
+}
 
-        const { data: usuarioData, error: dbError } = await client
-            .from('Usuarios')
-            .select('nombre, apellido, avatar')
-            .eq('id', user.id)
-            .maybeSingle();
+try {
+    const { data: { user }, error: authError } = await client.auth.getUser();
 
-        if (dbError) {
-            console.error("Error al obtener datos del usuario:", dbError.message);
-        }
-
-        // 1. Asignamos los datos directamente en el DOM ANTES de mostrar la pantalla
-        const nombre = usuarioData?.nombre || user.user_metadata?.nombre || 'Usuario';
-        const apellido = usuarioData?.apellido || user.user_metadata?.apellido || '';
-        const avatar = usuarioData?.avatar;
-
-        const nombreCompleto = `${nombre} ${apellido}`.trim();
-        
-        if (txtNombreHeader) txtNombreHeader.textContent = nombreCompleto;
-        if (txtBienvenida) txtBienvenida.textContent = `¡Hola ${nombre}!`;
-
-        if (imgPerfil) {
-            imgPerfil.src = (avatar && avatar.trim() !== '') ? avatar : AVATAR_DEFAULT;
-            imgPerfil.onerror = () => { imgPerfil.src = AVATAR_DEFAULT; };
-        }
-
-    } catch (err) {
-        console.error("Error inesperado cargando la sesión:", err);
-    } finally {
-        // 2. Revelamos todo de golpe solo cuando los textos ya están puestos en el DOM
-        if (contenedorPrincipal) {
-            contenedorPrincipal.classList.remove('cargando');
-        }
+    if (authError || !user) {
+        window.location.href = '../index.html';
+        return;
     }
+
+    const { data: usuarioData, error: dbError } = await client
+        .from('Usuarios')
+        .select('nombre, apellido, avatar')
+        .eq('id', user.id)
+        .maybeSingle();
+
+    if (dbError) {
+        console.error("Error al obtener datos del usuario:", dbError.message);
+    }
+
+    // 1. Asignamos los datos directamente en el DOM ANTES de mostrar la pantalla
+    const nombre = usuarioData?.nombre || user.user_metadata?.nombre || 'Usuario';
+    const apellido = usuarioData?.apellido || user.user_metadata?.apellido || '';
+    const avatar = usuarioData?.avatar;
+
+    const nombreCompleto = `${nombre} ${apellido}`.trim();
+
+    if (txtNombreHeader) txtNombreHeader.textContent = nombreCompleto;
+    if (txtBienvenida) txtBienvenida.textContent = `¡Hola ${nombre}!`;
+
+    if (imgPerfil) {
+        imgPerfil.src = (avatar && avatar.trim() !== '') ? avatar : AVATAR_DEFAULT;
+        imgPerfil.onerror = () => { imgPerfil.src = AVATAR_DEFAULT; };
+    }
+
+} catch (err) {
+    console.error("Error inesperado cargando la sesión:", err);
+} finally {
+    // 2. Revelamos todo de golpe solo cuando los textos ya están puestos en el DOM
+    if (contenedorPrincipal) {
+        contenedorPrincipal.classList.remove('cargando');
+    }
+}
 });

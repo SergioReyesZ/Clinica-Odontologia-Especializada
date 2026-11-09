@@ -1,0 +1,1463 @@
+html, body {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0;
+    scroll-behavior: smooth;
+}
+.contenedor-principal{
+    overflow: hidden;
+}
+body{
+    font-family: Arial, sans-serif;   
+}
+
+.contenedor{
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    width: auto;
+    height: 25vh;
+    background-color: rgba(237, 246, 252, 0.95);
+    overflow: hidden;
+    padding: 2rem 0 2rem 2rem;
+    margin: 25px 25px 0 25px; /* Eliminamos el margen inferior (0) */
+    border-radius: 20px;
+    box-sizing: border-box;
+    background: linear-gradient(to bottom, rgba(237, 246, 252, 0.95) 60%, rgba(237, 246, 252, 0) 100%);
+}
+
+.texto-bienvenida{
+    display: flex;
+    flex-direction: column;
+}
+
+.contenedor p, .contenedor h1, .contenedor h2{
+    margin: 0;
+}
+
+.contenedor p{
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    color: #525151;
+}
+
+.contenedor img{
+    width: 450px;    
+    height: auto;   
+    object-fit: cover; 
+    margin-top:-90px;
+}
+
+.informacion{
+    margin: 0;
+    height: 65%;
+    display: flex;
+    padding-bottom: 2rem;
+}
+
+.citas{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0 25px 25px 25px; /* 0 arriba, 25px a los lados y abajo */
+    border-radius: 20px;
+    padding: 1rem;
+    gap: 0.7rem;
+}
+
+p{
+    margin: 0;
+}
+
+.encabezado{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 1rem;
+}
+
+.titulos{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ver{
+    width: 30px;
+    cursor: pointer;
+    color: #0056e0;
+    transform: rotate(-90deg);
+}
+.ver:hover{
+    text-decoration: underline;
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+    transform: rotate(-90deg);
+}
+.ver.voltear{
+    transform: rotate(90deg);
+}
+
+.titulo{
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.tarjeta {
+    border: 1px solid #d1d5db;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto; /* Fecha, Hora, Bloque de Texto (crece), Estado, Flecha */
+    align-items: center;
+    gap: 1rem;
+}
+
+.linea{
+    width: 100%;
+    margin: 0 auto;
+    opacity: 50%;
+}
+
+.fecha{
+    display: block;
+    border-radius: 20px;
+    background-color: aliceblue;
+    padding: 1rem 1.5rem;
+}
+
+.hora{
+    border: 1px solid #d1d5db; 
+    padding: 1rem;
+    background-color: white;
+    color: #333333;
+    font-size: 1rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.nombre-paciente{
+    line-height: 2rem;
+}
+
+.nombre-paciente .nombre{
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    text-wrap: wrap; 
+}
+
+.nombre-paciente .nombre:hover{
+    text-decoration: underline;
+}
+
+.nombre-paciente .nombre, .info-cita .nombre {
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    word-break: break-word; /* Permite que nombres muy largos bajen de línea */
+    overflow-wrap: break-word;
+}
+
+.estado{
+    padding: 0.5rem 1rem;
+    background-color: rgb(247, 254, 249);
+    color: #106b0c;
+    font-size: 1rem;
+    border-radius: 20px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+#ver-mas{
+    padding: 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 20px;
+}
+#ver-mas:hover{
+    background-color: #f7f7f7;
+    transform: scale(1.3);
+    transition: transform 0.1s ease;
+}
+
+.linea {
+    width: 100%;
+    opacity: 50%;
+}
+
+.pacientes{
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    margin: 0 25px 25px 25px; /* 0 arriba, 25px a los lados y abajo */
+    border-radius: 20px;
+    padding: 1rem;
+    gap: 0.7rem;
+}
+
+.pacientes .nombre{
+    font-weight: 500;
+}
+
+.encabezado i{
+    color: #0056e0;
+    font-size: 1.5rem;
+    
+}
+
+.tarjeta-paciente {  
+    padding: 1rem;
+    border-bottom: 1px solid #d1d5db;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: auto 1fr auto; /* Imagen, Textos (crece), Flecha */
+    align-items: center;
+    gap: 1rem;
+}
+
+.tarjeta-paciente .nombre-paciente {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Vital para que el texto largo respete el ancho y baje */
+}
+
+.tarjeta-paciente .nombre-paciente .nombre {
+    font-weight: bold;
+    color: black;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.btn.agregar-cita{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #0056e0; 
+    color: white;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 86, 224, 0.3); 
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn.btn.agregar-cita:hover{
+    background-color: #0045b3;
+    transform: scale(1.03);
+}
+
+.btn.agregar-paciente{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    background-color: #f1f5f9; /* Gris azulado muy claro */
+    color: #475569; /* Texto oscuro para contrastar */
+    border: none;   
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn.btn.agregar-paciente:hover{
+    background-color: rgba(232, 241, 2525);
+    transform: scale(1.05);
+}
+
+.btn.agregar-paciente i{
+    font-size: 2rem;
+}
+
+.tarjetas{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 80%;
+    padding: 1rem; /* El padding que querías */
+    box-sizing: border-box; /* ESTA ES LA CLAVE PARA QUE NO SE DESCENTRE */
+    gap: 1rem;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.tarjetas.ocultar{
+    display: none;
+}
+
+.tarjetas::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tarjetas::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+.tarjetas::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.tarjetas::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* ==========================================
+   ESTILOS DE LOS MODALES
+========================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    z-index: 9999; /* Asegura que esté por encima de todo */
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-contenido {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #182f2c;
+}
+
+.btn-cerrar {
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+}
+
+.btn-cerrar:hover {
+    color: #e74c3c;
+}
+
+.formulario-cita .campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.2rem;
+}
+
+.formulario-cita .campo-doble {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.formulario-cita .campo-doble .campo {
+    flex: 1;
+}
+
+.formulario-cita label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #525151;
+    font-size: 0.9rem;
+}
+
+.formulario-cita input,
+.formulario-cita select {
+    padding: 0.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+}
+
+.formulario-cita input:focus,
+.formulario-cita select:focus {
+    border-color: #0056e0;
+}
+
+.ancho-total {
+    width: 100%;
+    margin-top: 1rem;
+    justify-content: center;
+}
+
+/* CALENDARIO */
+
+/* ==========================================
+   CALENDARIO INTERACTIVO (TEMA CLARO)
+========================================== */
+.cal-container {
+    background-color: #f1f5f9;
+    border-radius: 15px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+}
+
+.cal-mes-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.cal-mes-nav h4 {
+    margin: 0;
+    color: #182f2c;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.cal-mes-nav button {
+    background: white;
+    border: 1px solid #d1d5db;
+    color: #0056e0;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.cal-mes-nav button:hover:not(:disabled) {
+    background-color: #0056e0;
+    color: white;
+}
+
+.cal-mes-nav button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #e2e8f0;
+    color: #94a3b8;
+}
+
+/* ==========================================
+   CALENDARIO: ALINEACIÓN DE DÍAS Y NÚMEROS
+========================================== */
+
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    column-gap: 4px;
+    row-gap: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Encabezados: Lu, Ma, Mi, Ju, Vi, Sá, Do */
+.cal-dow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 0;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #475569;
+    margin-bottom: 0.5rem;
+    box-sizing: border-box;
+}
+
+/* Cuadrícula de números */
+.dias-grid {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    column-gap: 4px;
+    row-gap: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Cada día */
+.cal-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    box-sizing: border-box;
+
+    background-color: white;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 8px 0;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #333333;
+    transition: all 0.2s ease;
+}
+
+.cal-day:hover:not(.disabled) {
+    border-color: #0056e0;
+    color: #0056e0;
+}
+
+/* Días desactivados: se conservan */
+.cal-day.disabled {
+    color: #cbd5e1;
+    background-color: transparent;
+    cursor: not-allowed;
+}
+
+.cal-day.seleccionado {
+    background-color: #0056e0;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 86, 224, 0.3);
+}
+
+
+/* Selector de Horarios */
+.horarios-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 0.5rem;
+}
+
+.btn-hora {
+    background-color: white;
+    border: 1px solid #d1d5db;
+    color: #525151;
+    padding: 0.6rem 0.2rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-hora:hover {
+    border-color: #0056e0;
+    color: #0056e0;
+}
+
+.btn-hora.seleccionada {
+    background-color: #0056e0;
+    color: white;
+    border-color: #0056e0;
+    font-weight: bold;
+}
+
+/* Estilo del input que abre el calendario */
+.input-falso {
+    padding: 0.8rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #475569;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: border-color 0.2s;
+}
+
+.input-falso:hover {
+    border-color: #0056e0;
+}
+
+/* Modificadores para hacer flotar el calendario */
+.cal-container {
+    background-color: #f1f5f9;
+    border-radius: 15px;
+    padding: 1rem;
+    /* FLOTANTE */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 100; /* Asegura que quede por encima de todo */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    margin-top: 0.5rem;
+}
+
+.resumen-costo {
+    background: #f8fafc; 
+    padding: 1rem; 
+    border-radius: 10px; 
+    text-align: right; 
+    border: 1px dashed #cbd5e1;
+    margin-top: 1rem;
+}
+
+.resumen-costo p {
+    margin: 0; 
+    color: #475569;
+}
+
+.resumen-costo strong {
+    color: #0a84ff; 
+    font-size: 1.1rem;
+}
+
+
+/* ==========================================
+   SKELETON PAGE - DASHBOARD
+========================================== */
+
+/* Mantener el contenido original en su posición */
+.contenedor-principal {
+    position: relative;
+}
+
+/* Ocultar el dashboard real mientras carga */
+.contenedor-principal.cargando > .header,
+.contenedor-principal.cargando > .contenedor,
+.contenedor-principal.cargando > .informacion {
+    visibility: hidden;
+}
+
+/* Página de skeleton */
+.skeleton-page {
+    position: absolute;
+    inset: 0;
+    z-index: 1000;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding-bottom: 2rem;
+    background: #fff;
+    overflow: hidden;
+}
+
+/* Animación shimmer */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        #edf2f7 25%,
+        #f8fafc 50%,
+        #edf2f7 75%
+    );
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s ease-in-out infinite;
+    border-radius: 10px;
+}
+
+@keyframes skeletonShimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* HEADER */
+.skeleton-header {
+    min-height: 85px;
+    padding: 0 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    box-sizing: border-box;
+}
+
+.skeleton-logo {
+    width: 150px;
+    height: 45px;
+}
+
+.skeleton-menu {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+}
+
+.skeleton-menu-item {
+    width: 65px;
+    height: 17px;
+}
+
+.skeleton-perfil {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.skeleton-circulo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.skeleton-nombre {
+    width: 115px;
+    height: 16px;
+}
+
+.skeleton-flecha {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* BANNER DE BIENVENIDA */
+.skeleton-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 25vh;
+    min-height: 190px;
+    margin: 25px 25px 0;
+    padding: 2rem;
+    box-sizing: border-box;
+    border-radius: 20px;
+    background: #f1f7fb;
+    overflow: hidden;
+}
+
+.skeleton-banner-texto {
+    flex: 1;
+}
+
+.skeleton-titulo-corto {
+    width: 180px;
+    height: 20px;
+    margin-bottom: 15px;
+}
+
+.skeleton-titulo-largo {
+    width: 55%;
+    max-width: 450px;
+    height: 32px;
+    margin-bottom: 20px;
+}
+
+.skeleton-parrafo {
+    width: 80%;
+    max-width: 550px;
+    height: 13px;
+    margin-bottom: 10px;
+}
+
+.skeleton-parrafo-corto {
+    width: 55%;
+}
+
+.skeleton-diente {
+    width: 260px;
+    height: 190px;
+    border-radius: 45%;
+    margin-right: 25px;
+}
+
+/* SECCIONES */
+.skeleton-informacion {
+    display: flex;
+    gap: 0;
+    padding-bottom: 2rem;
+}
+
+.skeleton-seccion {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin: 0 25px 25px;
+    border-radius: 20px;
+    gap: 1rem;
+    box-sizing: border-box;
+}
+
+.skeleton-citas {
+    width: 100%;
+}
+
+.skeleton-pacientes {
+    width: 40%;
+}
+
+.skeleton-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    min-height: 35px;
+}
+
+.skeleton-subtitulo {
+    width: 160px;
+    height: 22px;
+}
+
+.skeleton-icono {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+
+.skeleton-linea {
+    height: 1px;
+    width: 100%;
+    background: #e2e8f0;
+}
+
+/* TARJETAS DE CITAS */
+.skeleton-tarjetas {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.skeleton-tarjeta-cita {
+    height: 95px;
+    width: 100%;
+    border-radius: 12px;
+}
+
+/* PACIENTES */
+.skeleton-lista-pacientes {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.skeleton-paciente {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.skeleton-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.skeleton-datos {
+    flex: 1;
+}
+
+.skeleton-nombre-paciente {
+    width: 65%;
+    height: 16px;
+    margin-bottom: 10px;
+}
+
+.skeleton-edad {
+    width: 35%;
+    height: 12px;
+}
+
+/* BOTONES */
+.skeleton-boton {
+    height: 50px;
+    width: 90%;
+    margin: auto auto 0;
+    border-radius: 15px;
+}
+
+.skeleton-boton-secundario {
+    width: 85%;
+    height: 42px;
+    border-radius: 20px;
+}
+
+/* DESAPARICIÓN DEL SKELETON */
+.skeleton-page {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+
+    .skeleton-header {
+        min-height: 75px;
+        padding: 0 18px;
+    }
+
+    .skeleton-logo {
+        width: 90px;
+        height: 35px;
+    }
+
+    .skeleton-menu {
+        display: none;
+    }
+
+    .skeleton-perfil {
+        gap: 8px;
+    }
+
+    .skeleton-nombre {
+        width: 75px;
+    }
+
+    .skeleton-banner {
+        margin: 15px;
+        min-height: 180px;
+        height: auto;
+        padding: 1.5rem;
+    }
+
+    .skeleton-titulo-largo {
+        width: 90%;
+        height: 25px;
+    }
+
+    .skeleton-parrafo {
+        width: 95%;
+    }
+
+    .skeleton-diente {
+        width: 90px;
+        height: 100px;
+        flex-shrink: 0;
+        margin-right: 0;
+    }
+
+    .skeleton-informacion {
+        flex-direction: column;
+    }
+
+    .skeleton-seccion {
+        width: auto;
+        margin: 10px 15px;
+    }
+
+    .skeleton-tarjeta-cita {
+        height: 85px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .skeleton-banner {
+        padding: 1.2rem;
+    }
+
+    .skeleton-diente {
+        width: 55px;
+        height: 75px;
+    }
+
+    .skeleton-titulo-corto {
+        width: 120px;
+    }
+
+    .skeleton-titulo-largo {
+        width: 100%;
+    }
+
+    .skeleton-subtitulo {
+        width: 140px;
+    }
+}
+
+/* Respetar usuarios que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+    .skeleton {
+        animation: none;
+    }
+}
+
+/* ==========================================
+   CONTROL DEFINITIVO DE CARGA
+========================================== */
+
+/* Skeleton visible desde el primer renderizado */
+body.dashboard-cargando .skeleton-page {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100vh;
+    min-height: 100vh;
+    z-index: 99999 !important;
+    background: #fff;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto;
+    overflow-y: auto;
+}
+
+/* Ocultar completamente el dashboard real */
+body.dashboard-cargando .contenedor-principal {
+    visibility: hidden !important;
+}
+
+/* Al terminar, ocultar skeleton */
+body:not(.dashboard-cargando) .skeleton-page {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Mostrar dashboard real */
+body:not(.dashboard-cargando) .contenedor-principal {
+    visibility: visible;
+}
+
+/* Evitar scroll mientras carga */
+body.dashboard-cargando {
+    overflow: hidden;
+}
+
+/* =====================================================
+   RESPONSIVE DASHBOARD CLIENTE
+   iPhone 12 + demás dispositivos móviles
+   No modifica header ni escritorio.
+===================================================== */
+
+@media (max-width: 760px) {
+
+    /* BIENVENIDA */
+    .contenedor-principal > #contenedor {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+
+        width: auto;
+        height: auto;
+        min-height: 155px;
+
+        margin: 16px 14px 10px;
+        padding: 18px 14px;
+
+        border-radius: 16px;
+        box-sizing: border-box;
+    }
+
+    .contenedor-principal > #contenedor .texto-bienvenida {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .contenedor-principal > #contenedor h1 {
+        font-size: clamp(19px, 5vw, 25px);
+        line-height: 1.25;
+    }
+
+    .contenedor-principal > #contenedor h2 {
+        font-size: clamp(14px, 3.8vw, 17px);
+        line-height: 1.3;
+    }
+
+    .contenedor-principal > #contenedor p {
+        font-size: 13px;
+        line-height: 1.45;
+        margin-top: 9px;
+    }
+
+    .contenedor-principal > #contenedor img {
+        width: clamp(85px, 25vw, 125px);
+        max-width: 34%;
+        height: auto;
+        object-fit: contain;
+        margin-top: 0;
+        flex-shrink: 0;
+    }
+
+    /* DISTRIBUCIÓN DE CITAS Y PACIENTES */
+
+    .informacion {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+
+        width: 100%;
+        height: auto;
+        padding: 10px 14px 25px;
+        gap: 18px;
+
+        box-sizing: border-box;
+    }
+
+    .informacion > .citas,
+    .informacion > .pacientes {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        min-height: 0;
+
+        margin: 0;
+        padding: 15px;
+
+        box-sizing: border-box;
+        border-radius: 16px;
+        gap: 12px;
+    }
+
+    /* ENCABEZADOS */
+
+    .encabezado {
+        width: 100%;
+        padding: 0;
+        gap: 10px;
+    }
+
+    .titulos {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .titulo {
+        font-size: 17px;
+        line-height: 1.35;
+    }
+
+    .ver {
+        flex: 0 0 28px;
+    }
+
+    /* LISTAS */
+
+    .tarjetas {
+        display: flex;
+        flex-direction: column;
+
+        width: 100%;
+        height: auto;
+        max-height: 330px;
+        min-height: 0;
+
+        padding: 5px 2px;
+        gap: 10px;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        box-sizing: border-box;
+    }
+
+    .tarjetas.ocultar {
+        display: none;
+    }
+
+    /* TARJETAS DE CITAS */
+
+    .tarjeta {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 9px;
+
+        width: 100%;
+        padding: 11px;
+
+        box-sizing: border-box;
+    }
+
+    .tarjeta > * {
+        min-width: 0;
+    }
+
+    .nombre-paciente {
+        min-width: 0;
+        line-height: 1.5;
+    }
+
+    .nombre-paciente .nombre,
+    .info-cita .nombre {
+        font-size: 13px;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+    }
+
+    .fecha,
+    .hora {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+    .estado {
+        padding: 6px 9px;
+        font-size: 11px;
+        white-space: normal;
+        text-align: center;
+    }
+
+    /* TARJETAS DE PACIENTES */
+
+    .tarjeta-paciente {
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+
+        width: 100%;
+        padding: 11px 5px;
+
+        box-sizing: border-box;
+    }
+
+    .tarjeta-paciente img {
+        width: 42px;
+        height: 42px;
+        object-fit: cover;
+    }
+
+    .tarjeta-paciente .nombre-paciente {
+        min-width: 0;
+    }
+
+    .tarjeta-paciente .nombre {
+        font-size: 13px;
+        overflow-wrap: anywhere;
+    }
+
+    /* BOTONES */
+
+    .btn.agregar-cita,
+    .btn.agregar-paciente {
+        width: 100%;
+        min-height: 46px;
+        padding: 11px 12px;
+        margin: 5px 0 0;
+
+        justify-content: center;
+        font-size: 13px;
+        box-sizing: border-box;
+    }
+
+    .btn.agregar-paciente i {
+        font-size: 22px;
+    }
+
+    /* MODALES */
+
+    .modal-overlay {
+        padding: 12px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .modal-contenido {
+        width: 100%;
+        max-width: 520px;
+        max-height: calc(100dvh - 24px);
+        min-width: 0;
+
+        padding: 19px 16px;
+        margin: auto;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        box-sizing: border-box;
+        border-radius: 17px;
+    }
+
+    .modal-header {
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .modal-header h3 {
+        font-size: 18px;
+        line-height: 1.3;
+    }
+
+    .formulario-cita {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .formulario-cita .campo {
+        width: 100%;
+        min-width: 0;
+        margin-bottom: 13px;
+    }
+
+    .formulario-cita .campo-doble {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        gap: 0;
+    }
+
+    .formulario-cita .campo-doble .campo {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .formulario-cita input,
+    .formulario-cita select,
+    .formulario-cita textarea {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 44px;
+
+        padding: 10px 12px;
+        font-size: 14px;
+
+        box-sizing: border-box;
+    }
+
+    .formulario-cita label {
+        font-size: 13px;
+    }
+
+    .ancho-total {
+        width: 100%;
+    }
+
+    /* CALENDARIO DE CITAS */
+
+    .cal-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 12px;
+        box-sizing: border-box;
+    }
+
+    .cal-grid,
+    .dias-grid {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 3px;
+        width: 100%;
+    }
+
+    .cal-dow {
+        font-size: 11px;
+    }
+
+    .cal-day {
+        min-width: 0;
+        padding: 7px 0;
+        font-size: 12px;
+    }
+
+    /* HORARIOS */
+
+    .horarios-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .btn-hora {
+        min-width: 0;
+        padding: 10px 3px;
+        font-size: 12px;
+    }
+
+}
+
+
+/* CELULARES PEQUEÑOS */
+
+@media (max-width: 390px) {
+
+    .contenedor-principal > #contenedor {
+        margin: 13px 11px 8px;
+        padding: 15px 11px;
+        min-height: 140px;
+    }
+
+    .contenedor-principal > #contenedor h1 {
+        font-size: 19px;
+    }
+
+    .contenedor-principal > #contenedor h2 {
+        font-size: 14px;
+    }
+
+    .contenedor-principal > #contenedor p {
+        font-size: 12px;
+    }
+
+    .contenedor-principal > #contenedor img {
+        width: 85px;
+    }
+
+    .informacion {
+        padding-left: 11px;
+        padding-right: 11px;
+        gap: 14px;
+    }
+
+    .informacion > .citas,
+    .informacion > .pacientes {
+        padding: 12px;
+    }
+
+    .tarjetas {
+        max-height: 290px;
+    }
+
+    .modal-contenido {
+        padding: 16px 13px;
+    }
+
+}
+
+
+/* CELULARES MUY ESTRECHOS */
+
+@media (max-width: 350px) {
+
+    .contenedor-principal > #contenedor img {
+        width: 70px;
+    }
+
+    .contenedor-principal > #contenedor h1 {
+        font-size: 17px;
+    }
+
+    .titulo {
+        font-size: 15px;
+    }
+
+    .tarjeta {
+        padding: 8px;
+        gap: 6px;
+    }
+
+}
