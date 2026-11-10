@@ -6,7 +6,7 @@ html, body {
     scroll-behavior: smooth;
 }
 .contenedor-principal{
-    overflow: hidden;
+    overflow-y: auto;
 }
 body{
     font-family: Arial, sans-serif;   

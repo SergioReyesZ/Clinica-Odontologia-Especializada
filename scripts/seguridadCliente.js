@@ -32,8 +32,7 @@ window.clienteAccessReady = (async function () {
             return false;
         }
 
-        // El rol 2 está reservado para administradores
-        if (Number(usuario.rol) === 2) {
+        if (Number(usuario.rol) !== 1) {
             irAlInicioCliente();
             return false;
         }
