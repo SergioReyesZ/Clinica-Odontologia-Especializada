@@ -131,10 +131,14 @@
         const costo = Number($("servicioCosto").value);
         const descripcion = $("servicioDescripcion").value.trim();
 
-        if (!nombre) {
-            $("feedbackServicio").textContent = "Escribe el nombre del servicio.";
+
+        if (!nombre || /\d/.test(nombre)) {
+            $("feedbackServicio").textContent =
+                "Escribe un nombre de servicio válido, sin números.";
+            $("feedbackServicio").style.color = "#b91c1c";
             return;
         }
+
         if (!Number.isFinite(costo) || costo <= 0) {
             $("feedbackServicio").textContent = "El costo debe ser mayor que cero.";
             return;
@@ -142,7 +146,6 @@
 
         const payload = { nombre, costo, descripcion: descripcion || null };
         const button = $("btnGuardarServicio");
-        button.disabled = true;
         button.innerHTML = '<i class="bi bi-arrow-repeat"></i> Guardando...';
         $("feedbackServicio").textContent = "";
 
@@ -158,11 +161,11 @@
             cerrarModalServicio();
             await cargarServicios();
             mostrarAviso(id ? "Servicio actualizado correctamente." : "Servicio creado correctamente.");
+            return false;
         } catch (error) {
             console.error("Error al guardar servicio:", error);
             $("feedbackServicio").textContent = error.message || "No se pudo guardar el servicio.";
         } finally {
-            button.disabled = false;
             button.innerHTML = id
                 ? '<i class="bi bi-save"></i> Guardar cambios'
                 : '<i class="bi bi-check-lg"></i> Guardar servicio';
@@ -187,7 +190,6 @@
 
         const id = servicioAEliminar;
         const button = $("btnConfirmarEliminar");
-        button.disabled = true;
         button.innerHTML = '<i class="bi bi-arrow-repeat"></i> Eliminando...';
 
         try {
@@ -203,12 +205,12 @@
             cerrarConfirmacionEliminar();
             await cargarServicios();
             mostrarAviso("Servicio eliminado correctamente.");
+            return false;
         } catch (error) {
             console.error("Error al eliminar servicio:", error);
             mostrarAviso(error.message || "No se pudo eliminar el servicio.", true);
             cerrarConfirmacionEliminar();
         } finally {
-            button.disabled = false;
             button.innerHTML = '<i class="bi bi-trash3"></i> Eliminar';
         }
     }
@@ -217,13 +219,18 @@
         $("btnNuevoServicio").addEventListener("click", abrirModalNuevo);
         $("btnCerrarModal").addEventListener("click", cerrarModalServicio);
         $("btnCancelarModal").addEventListener("click", cerrarModalServicio);
-        $("formServicio").addEventListener("submit", guardarServicio);
         $("buscarServicio").addEventListener("input", renderServicios);
         $("btnLimpiarBusqueda").addEventListener("click", () => {
             $("buscarServicio").value = "";
             renderServicios();
             $("buscarServicio").focus();
         });
+
+        $("formServicio").addEventListener(
+            "submit",
+            evitarDobleEnvio(guardarServicio, "#btnGuardarServicio")
+        );
+
 
         $("serviciosBody").addEventListener("click", (event) => {
             const button = event.target.closest("button[data-action]");
@@ -234,7 +241,10 @@
         });
 
         $("btnCancelarEliminar").addEventListener("click", cerrarConfirmacionEliminar);
-        $("btnConfirmarEliminar").addEventListener("click", eliminarServicio);
+        $("btnConfirmarEliminar").addEventListener(
+            "click",
+            evitarDobleEnvio(eliminarServicio, "#btnConfirmarEliminar")
+        );
 
         ["modalServicio", "modalEliminarServicio"].forEach((id) => {
             $(id).addEventListener("click", (event) => {

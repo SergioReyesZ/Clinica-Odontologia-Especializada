@@ -182,10 +182,11 @@
         </div>
         <h3 class="titulo-form-usuario">Información personal</h3>
         <div class="campos-usuario-dobles">
-          <label class="campo-usuario">Nombre(s)<input type="text" name="nombre" value="${esc(usuario.nombre)}" maxlength="29" required></label>
-          <label class="campo-usuario">Apellidos<input type="text" name="apellido" value="${esc(usuario.apellido)}" maxlength="29" required></label>
+          <label class="campo-usuario">Nombre(s)<input type="text" name="nombre" value="${esc(usuario.nombre)}" maxlength="30" minlength="2" required oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '');"></label>
+          <label class="campo-usuario">Apellidos<input type="text" name="apellido" value="${esc(usuario.apellido)}" maxlength="30" minlength="2" required oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '');"></label>
         </div>
-        <label class="campo-usuario">Teléfono celular<input type="tel" name="telefono" value="${esc(usuario.telefono || '')}" maxlength="30" placeholder="Teléfono (opcional)"></label>
+        <label class="campo-usuario">Teléfono celular<input type="tel" name="telefono" value="${esc(usuario.telefono || '')}" pattern="[0-9]*" inputmode="numeric"
+                    maxlength="10" minlength="10" onkeydown="return event.key === 'Backspace' || event.key === 'Delete' || event.key === 'ArrowLeft' || event.key === 'ArrowRight' || !isNaN(event.key)" oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Teléfono (opcional)"></label>
         <hr class="linea-usuario">
         <h3 class="titulo-form-usuario">Credenciales y permisos</h3>
         <label class="campo-usuario">Correo electrónico
@@ -215,13 +216,14 @@
         </div>
         <h3 class="titulo-form-usuario">Información personal</h3>
         <div class="campos-usuario-dobles">
-          <label class="campo-usuario">Nombre(s)<input name="nombre" maxlength="29" required autocomplete="given-name"></label>
-          <label class="campo-usuario">Apellidos<input name="apellido" maxlength="29" required autocomplete="family-name"></label>
+          <label class="campo-usuario">Nombre(s)<input name="nombre" maxlength="30" minlength="2" required type="text" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '');" required autocomplete="given-name"></label>
+          <label class="campo-usuario">Apellidos<input name="apellido" maxlength="30" minlength="2" required type="text" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '');" required autocomplete="family-name"></label>
         </div>
         <label class="campo-usuario">Correo electrónico<input type="email" name="email" required autocomplete="email" placeholder="correo@ejemplo.com"></label>
         <div class="campos-usuario-dobles">
           <label class="campo-usuario">Contraseña<input type="password" name="password" minlength="6" required autocomplete="new-password" placeholder="Mínimo 6 caracteres"></label>
-          <label class="campo-usuario">Teléfono celular<input type="tel" name="telefono" maxlength="30" placeholder="Opcional"></label>
+          <label class="campo-usuario">Teléfono celular<input type="tel" name="telefono" pattern="[0-9]*" inputmode="numeric"
+                    maxlength="10" minlength="10" onkeydown="return event.key === 'Backspace' || event.key === 'Delete' || event.key === 'ArrowLeft' || event.key === 'ArrowRight' || !isNaN(event.key)" oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Opcional"></label>
         </div>
         <label class="campo-usuario">Rol del usuario
           <select name="rol" required>${roles.map(r => `<option value="${r.id}">${esc(r.nombre)}</option>`).join('')}</select>
@@ -279,9 +281,35 @@
       const apellido = String(datos.get('apellido') || '').trim();
       const telefono = String(datos.get('telefono') || '').trim();
       const rol = Number(datos.get('rol'));
-      if (!nombre || !apellido || nombre.length >= 30 || apellido.length >= 30 ||
+      if (!nombre || !apellido || nombre.length > 30 || apellido.length > 30 ||
         !roles.some(r => Number(r.id) === rol)) {
         throw new Error('Revisa nombre, apellidos y rol. Nombre y apellidos deben tener menos de 30 caracteres.');
+      }
+
+      // Validar teléfono tanto al registrar como al editar
+      function esTelefonoValido(tel) {
+        const regexBase = /^[2-9]\d{9}$/;
+
+        if (!regexBase.test(tel)) return false;
+        if (/^(\d)\1{9}$/.test(tel)) return false;
+
+        const falsosComunes = [
+          "1234567890",
+          "0123456789",
+          "9876543210",
+          "1231231234",
+          "1234567891",
+          "0000000000"
+        ];
+
+        return !falsosComunes.includes(tel);
+      }
+
+      if (telefono !== "" && !esTelefonoValido(telefono)) {
+        feedback.textContent = "Ingresa un número de teléfono válido de 10 dígitos.";
+        feedback.classList.add('error');
+        form.querySelector('[name="telefono"]')?.focus();
+        return;
       }
 
       if (!esNuevo) {
@@ -298,6 +326,45 @@
       const email = String(datos.get('email') || '').trim().toLowerCase();
       const password = String(datos.get('password') || '');
       if (!email || password.length < 6) throw new Error('Escribe un correo válido y una contraseña de al menos 6 caracteres.');
+
+      // Validar correo mediante Disify
+      feedback.textContent = 'Verificando disponibilidad del correo...';
+      feedback.classList.remove('error');
+
+      const resultadoCorreo = await esCorreoEntregable(email);
+
+      if (!resultadoCorreo.valido) {
+        switch (resultadoCorreo.motivo) {
+
+          case "formato":
+            feedback.textContent =
+              "El formato del correo electrónico no es válido.";
+            break;
+
+          case "dns":
+            feedback.textContent =
+              "El dominio del correo no cuenta con registros válidos.";
+            break;
+
+          case "temporal":
+            feedback.textContent =
+              "No se permiten correos electrónicos temporales o desechables.";
+            break;
+
+          case "whitelist":
+            feedback.textContent =
+              "No se permite este dominio. Utiliza un proveedor de correo reconocido.";
+            break;
+
+          default:
+            feedback.textContent =
+              "No fue posible verificar el correo. Inténtalo nuevamente.";
+            break;
+        }
+
+        feedback.classList.add('error');
+        return;
+      }
 
       // Cliente Auth aislado: evita reemplazar la sesión del administrador al registrar otra cuenta.
       if (!window.supabase?.createClient || !client.supabaseUrl || !client.supabaseKey) {

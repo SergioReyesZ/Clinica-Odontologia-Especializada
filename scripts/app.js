@@ -4,19 +4,3 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 // Inicializamos usando el objeto global que trae el script de arriba
 const client = supabase.createClient(supabaseUrl, supabaseKey);
-
-async function probarConexion() {
-    try {
-        const { data, error } = await client
-            .from('Usuarios')
-            .select('*');
-
-        if (error) throw error;
-
-        console.log('¡Conexión exitosa! Datos recibidos:', data);
-    } catch (error) {
-        console.error('Error al conectar con Supabase:', error.message);
-    }
-}
-
-probarConexion();

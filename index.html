@@ -307,21 +307,21 @@
                 </div>
                 <button class="header-btn-cerrar-alerta" id="header-btn-cerrar-registrarse">&times;</button>
             </div>
-            <div class="alerta-body">
+            <!-- El form ahora envuelve a todo el contenido y al botón -->
+            <form class="alerta-body" id="form-registro">
                 <p>Nombre</p>
-                <input type="text" id="reg-nombre" placeholder="Tu nombre" maxlength="30" minlength="2" required>
+                <input type="text" id="reg-nombre" placeholder="Tu nombre" maxlength="30" minlength="2" required type="text" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '');" placeholder="Nombre completo">
                 <p>Apellido</p>
-                <input type="text" id="reg-apellido" placeholder="Tu apellido" maxlength="30" minlength="2" required>
+                <input type="text" id="reg-apellido" placeholder="Tu apellido" maxlength="30" minlength="2" required type="text" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '');" placeholder="Apellidos">
                 <p>Teléfono</p>
                 <input type="tel" id="reg-telefono" placeholder="Tu teléfono" pattern="[0-9]*" inputmode="numeric"
-                    maxlength="10" minlength="10">
+                    maxlength="10" minlength="10" onkeydown="return event.key === 'Backspace' || event.key === 'Delete' || event.key === 'ArrowLeft' || event.key === 'ArrowRight' || !isNaN(event.key)" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                 <p>Correo electrónico</p>
-                <input type="email" id="reg-correo" placeholder="ejemplo@gmail.com" minlength="5" maxlength="50"
+                <input type="email" id="reg-correo" placeholder="ejemplo@gmail.com" minlength="5" inputmode="email" maxlength="50"
                     required>
                 <p>Contraseña</p>
                 <div class="campo-contrasena">
                     <input type="password" id="reg-password" placeholder="********" required>
-
                     <button type="button" class="ojo">
                         <i class="bi bi-eye"></i>
                         <i class="bi bi-eye-slash" style="display:none;"></i>
@@ -330,7 +330,6 @@
                 <p>Confirmar contraseña</p>
                 <div class="campo-contrasena">
                     <input type="password" id="reg-confirm-password" placeholder="********" required>
-
                     <button type="button" class="ojo">
                         <i class="bi bi-eye"></i>
                         <i class="bi bi-eye-slash" style="display:none;"></i>
@@ -345,10 +344,11 @@
                         </a>.
                     </label>
                 </div>
-                <button id="btn-registrarse">Registrarse</button>
+                <!-- El botón pasa a ser type="submit" dentro del formulario -->
+                <button type="submit" id="btn-registrarse">Registrarse</button>
                 <p class="texto-registro">¿Ya tienes una cuenta? <a href="">Inicia sesión</a></p>
                 <p class="texto-registro" id="feedback-registro"></p>
-            </div>
+            </form>
         </div>
     </div>
 </body>

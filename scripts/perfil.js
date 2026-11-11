@@ -13,6 +13,50 @@ document.addEventListener('DOMContentLoaded', async () => {
             boton.querySelector('.bi-eye-slash').style.display = mostrar ? 'inline' : 'none';
         });
     });
+
+
+    // ==========================================
+    // VALIDACIONES DE NOMBRE, APELLIDO Y TELÉFONO
+    // ==========================================
+
+    const camposTexto = [
+        $('perfil-nombre'),
+        $('perfil-apellido')
+    ];
+
+    camposTexto.forEach(input => {
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(
+                /[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]/g,
+                ''
+            );
+        });
+    });
+
+    const inputTelefono = $('perfil-telefono');
+
+    inputTelefono.addEventListener('input', () => {
+        inputTelefono.value = inputTelefono.value.replace(/[^0-9]/g, '');
+    });
+
+    function esTelefonoValido(tel) {
+        const regexBase = /^[2-9]\d{9}$/;
+
+        if (!regexBase.test(tel)) return false;
+        if (/^(\d)\1{9}$/.test(tel)) return false;
+
+        const falsosComunes = [
+            "1234567890",
+            "0123456789",
+            "9876543210",
+            "1231231234",
+            "1234567891",
+            "0000000000"
+        ];
+
+        return !falsosComunes.includes(tel);
+    }
+
     const avatarPreview = $('avatarPreview');
     const inputAvatar = $('inputAvatar');
     const modalFoto = $('modalFoto');
@@ -363,9 +407,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================
 
 
-    $('formPerfil').addEventListener('submit', async (e) => {
+
+    $('formPerfil').addEventListener('submit', evitarDobleEnvio(async (e) => {
         e.preventDefault();
 
+        const passActual = $('perfil-password-actual').value;
         const pass1 = $('perfil-password').value;
         const pass2 = $('perfil-password-confirm').value;
 
@@ -373,29 +419,71 @@ document.addEventListener('DOMContentLoaded', async () => {
         const apellido = $('perfil-apellido').value.trim();
         const telefono = $('perfil-telefono').value.trim();
 
-        if (pass1 && pass1 !== pass2) {
-            mostrarError('Las contraseñas no coinciden.');
+        // Validar nombre y apellidos
+        const regexNombre = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]{2,30}$/;
+
+        if (!regexNombre.test(nombre) || !regexNombre.test(apellido)) {
+            mostrarError('El nombre y los apellidos deben contener únicamente letras.');
             return;
         }
 
-        if (pass1 && pass1.length < 6) {
-            mostrarError('La contraseña debe tener al menos 6 caracteres.');
+        // Validar teléfono si fue proporcionado
+        if (telefono && !esTelefonoValido(telefono)) {
+            mostrarError('Ingresa un número de teléfono válido de 10 dígitos.');
+            $('perfil-telefono').focus();
             return;
         }
 
-        const btn = $('btnGuardarPerfil');
-        btn.disabled = true;
+        // Si se intenta cambiar la contraseña, deben llenarse los tres campos
+        if (passActual || pass1 || pass2) {
+
+            if (!passActual || !pass1 || !pass2) {
+                mostrarError('Para cambiar tu contraseña, completa los tres campos.');
+                return;
+            }
+
+            if (pass1.length < 6) {
+                mostrarError('La nueva contraseña debe tener al menos 6 caracteres.');
+                return;
+            }
+
+            if (pass1 !== pass2) {
+                mostrarError('La nueva contraseña y su confirmación no coinciden.');
+                return;
+            }
+
+            if (passActual === pass1) {
+                mostrarError('La nueva contraseña debe ser diferente a la actual.');
+                return;
+            }
+        }
 
         try {
 
-            // 1. Comprobar si el teléfono ya pertenece a otro usuario
+            // 1. Verificar contraseña actual antes de cambiarla
+            if (pass1) {
+
+                const { error: verificacionError } =
+                    await client.auth.signInWithPassword({
+                        email: usuarioActual.email,
+                        password: passActual
+                    });
+
+                if (verificacionError) {
+                    throw new Error('La contraseña actual es incorrecta.');
+                }
+            }
+
+            // 2. Comprobar si el teléfono pertenece a otro usuario
             if (telefono) {
-                const { data: telefonoExistente, error: consultaError } = await client
-                    .from('Usuarios')
-                    .select('id')
-                    .eq('telefono', telefono)
-                    .neq('id', usuarioActual.id)
-                    .maybeSingle();
+
+                const { data: telefonoExistente, error: consultaError } =
+                    await client
+                        .from('Usuarios')
+                        .select('id')
+                        .eq('telefono', telefono)
+                        .neq('id', usuarioActual.id)
+                        .maybeSingle();
 
                 if (consultaError) throw consultaError;
 
@@ -406,7 +494,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
-            // 2. Actualizar datos personales
+            // 3. Actualizar información personal
             const { error: updateError } = await client
                 .from('Usuarios')
                 .update({
@@ -418,8 +506,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (updateError) throw updateError;
 
-            // 3. Actualizar contraseña si escribió una nueva
+            // 4. Actualizar contraseña si se solicitó
             if (pass1) {
+
                 const { error: passwordError } =
                     await client.auth.updateUser({
                         password: pass1
@@ -428,10 +517,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (passwordError) throw passwordError;
             }
 
-            // 4. Actualizar información visual
+            // 5. Actualizar información visual
             $('perfil-nombre-display').textContent =
                 `${nombre} ${apellido}`.trim();
 
+            $('perfil-password-actual').value = '';
             $('perfil-password').value = '';
             $('perfil-password-confirm').value = '';
 
@@ -441,6 +531,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 $('modalExito').classList.remove('activo');
             }, 2000);
 
+            return false;
+
         } catch (error) {
 
             console.error('Error al guardar perfil:', error);
@@ -449,10 +541,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `No se pudieron guardar los cambios: ${error.message || 'Error desconocido'}`
             );
 
-        } finally {
-            btn.disabled = false;
+            return false;
         }
-    });
+
+        }, '#btnGuardarPerfil')
+    );
 
 });
 

@@ -304,16 +304,20 @@
                 <button class="btn-cerrar" onclick="cerrarModalPaciente()"><i class="bi bi-x"></i></button>
             </div>
             <form class="formulario-cita" id="formNuevoPaciente">
+
                 <div class="campo-doble">
                     <div class="campo">
                         <label>Nombre(s)</label>
-                        <input type="text" id="pac-nombre" placeholder="Ej. Mateo" required>
+                        <input type="text" id="pac-nombre" placeholder="Ej. Mateo" minlength="2" maxlength="30" required
+                            oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]/g, '');">
                     </div>
                     <div class="campo">
                         <label>Apellidos</label>
-                        <input type="text" id="pac-apellido" placeholder="Ej. Ramírez" required>
+                        <input type="text" id="pac-apellido" placeholder="Ej. Ramírez" minlength="2" maxlength="30"
+                            required oninput="this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]/g, '');">
                     </div>
                 </div>
+
 
                 <div class="campo-doble">
                     <div class="campo" style="flex: 1.5;">
@@ -334,9 +338,39 @@
                                 <option value="11">Noviembre</option>
                                 <option value="12">Diciembre</option>
                             </select>
-                            <select id="pac-fecha-dia" required style="flex: 1; padding: 0.8rem 0.5rem;">
-                                <option value="" disabled selected>Día</option>
-                                <!-- Generado por JS -->
+                            <select id="pac-fecha-dia" required class="select-dia">
+                                <option value="" disabled selected>Día</option>
+                                <option value="01">1</option>
+                                <option value="02">2</option>
+                                <option value="03">3</option>
+                                <option value="04">4</option>
+                                <option value="05">5</option>
+                                <option value="06">6</option>
+                                <option value="07">7</option>
+                                <option value="08">8</option>
+                                <option value="09">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                                <option value="26">26</option>
+                                <option value="27">27</option>
+                                <option value="28">28</option>
+                                <option value="29">29</option>
+                                <option value="30">30</option>
+                                <option value="31">31</option>
                             </select>
                             <select id="pac-fecha-anio" required style="flex: 1; padding: 0.8rem 0.5rem;">
                                 <option value="" disabled selected>Año</option>

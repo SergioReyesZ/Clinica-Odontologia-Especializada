@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,11 +12,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../estilos/responsive-mobile.css">
 </head>
+
 <body>
     <div class="contenedor-principal">
         <div class="header" id="header">
             <img src="../iconos/logo.png" alt="logo">
-            <button class="hamburger-btn" id="hamburger-btn" type="button" aria-label="Abrir menú" aria-expanded="false">
+            <button class="hamburger-btn" id="hamburger-btn" type="button" aria-label="Abrir menú"
+                aria-expanded="false">
                 <i class="bi bi-list" aria-hidden="true"></i>
             </button>
 
@@ -95,7 +98,9 @@
                         </tr>
                     </thead>
                     <tbody id="serviciosBody">
-                        <tr><td colspan="4" class="estado-tabla">Cargando servicios...</td></tr>
+                        <tr>
+                            <td colspan="4" class="estado-tabla">Cargando servicios...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -116,7 +121,10 @@
             <form id="formServicio">
                 <input type="hidden" id="servicioId">
                 <label for="servicioNombre">Nombre del servicio</label>
-                <input type="text" id="servicioNombre" maxlength="100" placeholder="Ej. Limpieza dental" required>
+
+                <input type="text" id="servicioNombre" maxlength="100" pattern="[^0-9]+"
+                    oninput="this.value = this.value.replace(/[0-9]/g, '')" placeholder="Ej. Limpieza dental" required>
+
 
                 <label for="servicioCosto">Costo (MXN)</label>
                 <div class="campo-costo">
@@ -125,7 +133,8 @@
                 </div>
 
                 <label for="servicioDescripcion">Descripción</label>
-                <textarea id="servicioDescripcion" rows="4" placeholder="Describe brevemente en qué consiste el servicio..."></textarea>
+                <textarea id="servicioDescripcion" rows="4"
+                    placeholder="Describe brevemente en qué consiste el servicio..."></textarea>
 
                 <p id="feedbackServicio" class="feedback" aria-live="polite"></p>
                 <div class="modal-acciones">
@@ -139,7 +148,8 @@
     </div>
 
     <div class="modal-overlay" id="modalEliminarServicio" style="display:none;">
-        <div class="modal-contenido modal-confirmacion" role="dialog" aria-modal="true" aria-labelledby="tituloEliminar">
+        <div class="modal-contenido modal-confirmacion" role="dialog" aria-modal="true"
+            aria-labelledby="tituloEliminar">
             <div class="icono-eliminar"><i class="bi bi-trash3"></i></div>
             <h3 id="tituloEliminar">¿Eliminar este servicio?</h3>
             <p id="textoEliminar">Esta acción no se puede deshacer.</p>
@@ -156,6 +166,10 @@
     <script src="../scripts/app.js"></script>
     <script src="../scripts/seguridadAdmin.js"></script>
     <script src="../scripts/adminHeader.js"></script>
+
+    <script src="../scripts/bloqueoEnvios.js"></script>
     <script src="../scripts/admServicios.js"></script>
+
 </body>
+
 </html>

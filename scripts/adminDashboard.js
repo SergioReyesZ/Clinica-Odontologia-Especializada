@@ -83,25 +83,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Guardar Paciente
-    const formNuevoPaciente = document.getElementById('formNuevoPaciente');
-    if (formNuevoPaciente) {
-        formNuevoPaciente.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btnGuardarPaciente = document.getElementById('btnGuardarPaciente');
-            const feedbackPaciente = document.getElementById('feedback-paciente');
+    
+// 2. Guardar Paciente
+const formNuevoPaciente = document.getElementById('formNuevoPaciente');
 
-            const nombre = document.getElementById('pac-nombre').value.trim();
-            const apellido = document.getElementById('pac-apellido').value.trim();
-            const fechaNac = document.getElementById('pac-fecha').value;
-            const sexo = document.getElementById('pac-sexo').value;
+if (formNuevoPaciente) {
+    formNuevoPaciente.addEventListener(
+        'submit',
+        evitarDobleEnvio(async (e) => {
+            e.preventDefault();
+
+            const feedbackPaciente =
+                document.getElementById('feedback-paciente');
+
+            const nombre =
+                document.getElementById('pac-nombre').value.trim();
+
+            const apellido =
+                document.getElementById('pac-apellido').value.trim();
+
+            const fechaNac =
+                document.getElementById('pac-fecha').value;
+
+            const sexo =
+                document.getElementById('pac-sexo').value;
+
+            // Validar nombre y apellidos
+            const regexNombre =
+                /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]{2,30}$/;
+
+            if (!regexNombre.test(nombre) || !regexNombre.test(apellido)) {
+                feedbackPaciente.style.color = "#e74c3c";
+                feedbackPaciente.textContent =
+                    "El nombre y los apellidos deben contener únicamente letras.";
+                return false;
+            }
+
+            if (!fechaNac || !sexo) {
+                feedbackPaciente.style.color = "#e74c3c";
+                feedbackPaciente.textContent =
+                    "Completa todos los campos.";
+                return false;
+            }
 
             try {
-                const { data: { user } } = await client.auth.getUser();
-                if (!user) throw new Error("Sesión no encontrada.");
-
-                btnGuardarPaciente.disabled = true;
                 feedbackPaciente.style.color = "#3498db";
                 feedbackPaciente.textContent = "Guardando paciente...";
+
+                const {
+                    data: { user },
+                    error: authError
+                } = await client.auth.getUser();
+
+                if (authError) throw authError;
+                if (!user) throw new Error("Sesión no encontrada.");
 
                 const { error } = await client.from('Pacientes').insert([
                     {
@@ -116,18 +151,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (error) throw error;
 
                 feedbackPaciente.style.color = "#2ecc71";
-                feedbackPaciente.textContent = "¡Paciente registrado con éxito!";
+                feedbackPaciente.textContent =
+                    "¡Paciente registrado con éxito!";
+
                 setTimeout(() => window.location.reload(), 1000);
 
+                // Indica al protector que el registro fue exitoso.
+                // El botón permanecerá bloqueado hasta la recarga.
+                return true;
+
             } catch (error) {
-                console.error("Error:", error);
+                console.error("Error al guardar paciente:", error);
+
                 feedbackPaciente.style.color = "#e74c3c";
-                feedbackPaciente.textContent = "Error al guardar: " + error.message;
-            } finally {
-                btnGuardarPaciente.disabled = false;
+                feedbackPaciente.textContent =
+                    "Error al guardar: " + error.message;
+
+                return false;
             }
-        });
-    }
+        }, '#btnGuardarPaciente')
+    );
+}
+
 
     // 3. Mostrar Calendario Oculto
     const btnMostrarCalendario = document.getElementById('btn-mostrar-calendario');
@@ -355,24 +400,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function actualizarDias() {
-        const anio = parseInt(selectAnio.value);
-        const mes = parseInt(selectMes.value);
-        const diaSeleccionado = selectDia.value;
-        selectDia.innerHTML = '<option value="" disabled selected>Día</option>';
-        if (!anio || !mes) return;
+    const anio = parseInt(selectAnio.value);
+    const mes = parseInt(selectMes.value);
 
-        const diasEnElMes = new Date(anio, mes, 0).getDate();
-        for (let i = 1; i <= diasEnElMes; i++) {
-            const option = document.createElement('option');
-            const valorDia = i.toString().padStart(2, '0');
-            option.value = valorDia;
-            option.textContent = i;
-            selectDia.appendChild(option);
-        }
-        if (diaSeleccionado && parseInt(diaSeleccionado) <= diasEnElMes) {
-            selectDia.value = diaSeleccionado;
-        }
+    // Si falta año o mes, conserva los días del 1 al 31.
+    if (!anio || !mes) return;
+
+    const diaSeleccionado = selectDia.value;
+
+    selectDia.innerHTML = '<option value="" disabled selected>Día</option>';
+
+    const diasEnElMes = new Date(anio, mes, 0).getDate();
+
+    for (let i = 1; i <= diasEnElMes; i++) {
+        const option = document.createElement('option');
+        const valorDia = i.toString().padStart(2, '0');
+
+        option.value = valorDia;
+        option.textContent = i;
+        selectDia.appendChild(option);
     }
+
+    if (diaSeleccionado && parseInt(diaSeleccionado) <= diasEnElMes) {
+        selectDia.value = diaSeleccionado;
+    }
+}   
 
     function consolidarFecha() {
         if (selectAnio.value && selectMes.value && selectDia.value) {

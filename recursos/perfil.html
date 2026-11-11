@@ -49,22 +49,30 @@
                 <form class="formulario-perfil" id="formPerfil">
 
                     <h3 class="titulo-form">Información Personal</h3>
-                    <div class="campo-doble">
-                        <div class="campo">
-                            <label>Nombre(s)</label>
-                            <input type="text" id="perfil-nombre" required>
-                        </div>
-                        <div class="campo">
-                            <label>Apellidos</label>
-                            <input type="text" id="perfil-apellido" required>
-                        </div>
-                    </div>
 
                     <div class="campo-doble">
                         <div class="campo">
-                            <label>Teléfono Celular</label>
-                            <input type="tel" id="perfil-telefono">
+                            <label>Nombre(s)</label>
+                            <input type="text" id="perfil-nombre" minlength="2" maxlength="30"
+                                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]{2,30}" autocomplete="given-name" required>
                         </div>
+
+                        <div class="campo">
+                            <label>Apellidos</label>
+                            <input type="text" id="perfil-apellido" minlength="2" maxlength="30"
+                                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]{2,30}" autocomplete="family-name" required>
+                        </div>
+                    </div>
+
+
+                    <div class="campo-doble">
+
+                        <div class="campo">
+                            <label>Teléfono Celular</label>
+                            <input type="tel" id="perfil-telefono" placeholder="10 dígitos" pattern="[0-9]{10}"
+                                inputmode="numeric" minlength="10" maxlength="10" autocomplete="tel">
+                        </div>
+
                         <div class="campo">
                             <label>Fecha de Nacimiento</label>
                             <!-- disabled para que no lo puedan cambiar -->
@@ -74,19 +82,35 @@
 
                     <hr class="linea-divisora">
 
+
                     <h3 class="titulo-form">Credenciales de Acceso</h3>
+
                     <div class="campo">
                         <label>Correo Electrónico</label>
-                        <!-- disabled porque el correo de login no se cambia aquí -->
                         <input type="email" id="perfil-correo" disabled>
+                    </div>
+
+                    <div class="campo">
+                        <label>Contraseña Actual</label>
+                        <div class="campo-contrasena">
+                            <input type="password" id="perfil-password-actual"
+                                placeholder="Ingresa tu contraseña actual" autocomplete="current-password">
+
+                            <button type="button" class="ojo" aria-label="Mostrar contraseña">
+                                <i class="bi bi-eye"></i>
+                                <i class="bi bi-eye-slash" style="display:none;"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="campo-doble">
                         <div class="campo">
-                            <label>Nueva Contraseña (Opcional)</label>
+                            <label>Nueva Contraseña</label>
                             <div class="campo-contrasena">
-                                <input type="password" id="perfil-password" placeholder="••••••••">
-                                <button type="button" class="ojo">
+                                <input type="password" id="perfil-password" placeholder="••••••••" minlength="6"
+                                    autocomplete="new-password">
+
+                                <button type="button" class="ojo" aria-label="Mostrar contraseña">
                                     <i class="bi bi-eye"></i>
                                     <i class="bi bi-eye-slash" style="display:none;"></i>
                                 </button>
@@ -96,14 +120,17 @@
                         <div class="campo">
                             <label>Confirmar Contraseña</label>
                             <div class="campo-contrasena">
-                                <input type="password" id="perfil-password-confirm" placeholder="••••••••">
-                                <button type="button" class="ojo">
+                                <input type="password" id="perfil-password-confirm" placeholder="••••••••" minlength="6"
+                                    autocomplete="new-password">
+
+                                <button type="button" class="ojo" aria-label="Mostrar contraseña">
                                     <i class="bi bi-eye"></i>
                                     <i class="bi bi-eye-slash" style="display:none;"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
+
 
                     <div class="acciones-perfil">
                         <button type="submit" class="btn guardar" id="btnGuardarPerfil"><i class="bi bi-save"></i>
@@ -188,6 +215,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../scripts/app.js"></script>
+<script src="../scripts/bloqueoEnvios.js"></script>
+
 <script src="../scripts/perfil.js"></script>
 
 </html>

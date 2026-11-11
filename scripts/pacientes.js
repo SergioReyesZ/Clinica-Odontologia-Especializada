@@ -3,7 +3,7 @@
 
   const $ = (selector) => document.querySelector(selector);
   const esc = (value) => String(value ?? '').replace(/[&<>"']/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[c]);
 
   const BUCKET_PACIENTES = 'avatares_pacientes';
@@ -34,9 +34,9 @@
   const nombreCompleto = p => p ? `${p.nombre || ''} ${p.apellido || ''}`.trim() : '';
   const fechaBonita = fecha => {
     if (!fecha) return '—';
-    const [y,m,d] = String(fecha).slice(0,10).split('-').map(Number);
-    return y && m && d ? new Date(y,m-1,d).toLocaleDateString('es-MX',
-      {day:'2-digit',month:'short',year:'numeric'}) : '—';
+    const [y, m, d] = String(fecha).slice(0, 10).split('-').map(Number);
+    return y && m && d ? new Date(y, m - 1, d).toLocaleDateString('es-MX',
+      { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
   };
   const usuarioDe = id => usuarios.find(u => String(u.id) === String(id));
 
@@ -63,7 +63,7 @@
       // Paginación para no limitar la lista a los primeros 1,000 registros.
       pacientes = await traerTodos(() => client.from('Pacientes')
         .select('id,nombre,apellido,fecha_nac,sexo,cliente,avatar')
-        .order('nombre', {ascending:true}));
+        .order('nombre', { ascending: true }));
 
       const ids = [...new Set(pacientes.map(p => p.cliente).filter(Boolean))];
       usuarios = [];
@@ -124,8 +124,7 @@
           <button type="button" data-action="delete" data-id="${esc(p.id)}">Eliminar</button>
         </div></td>
       </tr>`;
-    }).join('') || `<tr><td colspan="5" class="emptymsg">${
-      cargando ? 'Cargando pacientes...' : 'No hay pacientes registrados.'
+    }).join('') || `<tr><td colspan="5" class="emptymsg">${cargando ? 'Cargando pacientes...' : 'No hay pacientes registrados.'
     }</td></tr>`;
   }
 
@@ -144,16 +143,29 @@
         ? `${anio.value}-${mes.value}-${dia.value}` : '';
     };
     const actualizarDias = () => {
+      // Si falta año o mes, conserva los días del 1 al 31.
+      if (!anio.value || !mes.value) {
+        oculta.value = '';
+        return;
+      }
+
       const anterior = dia.value;
+
       dia.innerHTML = '<option value="" disabled selected>Día</option>';
-      if (!anio.value || !mes.value) { oculta.value = ''; return; }
+
       const max = new Date(Number(anio.value), Number(mes.value), 0).getDate();
-      for (let d=1; d<=max; d++) {
+
+      for (let d = 1; d <= max; d++) {
         const op = document.createElement('option');
-        op.value = String(d).padStart(2,'0'); op.textContent = String(d);
+        op.value = String(d).padStart(2, '0');
+        op.textContent = String(d);
         dia.appendChild(op);
       }
-      if (anterior && Number(anterior) <= max) dia.value = anterior;
+
+      if (anterior && Number(anterior) <= max) {
+        dia.value = anterior;
+      }
+
       consolidar();
     };
     anio.addEventListener('change', actualizarDias);
@@ -181,6 +193,17 @@
     const apellido = $('#pac-apellido').value.trim();
     const fecha_nac = $('#pac-fecha').value;
     const sexo = $('#pac-sexo').value;
+
+
+    const regexNombre = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]{2,30}$/;
+
+    if (!regexNombre.test(nombre) || !regexNombre.test(apellido)) {
+      feedback.textContent =
+        'El nombre y los apellidos deben contener únicamente letras.';
+      feedback.style.color = '#b91c1c';
+      return;
+    }
+
     if (!nombre || !apellido || !fecha_nac || !sexo) {
       feedback.textContent = 'Completa todos los campos.';
       feedback.style.color = '#b91c1c';
@@ -212,7 +235,7 @@
     if (!paciente) return;
     const { data, error } = await client.from('Citas')
       .select('id,fecha_hora,estado,servicio').eq('paciente', id)
-      .order('fecha_hora', {ascending:false});
+      .order('fecha_hora', { ascending: false });
     if (error) { aviso('No se pudo cargar el historial: ' + error.message, true); return; }
     const filas = (data || []).map(c => {
       const fecha = c.fecha_hora ? new Date(c.fecha_hora).toLocaleString('es-MX') : '—';
@@ -408,11 +431,11 @@
     imagen.onload = () => {
       if (cropperPaciente) cropperPaciente.destroy();
       cropperPaciente = new Cropper(imagen, {
-        aspectRatio:1, viewMode:1, dragMode:'move', autoCropArea:.85,
-        movable:true, zoomable:true, zoomOnWheel:true, zoomOnTouch:true,
-        cropBoxMovable:false, cropBoxResizable:false, guides:true,
-        center:true, background:false, responsive:true,
-        ready() { $('#zoomCropperPaciente').value=50; ultimoZoomCropper=50; }
+        aspectRatio: 1, viewMode: 1, dragMode: 'move', autoCropArea: .85,
+        movable: true, zoomable: true, zoomOnWheel: true, zoomOnTouch: true,
+        cropBoxMovable: false, cropBoxResizable: false, guides: true,
+        center: true, background: false, responsive: true,
+        ready() { $('#zoomCropperPaciente').value = 50; ultimoZoomCropper = 50; }
       });
     };
     imagen.src = imagenTemporalCropper;
@@ -431,13 +454,13 @@
     boton.disabled = true; boton.innerHTML = '<i class="bi bi-arrow-repeat"></i> Procesando...';
     try {
       const canvas = cropperPaciente.getCroppedCanvas({
-        width:512,height:512,imageSmoothingEnabled:true,imageSmoothingQuality:'high'
+        width: 512, height: 512, imageSmoothingEnabled: true, imageSmoothingQuality: 'high'
       });
       if (!canvas) throw new Error('No se pudo procesar la fotografía.');
-      const blob = await new Promise((resolve,reject) =>
+      const blob = await new Promise((resolve, reject) =>
         canvas.toBlob(b => b ? resolve(b) : reject(new Error('No se pudo generar la imagen.')),
-          'image/jpeg',.90));
-      archivoAvatar = new File([blob], 'avatar-paciente.jpg', {type:'image/jpeg'});
+          'image/jpeg', .90));
+      archivoAvatar = new File([blob], 'avatar-paciente.jpg', { type: 'image/jpeg' });
       if (previewTemporal) URL.revokeObjectURL(previewTemporal);
       previewTemporal = URL.createObjectURL(archivoAvatar);
       $('#edit-avatarPreview').src = previewTemporal;
@@ -474,11 +497,25 @@
     $('#feedback-editar-paciente').textContent = 'Actualizando información...';
     let nuevaRuta = null, actualizado = false;
     try {
+
+      const nombre = $('#edit-pac-nombre').value.trim();
+      const apellido = $('#edit-pac-apellido').value.trim();
+
+      const regexNombre = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]{2,30}$/;
+
+      if (!regexNombre.test(nombre) || !regexNombre.test(apellido)) {
+        $('#feedback-editar-paciente').textContent =
+          'El nombre y los apellidos deben contener únicamente letras.';
+        $('#feedback-editar-paciente').style.color = '#b91c1c';
+        return;
+      }
+
       const cambios = {
-        nombre: $('#edit-pac-nombre').value.trim(),
-        apellido: $('#edit-pac-apellido').value.trim(),
+        nombre: nombre,
+        apellido: apellido,
         sexo: $('#edit-pac-sexo').value
       };
+
       // Solo cambia el tutor si se seleccionó uno distinto mediante resultados.
       if (tutorId) cambios.cliente = tutorId;
 
@@ -486,7 +523,7 @@
       if (archivoAvatar) {
         nuevaRuta = `${authData.user.id}/paciente-${id}-${Date.now()}.jpg`;
         const { error } = await client.storage.from(BUCKET_PACIENTES)
-          .upload(nuevaRuta, archivoAvatar, {contentType:'image/jpeg',upsert:false});
+          .upload(nuevaRuta, archivoAvatar, { contentType: 'image/jpeg', upsert: false });
         if (error) throw error;
         cambios.avatar = nuevaRuta;
       }
@@ -529,8 +566,17 @@
   function configurarEventos() {
     prepararFechaNacimiento();
     $('#searchPatient')?.addEventListener('input', render);
-    $('#formNuevoPaciente')?.addEventListener('submit', guardarPaciente);
-    $('#formEditarPaciente')?.addEventListener('submit', actualizarPaciente);
+
+    $('#formNuevoPaciente')?.addEventListener(
+      'submit',
+      evitarDobleEnvio(guardarPaciente, '#btnGuardarPaciente')
+    );
+
+    $('#formEditarPaciente')?.addEventListener(
+      'submit',
+      evitarDobleEnvio(actualizarPaciente, '#btnActualizarPaciente')
+    );
+
     $('#btnConfirmarEliminarPaciente')?.addEventListener('click', confirmarEliminarPaciente);
     $('#modalEliminarPacienteAdmin')?.addEventListener('click', e => {
       if (e.target.id === 'modalEliminarPacienteAdmin') window.cerrarModalEliminarPaciente();
@@ -596,7 +642,7 @@
     const { data, error } = await client.from('Usuarios')
       .select('id,nombre,apellido,email')
       .ilike('email', `%${termino}%`)
-      .order('nombre', {ascending:true}).limit(20);
+      .order('nombre', { ascending: true }).limit(20);
     if (error) {
       console.error('Error buscando tutores:', error);
       cont.innerHTML = '<small>Error al buscar. Revisa Usuarios.email y sus permisos de lectura.</small>';

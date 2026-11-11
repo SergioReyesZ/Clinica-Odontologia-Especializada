@@ -82,12 +82,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const anio = parseInt(selectAnio.value);
         const mes = parseInt(selectMes.value);
 
+        // Si falta año o mes, conserva los días del 1 al 31.
+        if (!anio || !mes) return;
+
         const diaSeleccionado = selectDia.value;
 
         selectDia.innerHTML =
             '<option value="" disabled selected>Día</option>';
-
-        if (!anio || !mes) return;
 
         const diasEnElMes = new Date(anio, mes, 0).getDate();
 
@@ -135,11 +136,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function configurarEventos() {
 
+
     document.getElementById("formNuevoPaciente")
-        ?.addEventListener("submit", registrarPaciente);
+        ?.addEventListener(
+            "submit",
+            evitarDobleEnvio(registrarPaciente, "#btnGuardarPaciente")
+        );
 
     document.getElementById("formEditarPaciente")
-        ?.addEventListener("submit", actualizarPaciente);
+        ?.addEventListener(
+            "submit",
+            evitarDobleEnvio(actualizarPaciente, "#btnActualizarPaciente")
+        );
+
 
     document.getElementById("inputAvatarPaciente")
         ?.addEventListener("change", previsualizarAvatar);
@@ -490,6 +499,17 @@ async function registrarPaciente(e) {
 
     const sexo =
         document.getElementById("pac-sexo").value;
+
+    const regexNombre = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]{2,30}$/;
+
+    if (!regexNombre.test(nombre) || !regexNombre.test(apellido)) {
+        mostrarFeedback(
+            "feedback-paciente",
+            "El nombre y los apellidos deben contener únicamente letras.",
+            true
+        );
+        return;
+    }
 
     if (!fecha_nac) {
         mostrarFeedback(
@@ -905,6 +925,18 @@ async function actualizarPaciente(e) {
 
     const sexo =
         document.getElementById("edit-pac-sexo").value;
+
+
+    const regexNombre = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]{2,30}$/;
+
+    if (!regexNombre.test(nombre) || !regexNombre.test(apellido)) {
+        mostrarFeedback(
+            "feedback-editar-paciente",
+            "El nombre y los apellidos deben contener únicamente letras.",
+            true
+        );
+        return;
+    }
 
     boton.disabled = true;
 
