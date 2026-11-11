@@ -100,7 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const iconos = {
                 CONFIRMACION: 'bi-calendar-check',
                 CANCELACION: 'bi-calendar-x',
-                RECORDATORIO: 'bi-clock-history'
+                RECORDATORIO: 'bi-clock-history',
+                REPROGRAMACION: 'bi-calendar2-week'
             };
 
             const icono = iconos[notificacion.tipo] || 'bi-bell';

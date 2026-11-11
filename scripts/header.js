@@ -221,3 +221,15 @@ window.addEventListener('DOMContentLoaded', () => {
         );
     }
 });
+
+document.querySelectorAll('.campo-contrasena .ojo').forEach(boton => {
+    boton.addEventListener('click', () => {
+        const input = boton.closest('.campo-contrasena').querySelector('input');
+        const mostrar = input.type === 'password';
+
+        input.type = mostrar ? 'text' : 'password';
+
+        boton.querySelector('.bi-eye').style.display = mostrar ? 'none' : 'inline';
+        boton.querySelector('.bi-eye-slash').style.display = mostrar ? 'inline' : 'none';
+    });
+});

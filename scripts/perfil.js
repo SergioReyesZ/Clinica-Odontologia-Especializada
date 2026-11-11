@@ -3,6 +3,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const $ = (id) => document.getElementById(id);
 
+    document.querySelectorAll('.campo-contrasena .ojo').forEach(boton => {
+        boton.addEventListener('click', () => {
+            const input = boton.closest('.campo-contrasena').querySelector('input');
+            const mostrar = input.type === 'password';
+
+            input.type = mostrar ? 'text' : 'password';
+            boton.querySelector('.bi-eye').style.display = mostrar ? 'none' : 'inline';
+            boton.querySelector('.bi-eye-slash').style.display = mostrar ? 'inline' : 'none';
+        });
+    });
     const avatarPreview = $('avatarPreview');
     const inputAvatar = $('inputAvatar');
     const modalFoto = $('modalFoto');
@@ -352,97 +362,97 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 6. GUARDAR CAMBIOS DEL PERFIL
     // ==========================================
 
-    
-$('formPerfil').addEventListener('submit', async (e) => {
-    e.preventDefault();
 
-    const pass1 = $('perfil-password').value;
-    const pass2 = $('perfil-password-confirm').value;
+    $('formPerfil').addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    const nombre = $('perfil-nombre').value.trim();
-    const apellido = $('perfil-apellido').value.trim();
-    const telefono = $('perfil-telefono').value.trim();
+        const pass1 = $('perfil-password').value;
+        const pass2 = $('perfil-password-confirm').value;
 
-    if (pass1 && pass1 !== pass2) {
-        mostrarError('Las contraseñas no coinciden.');
-        return;
-    }
+        const nombre = $('perfil-nombre').value.trim();
+        const apellido = $('perfil-apellido').value.trim();
+        const telefono = $('perfil-telefono').value.trim();
 
-    if (pass1 && pass1.length < 6) {
-        mostrarError('La contraseña debe tener al menos 6 caracteres.');
-        return;
-    }
+        if (pass1 && pass1 !== pass2) {
+            mostrarError('Las contraseñas no coinciden.');
+            return;
+        }
 
-    const btn = $('btnGuardarPerfil');
-    btn.disabled = true;
+        if (pass1 && pass1.length < 6) {
+            mostrarError('La contraseña debe tener al menos 6 caracteres.');
+            return;
+        }
 
-    try {
+        const btn = $('btnGuardarPerfil');
+        btn.disabled = true;
 
-        // 1. Comprobar si el teléfono ya pertenece a otro usuario
-        if (telefono) {
-            const { data: telefonoExistente, error: consultaError } = await client
-                .from('Usuarios')
-                .select('id')
-                .eq('telefono', telefono)
-                .neq('id', usuarioActual.id)
-                .maybeSingle();
+        try {
 
-            if (consultaError) throw consultaError;
+            // 1. Comprobar si el teléfono ya pertenece a otro usuario
+            if (telefono) {
+                const { data: telefonoExistente, error: consultaError } = await client
+                    .from('Usuarios')
+                    .select('id')
+                    .eq('telefono', telefono)
+                    .neq('id', usuarioActual.id)
+                    .maybeSingle();
 
-            if (telefonoExistente) {
-                throw new Error(
-                    'Este número de teléfono ya está registrado en otra cuenta. Utiliza uno diferente.'
-                );
+                if (consultaError) throw consultaError;
+
+                if (telefonoExistente) {
+                    throw new Error(
+                        'Este número de teléfono ya está registrado en otra cuenta. Utiliza uno diferente.'
+                    );
+                }
             }
+
+            // 2. Actualizar datos personales
+            const { error: updateError } = await client
+                .from('Usuarios')
+                .update({
+                    nombre,
+                    apellido,
+                    telefono: telefono || null
+                })
+                .eq('id', usuarioActual.id);
+
+            if (updateError) throw updateError;
+
+            // 3. Actualizar contraseña si escribió una nueva
+            if (pass1) {
+                const { error: passwordError } =
+                    await client.auth.updateUser({
+                        password: pass1
+                    });
+
+                if (passwordError) throw passwordError;
+            }
+
+            // 4. Actualizar información visual
+            $('perfil-nombre-display').textContent =
+                `${nombre} ${apellido}`.trim();
+
+            $('perfil-password').value = '';
+            $('perfil-password-confirm').value = '';
+
+            $('modalExito').classList.add('activo');
+
+            setTimeout(() => {
+                $('modalExito').classList.remove('activo');
+            }, 2000);
+
+        } catch (error) {
+
+            console.error('Error al guardar perfil:', error);
+
+            mostrarError(
+                `No se pudieron guardar los cambios: ${error.message || 'Error desconocido'}`
+            );
+
+        } finally {
+            btn.disabled = false;
         }
-
-        // 2. Actualizar datos personales
-        const { error: updateError } = await client
-            .from('Usuarios')
-            .update({
-                nombre,
-                apellido,
-                telefono: telefono || null
-            })
-            .eq('id', usuarioActual.id);
-
-        if (updateError) throw updateError;
-
-        // 3. Actualizar contraseña si escribió una nueva
-        if (pass1) {
-            const { error: passwordError } =
-                await client.auth.updateUser({
-                    password: pass1
-                });
-
-            if (passwordError) throw passwordError;
-        }
-
-        // 4. Actualizar información visual
-        $('perfil-nombre-display').textContent =
-            `${nombre} ${apellido}`.trim();
-
-        $('perfil-password').value = '';
-        $('perfil-password-confirm').value = '';
-
-        $('modalExito').classList.add('activo');
-
-        setTimeout(() => {
-            $('modalExito').classList.remove('activo');
-        }, 2000);
-
-    } catch (error) {
-
-        console.error('Error al guardar perfil:', error);
-
-        mostrarError(
-            `No se pudieron guardar los cambios: ${error.message || 'Error desconocido'}`
-        );
-
-    } finally {
-        btn.disabled = false;
-    }
-});
+    });
 
 });
 
@@ -451,6 +461,6 @@ $('formPerfil').addEventListener('submit', async (e) => {
 // CERRAR MODALES
 // ==========================================
 
-window.cerrarModal = function(id) {
+window.cerrarModal = function (id) {
     document.getElementById(id).classList.remove('activo');
 };

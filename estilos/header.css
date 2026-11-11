@@ -562,3 +562,82 @@
     color: #888;
     font-size: 12px;
 }
+
+/* Campo de contraseña con ojo integrado */
+.campo-contrasena {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    padding: 0 1rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+                0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: box-shadow 0.2s ease;
+}
+
+/* El input ya no dibuja su propio fondo ni borde */
+.campo-contrasena input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 1rem 0;
+    color: #333333;
+    font-size: 1rem;
+}
+
+/* El ojo: únicamente el icono, sin fondo */
+.campo-contrasena .ojo {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0 0 12px;
+    margin: 0;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 1.15rem;
+}
+
+.campo-contrasena .ojo:hover {
+    color: #0056e0;
+    transform: none !important;
+}
+
+.campo-contrasena .ojo:focus-visible {
+    outline: 2px solid #0056e0;
+    outline-offset: 3px;
+}
+
+/* Resaltar el contenedor cuando se escribe */
+.campo-contrasena:focus-within {
+    border-color: #0056e0;
+}
+
+/* Responsividad */
+@media (max-width: 650px) {
+    .campo-contrasena {
+        width: 100%;
+        padding: 0 .85rem;
+    }
+
+    .campo-contrasena input {
+        padding: .9rem 0;
+        font-size: 16px;
+    }
+
+    .campo-contrasena .ojo {
+        min-width: 30px;
+        min-height: 42px;
+        font-size: 1.1rem;
+    }
+}

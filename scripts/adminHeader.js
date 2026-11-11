@@ -1,3 +1,8 @@
+const RUTA_FOTO_DEFAULT = new URL(
+    "../iconos/perfil.png",
+    document.currentScript.src
+).href;
+
 document.addEventListener("DOMContentLoaded", () => {
     const menu = document.querySelector(".menu");
     const opciones = document.querySelectorAll(".opcion");
@@ -151,6 +156,10 @@ window.addEventListener('load', () => {
    CARGAR FOTO Y NOMBRE DEL ADMINISTRADOR
 ========================================== */
 
+/* ==========================================
+   CARGAR FOTO Y NOMBRE DEL ADMINISTRADOR
+========================================== */
+
 document.addEventListener("DOMContentLoaded", async () => {
 
     const fotoPerfil = document.querySelector(".perfil .pfp");
@@ -160,7 +169,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
-        // Obtener usuario autenticado
         const { data: { user }, error: authError } =
             await client.auth.getUser();
 
@@ -169,7 +177,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // Consultar información del administrador
         const { data: usuario, error } = await client
             .from("Usuarios")
             .select("nombre, apellido, avatar")
@@ -181,28 +188,28 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // Mostrar foto guardada
-        if (usuario.avatar) {
-            fotoPerfil.src = usuario.avatar;
-        } else {
-            fotoPerfil.src = "iconos/perfil.png";
-        }
-
+        // Cargar fotografía del administrador
         fotoPerfil.onerror = () => {
-            fotoPerfil.src = "iconos/perfil.png";
+            fotoPerfil.onerror = null;
+            fotoPerfil.src = RUTA_FOTO_DEFAULT;
         };
 
-        // Mostrar nombre completo dentro del desplegable
+        fotoPerfil.src = usuario.avatar || RUTA_FOTO_DEFAULT;
+
+        // Nombre del administrador
         if (nombreDropdown) {
             const nombreCompleto =
                 `${usuario.nombre || ""} ${usuario.apellido || ""}`.trim();
 
-            nombreDropdown.textContent = nombreCompleto || "Administrador";
+            nombreDropdown.textContent =
+                nombreCompleto || "Administrador";
         }
 
     } catch (error) {
 
         console.error("Error cargando perfil del administrador:", error);
+
+        fotoPerfil.src = RUTA_FOTO_DEFAULT;
 
     }
 

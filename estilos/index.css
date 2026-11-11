@@ -762,3 +762,41 @@ body {
     html { scroll-behavior: auto; }
     .servicios { animation: none; }
 }
+
+/* Aceptación de términos y condiciones */
+.aceptacion-terminos {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    width: 100%;
+    margin: 5px 0 10px;
+    font-size: .9rem;
+    line-height: 1.45;
+    color: #555;
+}
+
+.aceptacion-terminos input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    margin: 2px 0 0;
+    padding: 0;
+    box-shadow: none;
+    accent-color: #2570d3;
+    cursor: pointer;
+}
+
+.aceptacion-terminos label {
+    cursor: pointer;
+}
+
+.aceptacion-terminos a {
+    color: #2570d3;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.aceptacion-terminos a:hover {
+    color: #0045b3;
+}

@@ -489,3 +489,44 @@
         width: 100%;
     }
 }
+
+.campo-contrasena {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+.campo-contrasena:focus-within {
+    border-color: #0056e0;
+    background: #fff;
+}
+
+.campo-contrasena input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0.8rem 0;
+}
+
+.campo-contrasena .ojo {
+    border: none;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 1.1rem;
+}
+
+.campo-contrasena .ojo:hover {
+    color: #0056e0;
+}

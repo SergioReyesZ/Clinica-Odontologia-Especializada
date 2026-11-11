@@ -281,7 +281,14 @@
                 <p>Correo electrónico</p>
                 <input type="email" id="login-correo" placeholder="ejemplo@gmail.com" required>
                 <p>Contraseña</p>
-                <input type="password" id="login-password" placeholder="********" required>
+                <div class="campo-contrasena">
+                    <input type="password" id="login-password" placeholder="********" required>
+
+                    <button type="button" class="ojo">
+                        <i class="bi bi-eye"></i>
+                        <i class="bi bi-eye-slash" style="display:none;"></i>
+                    </button>
+                </div>
                 <button type="submit" id="btn-iniciar-sesion">Iniciar sesión</button>
                 <p class="texto-registro">¿No tienes una cuenta? <a href="">Regístrate</a></p>
                 <!-- Añadido aquí con ID único -->
@@ -312,10 +319,32 @@
                 <input type="email" id="reg-correo" placeholder="ejemplo@gmail.com" minlength="5" maxlength="50"
                     required>
                 <p>Contraseña</p>
-                <input type="password" id="reg-password" placeholder="********" minlength="6" maxlength="100" required>
+                <div class="campo-contrasena">
+                    <input type="password" id="reg-password" placeholder="********" required>
+
+                    <button type="button" class="ojo">
+                        <i class="bi bi-eye"></i>
+                        <i class="bi bi-eye-slash" style="display:none;"></i>
+                    </button>
+                </div>
                 <p>Confirmar contraseña</p>
-                <input type="password" id="reg-confirm-password" placeholder="********" minlength="6" maxlength="100"
-                    required>
+                <div class="campo-contrasena">
+                    <input type="password" id="reg-confirm-password" placeholder="********" required>
+
+                    <button type="button" class="ojo">
+                        <i class="bi bi-eye"></i>
+                        <i class="bi bi-eye-slash" style="display:none;"></i>
+                    </button>
+                </div>
+                <div class="aceptacion-terminos">
+                    <input type="checkbox" id="aceptar-terminos">
+                    <label for="aceptar-terminos">
+                        He leído y acepto los
+                        <a href="recursos/terminos-condiciones.html" target="_blank" rel="noopener noreferrer">
+                            términos y condiciones
+                        </a>.
+                    </label>
+                </div>
                 <button id="btn-registrarse">Registrarse</button>
                 <p class="texto-registro">¿Ya tienes una cuenta? <a href="">Inicia sesión</a></p>
                 <p class="texto-registro" id="feedback-registro"></p>

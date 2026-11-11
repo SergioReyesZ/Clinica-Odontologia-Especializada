@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const btnRegistrarse = document.getElementById('btn-registrarse');
 const inputNombre = document.getElementById('reg-nombre');
 const inputApellido = document.getElementById('reg-apellido');
-const inputTelefono = document.getElementById('reg-telefono'); 
+const inputTelefono = document.getElementById('reg-telefono');
 const inputCorreo = document.getElementById('reg-correo');
 const inputPassword = document.getElementById('reg-password');
 const inputConfirmPassword = document.getElementById('reg-confirm-password'); // Nuevo
@@ -61,15 +61,16 @@ const feedbackRegistro = document.getElementById('feedback-registro');
 btnRegistrarse.addEventListener('click', async () => {
     const nombre = inputNombre.value.trim();
     const apellido = inputApellido.value.trim();
-    const telefono = inputTelefono.value.trim(); 
+    const telefono = inputTelefono.value.trim();
     const email = inputCorreo.value.trim();
     const password = inputPassword.value.trim();
     const confirmPassword = inputConfirmPassword.value.trim(); // Nuevo
+    const checkboxTerminos = document.getElementById("aceptar-terminos");
 
     feedbackRegistro.style.color = "#e74c3c"; // Rojo para errores
 
     // 1. Validar campos vacíos
-    if (!email || !password || !nombre || !apellido || !confirmPassword) { 
+    if (!email || !password || !nombre || !apellido || !confirmPassword) {
         feedbackRegistro.textContent = "Por favor, llena todos los campos.";
         return;
     }
@@ -99,6 +100,14 @@ btnRegistrarse.addEventListener('click', async () => {
         feedbackRegistro.textContent = "Las contraseñas no coinciden.";
         return;
     }
+
+    if (!checkboxTerminos || !checkboxTerminos.checked) {
+        feedbackRegistro.style.color = "#e74c3c";
+        feedbackRegistro.textContent =
+            "Debes aceptar los términos y condiciones para continuar.";
+        checkboxTerminos?.focus();
+        return;
+    }
     try {
         btnRegistrarse.disabled = true;
         feedbackRegistro.style.color = "#3498db";
@@ -109,8 +118,8 @@ btnRegistrarse.addEventListener('click', async () => {
             email: email,
             password: password,
             options: {
-                data: { 
-                    nombre: nombre, 
+                data: {
+                    nombre: nombre,
                     apellido: apellido,
                     telefono: telefono || null
                 }
@@ -126,7 +135,7 @@ btnRegistrarse.addEventListener('click', async () => {
     } catch (error) {
         console.error("Error en el registro:", error.message);
         feedbackRegistro.style.color = "#e74c3c";
-        
+
         // Traducción de error de correo duplicado
         if (error.message.includes("already registered")) {
             feedbackRegistro.textContent = "Este correo ya está registrado.";
@@ -189,20 +198,20 @@ formLogin.addEventListener('submit', async (e) => {
         // 3. Redirigir dependiendo del rol (2 = Administrador)
         if (userData.rol === 2) {
             window.location.href = 'adminDashboard.html';
-        } 
+        }
 
         if (userData.rol === 1) {
             window.location.href = 'dashboard.html';
         }
 
-        if(userData.rol === 3) {
+        if (userData.rol === 3) {
             window.location.href = 'odontologoDashboard.html'
         }
 
     } catch (error) {
         console.error("Error al iniciar sesión:", error.message);
         feedbackLogin.style.color = "#e74c3c";
-        
+
         if (error.message.includes("Invalid login credentials")) {
             feedbackLogin.textContent = "Correo o contraseña incorrectos.";
         } else {

@@ -769,43 +769,83 @@ if (formNuevaCita) {
 }
 
 // --- MODIFICAR CITA ---
+
 async function abrirModalModificar(idCita, nombrePaciente, idServicio, fechaHoraStr) {
-    document.getElementById('modalModificarCita').style.display = 'flex';
+
+    const modal = document.getElementById('modalModificarCita');
+    modal.style.display = 'flex';
+
     document.getElementById('mod-cita-id').value = idCita;
     document.getElementById('mod-cita-paciente').value = nombrePaciente;
 
-    // Asegurar que los servicios estén cargados en el select de modificación
-    await cargarCatalogoServicios();
+    try {
 
-    const [fechaStr, horaResto] = fechaHoraStr.split('T');
-    const horaStr = horaResto ? horaResto.substring(0, 8) : '';
-    const [añoStr, mesStr, diaStr] = fechaStr.split('-');
+        // 1. Cargar odontólogos ANTES de utilizar el selector
+        await cargarSelectOdontologos();
 
-    document.getElementById('mod-cita-servicio').value = idServicio;
-    document.getElementById('mod-cita-fecha').value = fechaStr;
-    document.getElementById('mod-cita-hora').value = horaStr;
+        // 2. Cargar catálogo de servicios
+        await cargarCatalogoServicios();
 
-    document.getElementById('texto-fecha-seleccionada-mod').textContent = `${diaStr}/${mesStr}/${añoStr}`;
-    calActual = {
-        mes: parseInt(mesStr) - 1,
-        año: parseInt(añoStr),
-        fechaSeleccionada: new Date(parseInt(añoStr), parseInt(mesStr) - 1, parseInt(diaStr)),
-        modo: 'modificar'
-    };
+        const [fechaStr, horaResto] = fechaHoraStr.split('T');
+        const horaStr = horaResto ? horaResto.substring(0, 8) : '';
 
-    renderizarCalendario('modificar');
-    renderizarHorariosDisponibles('modificar');
+        const [añoStr, mesStr, diaStr] = fechaStr.split('-');
 
-    verificarHorariosOcupados(fechaStr, 'modificar', horaStr).then(() => {
-        const btnHora = document.querySelector(`#horarios-contenedor-mod .btn-hora[data-valor="${horaStr}"]`);
+        // 3. Establecer servicio y fecha
+        document.getElementById('mod-cita-servicio').value = idServicio;
+
+        document.getElementById('mod-cita-fecha').value = fechaStr;
+        document.getElementById('mod-cita-hora').value = horaStr;
+
+        document.getElementById('texto-fecha-seleccionada-mod').textContent =
+            `${diaStr}/${mesStr}/${añoStr}`;
+
+        // 4. Configurar calendario
+        calActual = {
+            mes: parseInt(mesStr) - 1,
+            año: parseInt(añoStr),
+            fechaSeleccionada: new Date(
+                parseInt(añoStr),
+                parseInt(mesStr) - 1,
+                parseInt(diaStr)
+            ),
+            modo: 'modificar'
+        };
+
+        // 5. Limpiar horarios anteriores
+        document.getElementById('horarios-contenedor-mod').innerHTML = '';
+
+        // 6. Renderizar calendario y horarios
+        renderizarCalendario('modificar');
+        renderizarHorariosDisponibles('modificar');
+
+        // 7. Consultar horarios ocupados
+        await verificarHorariosOcupados(fechaStr, 'modificar', horaStr);
+
+        // 8. Marcar la hora original
+        const btnHora = document.querySelector(
+            `#horarios-contenedor-mod .btn-hora[data-valor="${horaStr}"]`
+        );
+
         if (btnHora) {
             btnHora.classList.add('seleccionada');
         }
-    });
 
-    const evento = new Event('change');
-    document.getElementById('mod-cita-servicio').dispatchEvent(evento);
+        // Actualizar costo
+        document.getElementById('mod-cita-servicio')
+            .dispatchEvent(new Event('change'));
+
+    } catch (error) {
+
+        console.error('Error al abrir modal de modificación:', error);
+
+        document.getElementById('feedback-modificar').textContent =
+            'No se pudieron cargar los datos de la cita. Intenta nuevamente.';
+
+        document.getElementById('feedback-modificar').style.color = '#e74c3c';
+    }
 }
+
 
 function cerrarModalModificar() {
     document.getElementById('modalModificarCita').style.display = 'none';

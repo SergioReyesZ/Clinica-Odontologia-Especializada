@@ -1,3 +1,7 @@
+const RUTA_FOTO_DEFAULT = new URL(
+    "../iconos/perfil.png",
+    document.currentScript.src
+).href;
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -162,14 +166,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (imagen) {
 
-            imagen.src = usuario.avatar || "iconos/perfil.png";
+            imagen.src = usuario.avatar || RUTA_FOTO_DEFAULT;
 
             imagen.onerror = () => {
-                imagen.src = "iconos/perfil.png";
+                imagen.onerror = null;
+                imagen.src = RUTA_FOTO_DEFAULT;
             };
 
         }
-
     } catch (error) {
         console.error("Error cargando el perfil del odontólogo:", error);
     }
