@@ -53,7 +53,7 @@
 }
 
 .panel h2 {
-    font-size: 19px;
+    font-size: 2rem;
     margin: 0
 }
 
@@ -142,7 +142,7 @@
     display: inline-block;
     padding: 5px 10px;
     border-radius: 30px;
-    font-size: 12px;
+    font-size: 1.2rem;
     font-weight: bold;
     background: #f1f5f9;
     color: #475569
@@ -206,7 +206,7 @@ table {
 
 th {
     color: #64748b;
-    font-size: 12px;
+    font-size: 1.2rem;
     background: #f8fafc
 }
 
@@ -220,7 +220,11 @@ th {
 td small {
     display: block;
     color: var(--muted);
-    margin-top: 4px
+    margin-top: 4px;
+}
+
+td {
+    font-size: 1.1rem;
 }
 
 .actions {
@@ -235,7 +239,7 @@ td small {
     background: #eff6ff;
     color: #1d4ed8;
     padding: 8px;
-    font-size: 13px
+    font-size: 1.1rem;
 }
 
 .actions .danger {
@@ -438,7 +442,7 @@ td small {
 
 .usuario-identidad small {
     color: #64748b;
-    font-size: 12px;
+    font-size: 1.1rem;
 }
 
 .usuario-avatar {
@@ -897,4 +901,17 @@ td small {
     height: 54px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.usuario-identidad small a,
+td a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.usuario-identidad small a:hover,
+td a:hover {
+    color: #0d6efd;
+    text-decoration: underline;
 }

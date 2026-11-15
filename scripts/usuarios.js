@@ -130,27 +130,50 @@
 
     tbody.innerHTML = filtrados.map(u => `
       <tr>
-        <td>
-          <div class="usuario-identidad">
-            <span class="usuario-avatar">
-  ${u.avatar
+  <td>
+    <div class="usuario-identidad">
+      <span class="usuario-avatar">
+        ${u.avatar
         ? `<img src="${esc(u.avatar)}" alt="Avatar">`
         : '<i class="bi bi-person-fill"></i>'}
-</span>
-            <div><b>${esc(nombreCompleto(u))}</b><small>${esc(u.telefono || 'Sin teléfono')}</small></div>
-          </div>
-        </td>
-        <td>${esc(u.email || 'No disponible en Usuarios')}</td>
-        <td><span class="pill rol-${Number(u.rol)}">${esc(nombreRol(u.rol, u.rol_nombre))}</span></td>
-        <td><div class="actions">
-          <button type="button" class="btn-editar-usuario" data-action="edit" data-id="${esc(u.id)}">
-            <i class="bi bi-pencil-square"></i> Editar
-          </button>
-          <button type="button" class="btn-eliminar-usuario" data-action="delete" data-id="${esc(u.id)}">
-            <i class="bi bi-trash3"></i> Eliminar
-          </button>
-        </div></td>
-      </tr>
+      </span>
+      <div>
+        <b>${esc(nombreCompleto(u))}</b>
+        <small>
+          ${u.telefono
+        ? `<a href="tel:${esc(u.telefono)}">${esc(u.telefono)}</a>`
+        : 'Sin teléfono'}
+        </small>
+      </div>
+    </div>
+  </td>
+
+  <td>
+    ${u.email
+        ? `<a href="mailto:${esc(u.email)}">${esc(u.email)}</a>`
+        : 'No disponible en Usuarios'}
+  </td>
+
+  <td>
+    <span class="pill rol-${Number(u.rol)}">
+      ${esc(nombreRol(u.rol, u.rol_nombre))}
+    </span>
+  </td>
+
+  <td>
+    <div class="actions">
+      <button type="button" class="btn-editar-usuario"
+        data-action="edit" data-id="${esc(u.id)}">
+        <i class="bi bi-pencil-square"></i> Editar
+      </button>
+
+      <button type="button" class="btn-eliminar-usuario"
+        data-action="delete" data-id="${esc(u.id)}">
+        <i class="bi bi-trash3"></i> Eliminar
+      </button>
+    </div>
+  </td>
+</tr>
     `).join('') || `<tr><td colspan="4" class="emptymsg">${cargando ? 'Cargando usuarios...' : 'No se encontraron usuarios.'}</td></tr>`;
 
     // Mantiene el filtro de roles sincronizado con los IDs reales de la tabla Roles.

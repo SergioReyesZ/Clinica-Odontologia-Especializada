@@ -1153,6 +1153,12 @@ document.getElementById("formNuevaCita")?.addEventListener("submit", async funct
         if (insertError) throw insertError;
         feedback.style.color = "#16a34a"; feedback.textContent = "¡Cita agendada exitosamente!";
         setTimeout(() => window.location.reload(), 900);
-    } catch (err) { console.error(err); feedback.style.color = "#dc2626"; feedback.textContent = "No se pudo agendar: " + err.message; }
+    } catch (err) {
+        console.error(err);
+        feedback.style.color = "#dc2626";
+        feedback.textContent = err.code === "23505" && err.message.includes("idx_cita_unica_1_dia")
+            ? "No se pudo agendar: un paciente no puede tener dos citas en un día."
+            : "No se pudo agendar: " + err.message;
+    }
     finally { btn.disabled = false; }
 }, true);

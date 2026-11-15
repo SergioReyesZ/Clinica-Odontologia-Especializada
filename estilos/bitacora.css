@@ -53,7 +53,7 @@
 }
 
 .panel h2 {
-    font-size: 19px;
+    font-size: 2rem;
     margin: 0
 }
 
@@ -63,7 +63,7 @@
 }
 
 .panel h3 {
-    font-size: 16px;
+    font-size: 1.1rem;
     margin: 24px 0 12px
 }
 
@@ -206,7 +206,7 @@ table {
 
 th {
     color: #64748b;
-    font-size: 12px;
+    font-size: 1.1rem;
     background: #f8fafc
 }
 
@@ -221,6 +221,10 @@ td small {
     display: block;
     color: var(--muted);
     margin-top: 4px
+}
+
+td{
+    font-size: 1.1rem;
 }
 
 .actions {

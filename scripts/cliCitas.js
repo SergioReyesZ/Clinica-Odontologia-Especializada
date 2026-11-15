@@ -762,8 +762,11 @@ if (formNuevaCita) {
             fb.style.color = "#2ecc71"; fb.textContent = "¡Cita agendada!";
             setTimeout(() => window.location.reload(), 1000);
         } catch (error) {
+            console.error(error);
             fb.style.color = "#e74c3c";
-            fb.textContent = error.message.includes('idx_cita_unica') ? "Error: Un paciente solo puede tener una cita por día." : "Error al agendar: " + error.message;
+            fb.textContent = error.code === "23505" && error.message.includes("idx_cita_unica_1_dia")
+                ? "No se pudo agendar: un paciente no puede tener dos citas en un día."
+                : "No se pudo agendar: " + error.message;
         } finally { btnConfirmar.disabled = false; }
     });
 }
@@ -887,8 +890,12 @@ document.getElementById('formModificarCita').addEventListener('submit', async (e
         fb.style.color = "#2ecc71"; fb.textContent = "¡Cita modificada!";
         setTimeout(() => window.location.reload(), 1000);
     } catch (error) {
-        btn.disabled = false; fb.style.color = "#e74c3c";
-        fb.textContent = error.message.includes('idx_cita_unica') ? "Error: El paciente ya tiene una cita agendada ese día." : "Error al modificar: " + error.message;
+        console.error(error);
+        btn.disabled = false;
+        fb.style.color = "#e74c3c";
+        fb.textContent = error.code === "23505" && error.message.includes("idx_cita_unica_1_dia")
+            ? "No se pudo modificar: un paciente no puede tener dos citas en un día."
+            : "No se pudo modificar: " + error.message;
     }
 });
 
@@ -1057,12 +1064,14 @@ function descargarComprobante(id, paciente, servicio, fecha, hora, costo) {
                 <img src="../iconos/logo.png" alt="Logo">
                 <h2>Odontología Especializada</h2>
                 <p>Jesús Elías Piña #1003, Col. Del Pueblo<br>Tampico, Tamaulipas, C.P. 89190</p>
-                <p>Tel: 833 695 7177 | hola@odontologia.com</p>
+                <p>Tel: 833 695 7177 | dravickyhernandez@outlook.com</p>
+                <p>Cel: 833 171 8013</p>
+                <p>Whatsapp: 833 695 7177</p>
                 <h3 class="comprobante-title">COMPROBANTE DE CITA</h3>
             </div>
             
             <div class="details">
-                <p><strong>Folio / ID de Cita:</strong> #0045${id}</p>
+                <p><strong>Folio / ID de Cita:</strong> #${id}</p>
                 <p><strong>Paciente:</strong> ${paciente}</p>
                 <p><strong>Odontólogo:</strong> Dra. Virginia Hernández Sánchez</p>
                 <p><strong>Servicio Programado:</strong> ${servicio}</p>

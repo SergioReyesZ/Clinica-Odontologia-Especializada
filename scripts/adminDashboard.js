@@ -1468,9 +1468,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Error al modificar cita:", error);
 
                 feedback.style.color = "#e74c3c";
-                feedback.textContent = error.message.includes("idx_cita_unica")
-                    ? "El paciente ya tiene una cita agendada ese día."
-                    : "Error al modificar: " + error.message;
+                feedback.textContent = error.code === "23505" && error.message.includes("idx_cita_unica_1_dia")
+                    ? "No se pudo modificar: un paciente no puede tener dos citas en un día."
+                    : "No se pudo modificar: " + error.message;
 
                 btn.disabled = false;
             }
@@ -1699,12 +1699,14 @@ function descargarComprobante(id, paciente, servicio, fecha, hora, costo) {
                 <img src="iconos/logo.png" alt="Logo">
                 <h2>Odontología Especializada</h2>
                 <p>Jesús Elías Piña #1003, Col. Del Pueblo<br>Tampico, Tamaulipas, C.P. 89190</p>
-                <p>Tel: 833 695 7177 | hola@odontologia.com</p>
+                <p>Tel: 833 695 7177 | dravickyhernandez@outlook.com</p>
+                <p>Cel: 833 171 8013</p>
+                <p>Whatsapp: 833 695 7177</p>
                 <h3 class="comprobante-title">COMPROBANTE DE CITA</h3>
             </div>
             
             <div class="details">
-                <p><strong>Folio / ID de Cita:</strong> #0045${id}</p>
+                <p><strong>Folio / ID de Cita:</strong> #${id}</p>
                 <p><strong>Paciente:</strong> ${paciente}</p>
                 <p><strong>Odontólogo:</strong> Dra. Virginia Hernández Sánchez</p>
                 <p><strong>Servicio Programado:</strong> ${servicio}</p>
@@ -1991,6 +1993,12 @@ document.getElementById("formNuevaCita")?.addEventListener("submit",async functi
         if(insertError)throw insertError;
         feedback.style.color="#16a34a";feedback.textContent="¡Cita agendada exitosamente!";
         setTimeout(()=>window.location.reload(),900);
-    }catch(err){console.error(err);feedback.style.color="#dc2626";feedback.textContent="No se pudo agendar: "+err.message;}
+    }catch(err){
+        console.error(err);
+        feedback.style.color="#dc2626";
+        feedback.textContent=err.code==="23505"&&err.message.includes("idx_cita_unica_1_dia")
+            ?"No se pudo agendar: un paciente no puede tener dos citas en un día."
+            :"No se pudo agendar: "+err.message;
+    }
     finally{btn.disabled=false;}
 },true);
