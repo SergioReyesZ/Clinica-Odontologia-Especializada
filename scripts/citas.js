@@ -584,201 +584,43 @@
         await loadData();
     }
     
-    // ==========================================
-// COMPROBANTE EN PDF (IMPRESIÓN / VENTANA)
-// ==========================================
+    // Comprobante compartido.
 function descargarComprobante(id, paciente, servicio, fecha, hora, costo) {
-    // Si solo recibe el id (como desde el botón de la tabla), busca los datos en memoria
-    if (paciente === undefined) {
-        const cita = citas.find(c => String(c.id) === String(id));
-        if (!cita) {
-            notice("No se encontró la cita para generar el comprobante.", true);
+        // Si el botón entrega solo el ID, recuperar los datos desde la cita cargada.
+        if (paciente === undefined) {
+            const cita = citas.find(c => String(c.id) === String(id));
+            if (!cita) {
+                notice("No se encontró la cita para generar el comprobante.", true);
+                return;
+            }
+
+            const [fechaParte = "", horaCompleta = ""] = String(cita.fecha_hora || "").split("T");
+            const [anio = "", mes = "", dia = ""] = fechaParte.split("-");
+            const [horas = "00", minutos = "00"] = horaCompleta.split(":");
+            const servicioCita = service(cita.servicio);
+
+            paciente = patientName(cita.paciente);
+            servicio = servicioCita?.nombre || "Servicio";
+            fecha = `${dia}/${mes}/${anio}`;
+            hora = `${pad(parseInt(horas, 10))}:${pad(parseInt(minutos, 10))}`;
+            costo = Number(servicioCita?.costo || 0).toFixed(2);
+        }
+
+        if (typeof window.generarComprobanteCita !== "function") {
+            notice("No se cargó comprobante.js. Revisa su inclusión en el HTML.", true);
             return;
         }
-        const [fechaParte = "", horaCompleta = ""] = String(cita.fecha_hora || "").split("T");
-        const [añoStr = "", mesStr = "", diaStr = ""] = fechaParte.split("-");
-        const [hStr = "00", mStr = "00"] = horaCompleta.split(":");
-        const s = service(cita.servicio);
 
-        paciente = patientName(cita.paciente);
-        servicio = s?.nombre || "Servicio";
-        fecha = `${diaStr}/${mesStr}/${añoStr}`;
-        hora = `${pad(parseInt(hStr, 10))}:${pad(parseInt(mStr, 10))}`;
-        costo = Number(s?.costo || 0).toFixed(2);
+        window.generarComprobanteCita({
+            id,
+            paciente,
+            servicio,
+            fecha,
+            hora,
+            costo,
+            odontologo: "Dra. Virginia Hernández Sánchez"
+        });
     }
-
-    const ventanaImpresion = window.open('', '_blank');
-    ventanaImpresion.document.write(`
-        <!DOCTYPE html>
-        <html lang="es">
-        <head>
-            <meta charset="UTF-8">
-            <title>Comprobante de Cita - Odontología Especializada</title>
-            <style>
-                /* Configuración estricta para una sola hoja Carta */
-                @page {
-                    size: letter;
-                    margin: 10mm 15mm;
-                }
-                body { 
-                    font-family: Arial, sans-serif; 
-                    padding: 0; 
-                    margin: 0 auto; 
-                    color: #333; 
-                    max-width: 100%; 
-                    line-height: 1.4; 
-                    font-size: 13px;
-                }
-                .header { 
-                    text-align: center; 
-                    border-bottom: 2px solid #0056e0; 
-                    padding-bottom: 0.8rem; 
-                    margin-bottom: 1rem; 
-                }
-                .header img { 
-                    width: 100px; 
-                    margin-bottom: 0.3rem; 
-                }
-                .header h2 { 
-                    margin: 0; 
-                    color: #0056e0; 
-                    font-size: 1.5rem; 
-                }
-                .header p { 
-                    margin: 0.2rem 0; 
-                    font-size: 0.85rem; 
-                    color: #555; 
-                }
-                .comprobante-title { 
-                    margin-top: 0.8rem; 
-                    font-size: 1rem; 
-                    color: #333; 
-                    letter-spacing: 1px; 
-                }
-                
-                .details { 
-                    background: #f8fafc; 
-                    padding: 1rem 1.2rem; 
-                    border-radius: 8px; 
-                    border: 1px solid #e2e8f0; 
-                    margin-bottom: 1rem; 
-                }
-                .details p { 
-                    margin: 0.5rem 0; 
-                    font-size: 0.95rem; 
-                    border-bottom: 1px dashed #cbd5e1; 
-                    padding-bottom: 0.4rem;
-                }
-                .details p:last-child { border-bottom: none; padding-bottom: 0; }
-                
-                .costo-grande { 
-                    text-align: center; 
-                    font-size: 1.6rem; 
-                    color: #0056e0; 
-                    font-weight: bold; 
-                    margin: 1rem 0; 
-                    padding: 0.8rem; 
-                    background: #eff6ff; 
-                    border-radius: 8px;
-                }
-                .costo-grande span { 
-                    font-size: 0.85rem; 
-                    color: #64748b; 
-                    display: block; 
-                    font-weight: normal; 
-                    margin-bottom: 0.2rem; 
-                }
-                
-                .recomendaciones { 
-                    background: #fffbeb; 
-                    padding: 0.8rem 1rem; 
-                    border-left: 4px solid #f59e0b; 
-                    margin-bottom: 1rem; 
-                    border-radius: 4px;
-                }
-                .recomendaciones h4 { 
-                    margin: 0 0 0.3rem 0; 
-                    color: #b45309; 
-                    font-size: 0.95rem; 
-                }
-                .recomendaciones ul { 
-                    margin: 0; 
-                    padding-left: 1.2rem; 
-                    color: #78350f; 
-                    font-size: 0.85rem; 
-                }
-                .recomendaciones li { 
-                    margin-bottom: 0.3rem; 
-                }
-                
-                .footer { 
-                    text-align: center; 
-                    font-size: 0.8rem; 
-                    color: #94a3b8; 
-                    border-top: 1px solid #e2e8f0; 
-                    padding-top: 0.6rem; 
-                    margin-top: 1rem;
-                }
-                .btn-print { 
-                    display: block; 
-                    width: 100%; 
-                    background: #0056e0; 
-                    color: white; 
-                    border: none; 
-                    padding: 0.8rem; 
-                    font-size: 1rem; 
-                    border-radius: 8px; 
-                    cursor: pointer; 
-                    font-weight: bold; 
-                    margin-top: 1rem;
-                }
-                @media print { 
-                    .btn-print { display: none; } 
-                }
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <img src="../iconos/logo.png" alt="Logo">
-                <h2>Odontología Especializada</h2>
-                <p>Jesús Elías Piña #1003, Col. Del Pueblo<br>Tampico, Tamaulipas, C.P. 89190</p>
-                <p>Tel: 833 695 7177 | dravickyhernandez@outlook.com</p>
-                <p>Cel: 833 171 8013</p>
-                <p>Whatsapp: 833 695 7177</p>
-                <h3 class="comprobante-title">COMPROBANTE DE CITA</h3>
-            </div>
-            
-            <div class="details">
-                <p><strong>Folio / ID de Cita:</strong> #${safe(id)}</p>
-                <p><strong>Paciente:</strong> ${safe(paciente)}</p>
-                <p><strong>Odontólogo:</strong> Dra. Virginia Hernández Sánchez</p>
-                <p><strong>Servicio Programado:</strong> ${safe(servicio)}</p>
-                <p><strong>Fecha de la Cita:</strong> ${safe(fecha)}</p>
-                <p><strong>Hora de la Cita:</strong> ${safe(hora)}</p>
-            </div>
-
-            <div class="costo-grande">
-                <span>Costo Estimado</span>
-                $${safe(costo)} MXN
-            </div>
-            
-            <div class="recomendaciones">
-                <h4>Recomendaciones para su visita:</h4>
-                <ul>
-                    <li>Le pedimos amablemente llegar 10 minutos antes de su cita.</li>
-                    <li>En caso de no poder asistir, le solicitamos cancelar con al menos 24 horas de anticipación desde su portal web.</li>
-                    <li>Si tiene dudas o requiere indicaciones especiales, no dude en contactarnos.</li>
-                </ul>
-            </div>
-            
-            <div class="footer">Generado desde el Portal de Pacientes - Odontología Especializada</div>
-            <button class="btn-print" onclick="window.print()">Imprimir / Guardar como PDF</button>
-            <script>window.onload = function() { setTimeout(() => window.print(), 500); }</script>
-        </body>
-        </html>
-    `);
-    ventanaImpresion.document.close();
-}
 
     function bindEvents() {
         $("searchAppointment")?.addEventListener("input",renderTable);

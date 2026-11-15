@@ -11,9 +11,19 @@
     <link rel="stylesheet" href="../estilos/usuarios.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../estilos/responsive-mobile.css">
+    <link rel="stylesheet" href="../estilos/skeleton.css">
 </head>
 
-<body>
+<body class="dashboard-cargando">
+    <div class="skeleton-page skeleton-page-interno" aria-label="Cargando contenido"><div class="skeleton-header">
+        <div class="skeleton skeleton-logo"></div>
+        <div class="skeleton-menu"><div class="skeleton skeleton-menu-item"></div><div class="skeleton skeleton-menu-item"></div><div class="skeleton skeleton-menu-item"></div><div class="skeleton skeleton-menu-item"></div><div class="skeleton skeleton-menu-item"></div><div class="skeleton skeleton-menu-item"></div></div>
+        <div class="skeleton-perfil"><div class="skeleton skeleton-circulo"></div><div class="skeleton skeleton-nombre"></div><div class="skeleton skeleton-flecha"></div></div>
+    </div><div class="skeleton-banner"><div class="skeleton-banner-texto">
+        <div class="skeleton skeleton-titulo-corto"></div><div class="skeleton skeleton-titulo-largo"></div>
+        <div class="skeleton skeleton-parrafo"></div></div></div><div class="skeleton-toolbar"><div class="skeleton skeleton-control"></div><div class="skeleton skeleton-control corto"></div></div>
+        <div class="skeleton-panel"><div class="skeleton-encabezado"><div class="skeleton skeleton-subtitulo"></div><div class="skeleton skeleton-control corto"></div></div><div class="skeleton-table"><div class="skeleton-table-row"><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div></div><div class="skeleton-table-row"><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div></div><div class="skeleton-table-row"><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div></div><div class="skeleton-table-row"><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div></div><div class="skeleton-table-row"><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div></div><div class="skeleton-table-row"><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div></div><div class="skeleton-table-row"><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div><div class="skeleton skeleton-table-cell"></div></div></div></div></div>
+
     <div class="contenedor-principal">
         <div class="header" id="header">
             <img src="../iconos/logo.png" alt="logo">
@@ -103,7 +113,8 @@
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../scripts/app.js"></script>
+    <script src="../scripts/skeleton.js"></script>
+    <script src="../scripts/app.js"></script>
 <script src="../scripts/seguridadAdmin.js"></script>
 <script src="../scripts/adminHeader.js"></script>
 <script src="../scripts/validacionCorreo.js"></script>

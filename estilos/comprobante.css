@@ -1,0 +1,333 @@
+/* =========================================================
+   COMPROBANTE.CSS
+   Apariencia unificada en pantalla, celular e impresión.
+   La salida impresa usa siempre papel Carta.
+========================================================= */
+
+:root {
+    color-scheme: light;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333333;
+    background: #eef2f7;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333333;
+    line-height: 1.35;
+}
+
+body {
+    padding: 24px 14px;
+}
+
+.comprobante {
+    width: min(100%, 760px);
+    margin: 0 auto;
+    padding: 28px 34px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.10);
+}
+
+.comprobante-header {
+    text-align: center;
+    padding-bottom: 15px;
+    margin-bottom: 17px;
+    border-bottom: 2px solid #0056e0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.comprobante-logo {
+    display: block;
+    width: 82px;
+    height: auto;
+    max-height: 82px;
+    object-fit: contain;
+    margin: 0 auto 7px;
+}
+
+.comprobante-header h1 {
+    margin: 0 0 5px;
+    color: #0056e0;
+    font-size: 22px;
+    line-height: 1.2;
+}
+
+.comprobante-header p {
+    margin: 2px 0;
+    color: #555555;
+    font-size: 11px;
+}
+
+.comprobante-header h2 {
+    margin: 12px 0 0;
+    color: #333333;
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+.comprobante-detalles {
+    padding: 13px 16px;
+    margin-bottom: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.comprobante-detalles p {
+    display: grid;
+    grid-template-columns: minmax(145px, 34%) minmax(0, 1fr);
+    gap: 10px;
+    margin: 0;
+    padding: 7px 0;
+    border-bottom: 1px dashed #cbd5e1;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.comprobante-detalles p:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.comprobante-detalles strong {
+    color: #334155;
+}
+
+.comprobante-detalles span {
+    min-width: 0;
+}
+
+.comprobante-costo {
+    margin: 14px 0;
+    padding: 13px;
+    text-align: center;
+    color: #0056e0;
+    background: #eff6ff;
+    border-radius: 8px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.comprobante-costo span {
+    display: block;
+    margin-bottom: 3px;
+    color: #64748b;
+    font-size: 11px;
+}
+
+.comprobante-costo strong {
+    display: block;
+    font-size: 22px;
+}
+
+.comprobante-recomendaciones {
+    padding: 12px 15px;
+    margin-bottom: 14px;
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    border-radius: 5px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.comprobante-recomendaciones h3 {
+    margin: 0 0 6px;
+    color: #b45309;
+    font-size: 12px;
+}
+
+.comprobante-recomendaciones ul {
+    margin: 0;
+    padding-left: 18px;
+    color: #78350f;
+    font-size: 11px;
+}
+
+.comprobante-recomendaciones li {
+    margin: 3px 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.comprobante-footer {
+    margin-top: 14px;
+    padding-top: 9px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 10px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.comprobante-imprimir {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 11px 14px;
+    border: 0;
+    border-radius: 8px;
+    background: #0056e0;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.comprobante-imprimir:hover {
+    background: #0045b3;
+}
+
+@media (max-width: 520px) {
+    body {
+        padding: 10px;
+    }
+
+    .comprobante {
+        padding: 20px 16px;
+        border-radius: 9px;
+    }
+
+    .comprobante-header h1 {
+        font-size: 20px;
+    }
+
+    .comprobante-detalles {
+        padding: 11px;
+    }
+
+    .comprobante-detalles p {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2px;
+        padding: 7px 0;
+    }
+}
+
+/* Impresión: tamaño físico uniforme en móvil y escritorio. */
+@page {
+    size: letter portrait;
+    margin: 9mm 12mm;
+}
+
+@media print {
+    html,
+    body {
+        width: auto !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #222222 !important;
+        font-size: 10.5px;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .comprobante {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .comprobante-header {
+        padding-bottom: 9px;
+        margin-bottom: 10px;
+    }
+
+    .comprobante-logo {
+        width: 65px;
+        max-height: 65px;
+        margin-bottom: 4px;
+    }
+
+    .comprobante-header h1 {
+        font-size: 19px;
+    }
+
+    .comprobante-header p {
+        font-size: 9.5px;
+        margin: 1px 0;
+    }
+
+    .comprobante-header h2 {
+        margin-top: 8px;
+        font-size: 13px;
+    }
+
+    .comprobante-detalles {
+        padding: 9px 12px;
+        margin-bottom: 9px;
+    }
+
+    .comprobante-detalles p {
+        padding: 5px 0;
+        font-size: 10.5px;
+    }
+
+    .comprobante-costo {
+        padding: 9px;
+        margin: 9px 0;
+    }
+
+    .comprobante-costo span {
+        font-size: 9.5px;
+    }
+
+    .comprobante-costo strong {
+        font-size: 19px;
+    }
+
+    .comprobante-recomendaciones {
+        padding: 9px 12px;
+        margin-bottom: 9px;
+    }
+
+    .comprobante-recomendaciones h3 {
+        font-size: 10.5px;
+    }
+
+    .comprobante-recomendaciones ul {
+        font-size: 9.5px;
+        line-height: 1.25;
+    }
+
+    .comprobante-recomendaciones li {
+        margin: 2px 0;
+    }
+
+    .comprobante-footer {
+        margin-top: 9px;
+        padding-top: 6px;
+        font-size: 9px;
+    }
+
+    .comprobante-imprimir {
+        display: none !important;
+    }
+
+    .comprobante-header,
+    .comprobante-detalles,
+    .comprobante-costo,
+    .comprobante-recomendaciones,
+    .comprobante-footer {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}

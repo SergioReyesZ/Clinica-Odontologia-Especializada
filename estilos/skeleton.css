@@ -1,0 +1,522 @@
+.skeleton-page {
+    position: absolute;
+    inset: 0;
+    z-index: 1000;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding-bottom: 2rem;
+    background: #fff;
+    overflow: hidden;
+}
+
+/* Animación shimmer */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        #edf2f7 25%,
+        #f8fafc 50%,
+        #edf2f7 75%
+    );
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s ease-in-out infinite;
+    border-radius: 10px;
+}
+
+@keyframes skeletonShimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* HEADER */
+.skeleton-header {
+    min-height: 85px;
+    padding: 0 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    box-sizing: border-box;
+}
+
+.skeleton-logo {
+    width: 150px;
+    height: 45px;
+}
+
+.skeleton-menu {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+}
+
+.skeleton-menu-item {
+    width: 65px;
+    height: 17px;
+}
+
+.skeleton-perfil {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.skeleton-circulo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.skeleton-nombre {
+    width: 115px;
+    height: 16px;
+}
+
+.skeleton-flecha {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* BANNER DE BIENVENIDA */
+.skeleton-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 25vh;
+    min-height: 190px;
+    margin: 25px 25px 0;
+    padding: 2rem;
+    box-sizing: border-box;
+    border-radius: 20px;
+    background: #f1f7fb;
+    overflow: hidden;
+}
+
+.skeleton-banner-texto {
+    flex: 1;
+}
+
+.skeleton-titulo-corto {
+    width: 180px;
+    height: 20px;
+    margin-bottom: 15px;
+}
+
+.skeleton-titulo-largo {
+    width: 55%;
+    max-width: 450px;
+    height: 32px;
+    margin-bottom: 20px;
+}
+
+.skeleton-parrafo {
+    width: 80%;
+    max-width: 550px;
+    height: 13px;
+    margin-bottom: 10px;
+}
+
+.skeleton-parrafo-corto {
+    width: 55%;
+}
+
+.skeleton-diente {
+    width: 260px;
+    height: 190px;
+    border-radius: 45%;
+    margin-right: 25px;
+}
+
+/* SECCIONES */
+.skeleton-informacion {
+    display: flex;
+    gap: 0;
+    padding-bottom: 2rem;
+}
+
+.skeleton-seccion {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin: 0 25px 25px;
+    border-radius: 20px;
+    gap: 1rem;
+    box-sizing: border-box;
+}
+
+.skeleton-citas {
+    width: 55%;
+}
+
+.skeleton-pacientes {
+    width: 40%;
+}
+
+.skeleton-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    min-height: 35px;
+}
+
+.skeleton-subtitulo {
+    width: 160px;
+    height: 22px;
+}
+
+.skeleton-icono {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+
+.skeleton-linea {
+    height: 1px;
+    width: 100%;
+    background: #e2e8f0;
+}
+
+/* TARJETAS DE CITAS */
+.skeleton-tarjetas {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.skeleton-tarjeta-cita {
+    height: 95px;
+    width: 100%;
+    border-radius: 12px;
+}
+
+/* PACIENTES */
+.skeleton-lista-pacientes {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.skeleton-paciente {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.skeleton-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.skeleton-datos {
+    flex: 1;
+}
+
+.skeleton-nombre-paciente {
+    width: 65%;
+    height: 16px;
+    margin-bottom: 10px;
+}
+
+.skeleton-edad {
+    width: 35%;
+    height: 12px;
+}
+
+/* BOTONES */
+.skeleton-boton {
+    height: 50px;
+    width: 90%;
+    margin: auto auto 0;
+    border-radius: 15px;
+}
+
+.skeleton-boton-secundario {
+    width: 85%;
+    height: 42px;
+    border-radius: 20px;
+}
+
+/* DESAPARICIÓN DEL SKELETON */
+.skeleton-page {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+
+    .skeleton-header {
+        min-height: 75px;
+        padding: 0 18px;
+    }
+
+    .skeleton-logo {
+        width: 90px;
+        height: 35px;
+    }
+
+    .skeleton-menu {
+        display: none;
+    }
+
+    .skeleton-perfil {
+        gap: 8px;
+    }
+
+    .skeleton-nombre {
+        width: 75px;
+    }
+
+    .skeleton-banner {
+        margin: 15px;
+        min-height: 180px;
+        height: auto;
+        padding: 1.5rem;
+    }
+
+    .skeleton-titulo-largo {
+        width: 90%;
+        height: 25px;
+    }
+
+    .skeleton-parrafo {
+        width: 95%;
+    }
+
+    .skeleton-diente {
+        width: 90px;
+        height: 100px;
+        flex-shrink: 0;
+        margin-right: 0;
+    }
+
+    .skeleton-informacion {
+        flex-direction: column;
+    }
+
+    .skeleton-seccion {
+        width: auto;
+        margin: 10px 15px;
+    }
+
+    .skeleton-tarjeta-cita {
+        height: 85px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .skeleton-banner {
+        padding: 1.2rem;
+    }
+
+    .skeleton-diente {
+        width: 55px;
+        height: 75px;
+    }
+
+    .skeleton-titulo-corto {
+        width: 120px;
+    }
+
+    .skeleton-titulo-largo {
+        width: 100%;
+    }
+
+    .skeleton-subtitulo {
+        width: 140px;
+    }
+}
+
+/* Respetar usuarios que prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+    .skeleton {
+        animation: none;
+    }
+}
+
+/* ==========================================
+   CONTROL DEFINITIVO DE CARGA
+========================================== */
+
+/* Skeleton visible desde el primer renderizado */
+body.dashboard-cargando .skeleton-page {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100vh;
+    min-height: 100vh;
+    z-index: 99999 !important;
+    background: #fff;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto;
+    overflow-y: auto;
+}
+
+/* Ocultar completamente el dashboard real */
+body.dashboard-cargando .contenedor-principal {
+    visibility: hidden !important;
+}
+
+/* Al terminar, ocultar skeleton */
+body:not(.dashboard-cargando) .skeleton-page {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Mostrar dashboard real */
+body:not(.dashboard-cargando) .contenedor-principal {
+    visibility: visible;
+}
+
+/* Evitar scroll mientras carga */
+body.dashboard-cargando {
+    overflow: hidden;
+}
+
+
+
+/* Skeleton para secciones administrativas y del odontólogo */
+.skeleton-page-interno {
+    padding: 0 25px 35px;
+}
+.skeleton-page-interno .skeleton-banner {
+    height: auto;
+    min-height: 125px;
+    margin-top: 18px;
+}
+.skeleton-page-interno .skeleton-panel {
+    background: #fff;
+    border: 1px solid #edf2f7;
+    border-radius: 18px;
+    padding: 22px;
+    margin: 22px 0;
+    box-sizing: border-box;
+}
+.skeleton-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin: 20px 0;
+}
+.skeleton-control {
+    height: 42px;
+    width: 190px;
+    border-radius: 9px;
+}
+.skeleton-control.corto { width: 125px; }
+.skeleton-table {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    width: 100%;
+}
+.skeleton-table-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr .8fr .65fr;
+    gap: 14px;
+    align-items: center;
+    min-height: 53px;
+    border-bottom: 1px solid #edf2f7;
+    padding: 7px 4px;
+}
+.skeleton-table-cell {
+    height: 14px;
+    border-radius: 6px;
+    width: 85%;
+}
+.skeleton-table-row:first-child .skeleton-table-cell {
+    height: 17px;
+    width: 75%;
+}
+.skeleton-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    padding: 10px 0;
+}
+.skeleton-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.skeleton-form-label { width: 35%; height: 13px; }
+.skeleton-form-input { width: 100%; height: 43px; border-radius: 9px; }
+.skeleton-calendar {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(230px, .8fr);
+    gap: 22px;
+}
+.skeleton-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 10px;
+    padding: 12px 0;
+}
+.skeleton-calendar-day {
+    aspect-ratio: 1 / .8;
+    border-radius: 8px;
+}
+.skeleton-mini-card {
+    height: 72px;
+    border-radius: 11px;
+    margin: 12px 0;
+}
+.skeleton-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap: 20px;
+    margin: 20px 25px;
+}
+.skeleton-action-row {
+    display: flex;
+    gap: 14px;
+    margin: 16px 0 22px;
+}
+.skeleton-action {
+    height: 54px;
+    flex: 1;
+    border-radius: 12px;
+}
+.skeleton-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+    margin: 20px 25px;
+}
+.skeleton-stat {
+    height: 95px;
+    border-radius: 14px;
+}
+@media (max-width: 768px) {
+    .skeleton-page-interno { padding: 0 12px 25px; }
+    .skeleton-page-interno .skeleton-banner { margin: 12px 0; }
+    .skeleton-toolbar { align-items: stretch; flex-direction: column; }
+    .skeleton-control { width: 100%; }
+    .skeleton-table-row { grid-template-columns: 1fr 1fr; }
+    .skeleton-table-row .skeleton-table-cell:nth-child(n+3) { display: none; }
+    .skeleton-form-grid { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+    .skeleton-calendar { grid-template-columns: 1fr; }
+    .skeleton-dashboard-grid { grid-template-columns: 1fr; margin: 12px; }
+    .skeleton-stat-grid { grid-template-columns: 1fr 1fr; margin: 12px; }
+    .skeleton-stat-grid .skeleton-stat:last-child { display: none; }
+    .skeleton-action-row { flex-direction: column; }
+    .skeleton-page-interno .skeleton-header { padding: 0 12px; }
+}

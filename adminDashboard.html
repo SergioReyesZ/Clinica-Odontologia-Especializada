@@ -11,9 +11,22 @@
     <link rel="stylesheet" href="estilos/adminDashboard.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="estilos/responsive-mobile.css">
+    <link rel="stylesheet" href="estilos/skeleton.css">
 </head>
 
-<body id="cuerpo">
+<body id="cuerpo" class="dashboard-cargando">
+    <div class="skeleton-page" aria-label="Cargando panel administrativo">
+<div class="skeleton-header">
+        <div class="skeleton skeleton-logo"></div>
+        <div class="skeleton-menu"><div class="skeleton skeleton-menu-item"></div><div class="skeleton skeleton-menu-item"></div><div class="skeleton skeleton-menu-item"></div><div class="skeleton skeleton-menu-item"></div><div class="skeleton skeleton-menu-item"></div><div class="skeleton skeleton-menu-item"></div></div>
+        <div class="skeleton-perfil"><div class="skeleton skeleton-circulo"></div><div class="skeleton skeleton-nombre"></div><div class="skeleton skeleton-flecha"></div></div>
+    </div>
+<div class="skeleton-banner"><div class="skeleton-banner-texto"><div class="skeleton skeleton-titulo-corto"></div><div class="skeleton skeleton-titulo-largo"></div><div class="skeleton skeleton-parrafo"></div></div><div class="skeleton skeleton-diente"></div></div>
+<div class="skeleton-panel" style="margin:22px 25px;"><div class="skeleton skeleton-subtitulo"></div><div class="skeleton-action-row"><div class="skeleton skeleton-action"></div><div class="skeleton skeleton-action"></div><div class="skeleton skeleton-action"></div><div class="skeleton skeleton-action"></div></div></div>
+<div class="skeleton-stat-grid"><div class="skeleton skeleton-stat"></div><div class="skeleton skeleton-stat"></div><div class="skeleton skeleton-stat"></div></div>
+<div class="skeleton-dashboard-grid"><div class="skeleton-panel"><div class="skeleton skeleton-subtitulo"></div><div class="skeleton skeleton-mini-card"></div><div class="skeleton skeleton-mini-card"></div><div class="skeleton skeleton-mini-card"></div><div class="skeleton skeleton-mini-card"></div></div><div class="skeleton-panel"><div class="skeleton skeleton-subtitulo"></div><div class="skeleton skeleton-mini-card"></div><div class="skeleton skeleton-mini-card"></div><div class="skeleton skeleton-mini-card"></div><div class="skeleton skeleton-mini-card"></div></div></div>
+</div>
+
     <div class="contenedor-principal">
         <div class="header" id="header">
             <img src="iconos/logo.png" alt="logo">
@@ -534,12 +547,14 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script src="scripts/skeleton.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/seguridadAdmin.js"></script>
     <script src="scripts/adminHeader.js"></script>
     <script src="scripts/bloqueoEnvios.js"></script>
     <script src="scripts/adminDashboard.js"></script>
     <script src="scripts/dashCitas.js"></script>
+    <script src="scripts/comprobante.js"></script>
 </body>
 
 </html>

@@ -170,10 +170,20 @@
             const button = event.target.closest('[data-action="receipt"]');
             if (!button) return;
             const cita = citas.find(item => String(item.id) === button.dataset.id);
-            if (cita && typeof imprimirComprobanteOdontologo === "function") {
-                imprimirComprobanteOdontologo(cita);
+            if (cita && typeof window.imprimirComprobanteOdontologo === "function") {
+                const servicio = getService(cita.servicio);
+                const odontologo = `${window.odontologoActual?.usuario?.nombre || ""} ${window.odontologoActual?.usuario?.apellido || ""}`.trim() || "Odontólogo";
+
+                window.imprimirComprobanteOdontologo(cita, {
+                    paciente: patientName(cita.paciente),
+                    servicio: serviceName(cita.servicio),
+                    odontologo,
+                    fecha: displayDate(dateOf(cita)),
+                    hora: displayTime(cita.fecha_hora),
+                    costo: servicio?.costo || 0
+                });
             } else {
-                notice("No se pudo preparar el comprobante.", true);
+                notice("No se pudo preparar el comprobante. Comprueba que comprobante.js esté cargado.", true);
             }
         });
     }

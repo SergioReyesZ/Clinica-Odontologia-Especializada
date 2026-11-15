@@ -621,7 +621,46 @@ function actualizarCitasVisiblesOdontologo(fecha) {
 
             opcionesMenu.classList.remove("abierto");
 
-            imprimirComprobanteOdontologo(cita);
+            const paciente = pacientesOdontologoCache.find(
+                p => String(p.id) === String(cita.paciente)
+            );
+
+            const servicio = serviciosOdontologoCache.find(
+                s => String(s.id) === String(cita.servicio)
+            );
+
+            const usuario = window.odontologoActual?.usuario;
+
+            const nombreOdontologo = usuario
+                ? `${usuario.nombre || ""} ${usuario.apellido || ""}`.trim()
+                : "Odontólogo";
+
+            const nombrePaciente = paciente
+                ? `${paciente.nombre || ""} ${paciente.apellido || ""}`.trim()
+                : "Paciente no encontrado";
+
+            const fecha = new Date(cita.fecha_hora);
+
+            const fechaTexto = fecha.toLocaleDateString("es-MX", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            });
+
+            const horaTexto = fecha.toLocaleTimeString("es-MX", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+            });
+
+            window.imprimirComprobanteOdontologo(cita, {
+                paciente: nombrePaciente,
+                odontologo: nombreOdontologo,
+                servicio: servicio?.nombre || "No especificado",
+                fecha: fechaTexto,
+                hora: horaTexto,
+                costo: servicio?.costo || 0
+            });
 
         });
 
@@ -664,272 +703,7 @@ window.addEventListener("scroll", cerrarMenusCitasOdontologo, true);
 window.addEventListener("resize", cerrarMenusCitasOdontologo);
 
 
-// ==========================================
-// COMPROBANTE DE CITA
-// ==========================================
-
-function imprimirComprobanteOdontologo(cita) {
-
-    const ventana = window.open("", "_blank");
-
-    if (!ventana) {
-
-        alert(
-            "El navegador bloqueó la ventana del comprobante. Permite las ventanas emergentes para este sitio."
-        );
-
-        return;
-
-    }
-
-    const paciente = pacientesOdontologoCache.find(
-        p => String(p.id) === String(cita.paciente)
-    );
-
-    const servicio = serviciosOdontologoCache.find(
-        s => String(s.id) === String(cita.servicio)
-    );
-
-    const usuario = window.odontologoActual?.usuario;
-
-    const nombreOdontologo = usuario
-        ? `${usuario.nombre || ""} ${usuario.apellido || ""}`.trim()
-        : "Odontólogo";
-
-    const nombrePaciente = paciente
-        ? `${paciente.nombre || ""} ${paciente.apellido || ""}`.trim()
-        : "Paciente no encontrado";
-
-    const nombreServicio = servicio?.nombre || "No especificado";
-
-    const fecha = new Date(cita.fecha_hora);
-
-    const fechaTexto = fecha.toLocaleDateString("es-MX", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-    });
-
-    const horaTexto = fecha.toLocaleTimeString("es-MX", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true
-    });
-
-    const costo = Number(servicio?.costo || 0).toLocaleString(
-        "es-MX",
-        {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }
-    );
-
-    const logo = new URL(
-        "iconos/logo.png",
-        window.location.href
-    ).href;
-
-    const datos = {
-        id: escaparHTMLOdontologo(cita.id),
-        paciente: escaparHTMLOdontologo(nombrePaciente),
-        odontologo: escaparHTMLOdontologo(nombreOdontologo),
-        servicio: escaparHTMLOdontologo(nombreServicio),
-        fecha: escaparHTMLOdontologo(fechaTexto),
-        hora: escaparHTMLOdontologo(horaTexto),
-        estado: escaparHTMLOdontologo(cita.estado),
-        costo
-    };
-
-    ventana.document.write(`
-        <!DOCTYPE html>
-        <html lang="es">
-        <head>
-            <meta charset="UTF-8">
-
-            <title>Comprobante de cita</title>
-
-            <style>
-
-                @page {
-                    size: letter;
-                    margin: 10mm 15mm;
-                }
-
-                body {
-                    font-family: Arial, sans-serif;
-                    color: #333;
-                    max-width: 100%;
-                    line-height: 1.5;
-                    font-size: 13px;
-                    margin: 0 auto;
-                }
-
-                .header {
-                    text-align: center;
-                    border-bottom: 2px solid #0056e0;
-                    padding-bottom: 15px;
-                    margin-bottom: 20px;
-                }
-
-                .header img {
-                    width: 100px;
-                }
-
-                .header h2 {
-                    color: #0056e0;
-                    margin: 5px 0;
-                }
-
-                .header p {
-                    margin: 3px 0;
-                    color: #555;
-                }
-
-                .titulo {
-                    margin-top: 15px;
-                    font-size: 18px;
-                    font-weight: bold;
-                }
-
-                .details {
-                    background: #f8fafc;
-                    padding: 18px;
-                    border-radius: 8px;
-                    border: 1px solid #e2e8f0;
-                }
-
-                .details p {
-                    padding-bottom: 9px;
-                    border-bottom: 1px dashed #cbd5e1;
-                }
-
-                .details p:last-child {
-                    border: none;
-                }
-
-                .costo {
-                    text-align: center;
-                    background: #eff6ff;
-                    color: #0056e0;
-                    font-size: 22px;
-                    font-weight: bold;
-                    padding: 18px;
-                    margin-top: 20px;
-                    border-radius: 8px;
-                }
-
-                .costo small {
-                    display: block;
-                    font-size: 12px;
-                    color: #64748b;
-                    font-weight: normal;
-                }
-
-                .footer {
-                    text-align: center;
-                    color: #94a3b8;
-                    border-top: 1px solid #e2e8f0;
-                    padding-top: 15px;
-                    margin-top: 25px;
-                }
-
-                .btn-print {
-                    display: block;
-                    width: 100%;
-                    padding: 12px;
-                    margin-top: 20px;
-                    background: #0056e0;
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    cursor: pointer;
-                }
-
-                @media print {
-                    .btn-print {
-                        display: none;
-                    }
-                }
-
-            </style>
-        </head>
-
-        <body>
-
-            <div class="header">
-
-                <img src="${logo}" alt="Logo">
-
-                <h2>Odontología Especializada</h2>
-
-                <p>Jesús Elías Piña #1003, Col. Del Pueblo</p>
-
-                <p>Tampico, Tamaulipas, C.P. 89190</p>
-
-                <p>Tel: 833 695 7177 | hola@odontologia.com</p>
-
-                <div class="titulo">
-                    COMPROBANTE DE CITA
-                </div>
-
-            </div>
-
-            <div class="details">
-
-                <p><strong>Folio:</strong> #${datos.id}</p>
-
-                <p><strong>Paciente:</strong> ${datos.paciente}</p>
-
-                <p><strong>Odontólogo:</strong> ${datos.odontologo}</p>
-
-                <p><strong>Servicio:</strong> ${datos.servicio}</p>
-
-                <p><strong>Fecha:</strong> ${datos.fecha}</p>
-
-                <p><strong>Hora:</strong> ${datos.hora}</p>
-
-                <p><strong>Estado:</strong> ${datos.estado}</p>
-
-            </div>
-
-            <div class="costo">
-
-                <small>Costo del servicio</small>
-
-                $${datos.costo} MXN
-
-            </div>
-
-            <div class="footer">
-
-                Generado desde el Portal de Odontología Especializada.
-
-            </div>
-
-            <button class="btn-print" onclick="window.print()">
-                Imprimir / Guardar como PDF
-            </button>
-
-        </body>
-        </html>
-    `);
-
-    ventana.document.close();
-
-    ventana.onload = () => {
-
-        setTimeout(() => {
-
-            ventana.focus();
-
-            ventana.print();
-
-        }, 500);
-
-    };
-
-}
+// El comprobante se genera desde comprobante.js compartido.
 
 
 // ==========================================
